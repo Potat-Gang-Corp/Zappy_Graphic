@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  sync_server:
+  sync_graphic:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,5 +35,5 @@ jobs:
 
         cd private-repo
         git add Graphic/
-        git commit -m "[+] Sync Server changes"
+        git commit -m "[+] Sync Graphic repository with the final one"
         git push origin main
