@@ -7,17 +7,21 @@
 
 #include "Team.hpp"
 #include "PlayerData.hpp"
+#include "Server.hpp"
 
-int main(void)
+int main(int ac, char **av)
 {
-    Team team("Dragon Sword");
-    Player player(1, 0, 0, "Dragon Sword", Orientation::NORTH);
+    if (ac != 3) {
+        std::cerr << "Usage: " << av[0] << " <host> <port>\n";
+        return 1;
+    }
 
-    std::cout << "The player is number #" << player.getNumber() << std::endl;
-    std::cout << "The player is at position " << player.getPosX() << "," << player.getPosY() << std::endl;
-    std::cout << "The player is at level " << player.getLevel() << std::endl;
-    std::cout << "The player is in team " << player.getTeamName() << std::endl;
-    std::cout << "The player is facing " << player.getOrientation() << std::endl;
-    // std::cout << "The team is " << team.getName() << std::endl;
-    return 0;
+    // Debug messages
+    std::cout << "Arguments received - Host: " << av[1] << ", Port: " << av[2] << std::endl;
+
+    Server server;
+    std::string host = av[1];
+    std::string port = av[2];
+
+    return server.connect_server(host, port);
 }

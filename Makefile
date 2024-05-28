@@ -21,7 +21,8 @@ TSRCS = $(wildcard tests/unit-tests/*.cpp)
 SRCS := $(wildcard \
 				$(SRC_DIR)/*.cpp \
 				$(SRC_DIR)/Player/*.cpp \
-				$(SRC_DIR)/Team/*.cpp)
+				$(SRC_DIR)/Team/*.cpp 	\
+				$(SRC_DIR)/Server/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -29,7 +30,8 @@ OBJS_NO_MAIN = $(SRCS_NO_MAIN:.c=.o)
 
 INCLUDES := -I./src \
 			-I./src/Player \
-			-I./src/Team
+			-I./src/Team 	\
+			-I./src/Server
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)
