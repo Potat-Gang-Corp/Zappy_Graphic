@@ -25,39 +25,33 @@ jobs:
         echo "Obtained Jenkins crumb: $crumb"
 
         build_url=$(curl -X POST "https://potatgangcorp.fr/${JENKINS_JOB_NAME}build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
-        queue_url=$(echo $build_url | sed 's,/queue/.*,/queue/,')
+        
+        sleep 10
 
-        echo "HELOOOOOOOOOOOOOOOOO"
+        last_build_number=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
+        echo "Last build number: $last_build_number"
+
+        check_build_status() {
+          build_status=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/${1}/api/json" --user ${JENKINS_USER}:${JENKINS_PASSWORD} | jq -r '.result')
+          echo "Build status: $build_status"
+        }
+
         while true; do
-          build_info=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "$queue_url/api/json")
-          build_number=$(echo $build_info | jq -r '.executable.number')
-
-          if [ "$build_number" != "null" ]; then
-            echo "Jenkins build number: $build_number"
-            break
+          status=$(check_build_status $last_build_number)
+          if [ "$status" == "SUCCESS" ]; then
+            echo "Build succeeded."
+            exit 0
+          elif [ "$status" == "FAILURE" ]; then
+            echo "Build failed."
+            exit 1
+          elif [ "$status" == "ABORTED" ]; then
+            echo "Build was aborted."
+            exit 1
           fi
-
-          echo "Waiting for Jenkins build to start..."
+          echo "Waiting for build to complete..."
           sleep 10
         done
 
-        echo "Jenkins build started"
-        while true; do
-          build_status=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/${build_number}/api/json" | jq -r '.result')
-
-          if [ "$build_status" != "null" ]; then
-            echo "Jenkins build status: $build_status"
-            break
-          fi
-
-          echo "Waiting for Jenkins build to complete..."
-          sleep 10
-        done
-
-        if [ "$build_status" != "SUCCESS" ]; then
-          echo "Jenkins build failed"
-          exit 1
-        fi
 
     - name: Sync with Private Repository
       env:
