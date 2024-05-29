@@ -24,7 +24,7 @@ jobs:
         crumb=$(echo $crumb_response | jq -r '.crumb')
         echo "Obtained Jenkins crumb: $crumb"
 
-        build_url="https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/build"
+        build_url="https://potatgangcorp.fr/${JENKINS_JOB_NAME}/build"
         job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "Jenkins-Crumb:$crumb")
         echo "Job started: $job_response"
 
