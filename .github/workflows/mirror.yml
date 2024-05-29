@@ -18,24 +18,16 @@ jobs:
         JENKINS_URL: ${{ secrets.JENKINS_URL }}
         JENKINS_USER: ${{ secrets.JENKINS_USER }}
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
-        JENKINS_JOB_NAME: "Zappy/Graphic/Build_all"
+        JENKINS_JOB_NAME: "job/Zappy/job/Graphic/job/Build_all/"
       run: |        
         crumb=$(curl -v GET https://potatgangcorp.fr/jenkins/crumbIssuer/api/json --user ${JENKINS_USER}:${JENKINS_PASSWORD})
 
         echo "Obtained Jenkins crumb: $crumb"
 
-        echo "Triggering Jenkins build..."
+        build_url=$(curl -X POST "https://potatgangcorp.fr/${JENKINS_JOB_NAME}build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
 
-        build_url=$(curl -X POST "https://potatgangcorp.fr/jenkins/job/${JENKINS_JOB_NAME}/build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
-        
-        echo "Triggered Jenkins build: $build_url"
-
-        # Extract the queue item URL from the response
         queue_url=$(echo $build_url | sed 's,/queue/.*,/queue/,')
 
-        echo "Jenkins queue URL: $queue_url"
-
-        # Poll Jenkins queue to get the build number
         while true; do
           build_info=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "$queue_url/api/json")
           build_number=$(echo $build_info | jq -r '.executable.number')
@@ -49,7 +41,6 @@ jobs:
           sleep 10
         done
 
-        # Poll Jenkins build status
         while true; do
           build_status=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/${build_number}/api/json" | jq -r '.result')
 
@@ -62,7 +53,6 @@ jobs:
           sleep 10
         done
 
-        # Check build status
         if [ "$build_status" != "SUCCESS" ]; then
           echo "Jenkins build failed"
           exit 1
