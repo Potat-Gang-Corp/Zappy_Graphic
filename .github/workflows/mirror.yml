@@ -44,7 +44,7 @@ jobs:
 
         # Boucle pour vérifier le statut du build jusqu'à ce qu'il soit terminé
         while true; do
-          status=$(check_build_status())
+          status=$(check_build_status)
           if [ "$status" == "SUCCESS" ]; then
             echo "Build succeeded."
             exit 0
