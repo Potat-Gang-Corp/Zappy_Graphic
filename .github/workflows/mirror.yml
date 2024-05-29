@@ -26,8 +26,9 @@ jobs:
 
         build_url=$(curl -X POST "https://potatgangcorp.fr/${JENKINS_JOB_NAME}build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
         
-        sleep 10
+        sleep 5
 
+        echo "Triggered Jenkins build: $build_url"
         last_build_number=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
         echo "Last build number: $last_build_number"
 
