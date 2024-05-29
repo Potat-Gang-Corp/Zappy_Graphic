@@ -42,20 +42,22 @@ jobs:
           echo $build_status
         }
 
+        # Boucle pour vérifier le statut du build jusqu'à ce qu'il soit terminé
         while true; do
-          if [ "$build_status" == "SUCCESS" ]; then
+          status=$(check_build_status())
+          if [ "$status" == "SUCCESS" ]; then
             echo "Build succeeded."
             exit 0
-          elif [ "$build_status" == "FAILURE" ]; then
+          elif [ "$status" == "FAILURE" ]; then
             echo "Build failed."
             exit 1
-          elif [ "$build_status" == "ABORTED" ]; then
+          elif [ "$status" == "ABORTED" ]; then
             echo "Build was aborted."
             exit 1
-          elif [ "$build_status" == "null" ]; then
+          elif [ "$status" == "null" ]; then
             echo "Build is still running..."
           else
-            echo "Unknown build status: $build_status"
+            echo "Unknown build status: $status"
             exit 1
           fi
           sleep 10
