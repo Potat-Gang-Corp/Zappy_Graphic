@@ -20,47 +20,43 @@ jobs:
       env:
         JENKINS_URL: ${{ secrets.JENKINS_URL }}
         JENKINS_USER: ${{ secrets.JENKINS_USER }}
-        JENKINS_API_TOKEN: 1155db0fa8072219ec71fcd65c5f207072
-        JENKINS_JOB_NAME: "jenkins/job/Zappy/job/Graphic/job/Build_all/"
+        JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}
+        JENKINS_JOB_NAME: ${{ secrets.JENKINS_JOB_NAME }}
       run: |
-        # Démarrer le job sans besoin de Crumb
-        build_url="https://potatgangcorp.fr/${JENKINS_JOB_NAME}/build"
+        build_url="${JENKINS_URL}${JENKINS_JOB_NAME}/build"
         job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
-        echo "Job started: $job_response"
 
-        # Attendre quelques secondes pour permettre à Jenkins de démarrer le job et obtenir le numéro de build
         sleep 10
 
-        # Obtenir le numéro du dernier build
-        last_build_number=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
-        echo "Last build number: $last_build_number"
+        last_build_number=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
 
-        build_status=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
-        echo "Build status: $build_status"
+        build_status=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
 
-        # Boucle pour vérifier le statut du build jusqu'à ce qu'il soit terminé
         while true; do
           if [ "$build_status" == "SUCCESS" ]; then
             echo "Build succeeded."
+            echo "::set-output name=build_status::SUCCESS"
             exit 0
           elif [ "$build_status" == "FAILURE" ]; then
             echo "Build failed."
+            echo "::set-output name=build_status::FAILURE"
             exit 1
           elif [ "$build_status" == "ABORTED" ]; then
             echo "Build was aborted."
+            echo "::set-output name=build_status::ABORTED"
             exit 1
           elif [ "$build_status" == "null" ]; then
             echo "Build is still running..."
           else
             echo "Unknown build status: $build_status"
+            echo "::set-output name=build_status::UNKNOWN"
             exit 1
           fi
           sleep 10
         done
 
-
-
     - name: Sync with Private Repository
+      if: steps.jenkins_build.outputs.build_status == 'SUCCESS'
       env:
         SSH_PRIVATE_KEY: ${{ secrets.POTAT_KEY }}
       run: |
