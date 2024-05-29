@@ -13,6 +13,58 @@ jobs:
     - name: Checkout Server Repository
       uses: actions/checkout@v3
 
+    - name: Trigger Jenkins Build
+      env:
+        JENKINS_URL: ${{ secrets.JENKINS_URL }}
+        JENKINS_USER: ${{ secrets.JENKINS_USER }}
+        JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
+        JENKINS_JOB_NAME: "Zappy/Graphic/Build All"
+      run: |
+        # Trigger Jenkins build
+        build_url=$(curl -X POST "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/buildWithParameters" \
+          --user ${JENKINS_USER}:${JENKINS_PASSWORD} \
+          --silent --write-out "%{redirect_url}")
+        
+        echo "Triggered Jenkins build: $build_url"
+
+        # Extract the queue item URL from the response
+        queue_url=$(echo $build_url | sed 's,/queue/.*,/queue/,')
+
+        echo "Jenkins queue URL: $queue_url"
+
+        # Poll Jenkins queue to get the build number
+        while true; do
+          build_info=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "$queue_url/api/json")
+          build_number=$(echo $build_info | jq -r '.executable.number')
+
+          if [ "$build_number" != "null" ]; then
+            echo "Jenkins build number: $build_number"
+            break
+          fi
+
+          echo "Waiting for Jenkins build to start..."
+          sleep 10
+        done
+
+        # Poll Jenkins build status
+        while true; do
+          build_status=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/${build_number}/api/json" | jq -r '.result')
+
+          if [ "$build_status" != "null" ]; then
+            echo "Jenkins build status: $build_status"
+            break
+          fi
+
+          echo "Waiting for Jenkins build to complete..."
+          sleep 10
+        done
+
+        # Check build status
+        if [ "$build_status" != "SUCCESS" ]; then
+          echo "Jenkins build failed"
+          exit 1
+        fi
+
     - name: Sync with Private Repository
       env:
         SSH_PRIVATE_KEY: ${{ secrets.POTAT_KEY }}
