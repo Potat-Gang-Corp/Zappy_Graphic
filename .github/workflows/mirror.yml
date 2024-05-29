@@ -19,22 +19,24 @@ jobs:
         JENKINS_USER: ${{ secrets.JENKINS_USER }}
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
         JENKINS_JOB_NAME: "jenkins/job/Zappy/job/Graphic/job/Build_all/"
-      run: |        
-        crumb=$(curl -v GET https://potatgangcorp.fr/jenkins/crumbIssuer/api/json --user ${JENKINS_USER}:${JENKINS_PASSWORD})
-
+      run: |
+        crumb_response=$(curl -s "https://potatgangcorp.fr/jenkins/crumbIssuer/api/json" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
+        crumb=$(echo $crumb_response | jq -r '.crumb')
         echo "Obtained Jenkins crumb: $crumb"
 
-        build_url=$(curl -X POST "https://potatgangcorp.fr/${JENKINS_JOB_NAME}build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
-        
-        sleep 5
+        build_url="https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/buildWithParameters"
+        job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "Jenkins-Crumb:$crumb")
+        echo "Job started: $job_response"
 
-        echo "Triggered Jenkins build: $build_url"
+        sleep 10
+
         last_build_number=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
         echo "Last build number: $last_build_number"
 
         check_build_status() {
           build_status=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/${1}/api/json" --user ${JENKINS_USER}:${JENKINS_PASSWORD} | jq -r '.result')
           echo "Build status: $build_status"
+          echo $build_status
         }
 
         while true; do
@@ -48,10 +50,15 @@ jobs:
           elif [ "$status" == "ABORTED" ]; then
             echo "Build was aborted."
             exit 1
+          elif [ "$status" == "null" ]; then
+            echo "Build is still running..."
+          else
+            echo "Unknown build status: $status"
+            exit 1
           fi
-          echo "Waiting for build to complete..."
           sleep 10
         done
+
 
 
     - name: Sync with Private Repository
