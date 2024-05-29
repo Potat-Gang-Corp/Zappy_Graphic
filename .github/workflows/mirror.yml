@@ -35,21 +35,17 @@ jobs:
         while true; do
           if [ "$build_status" == "SUCCESS" ]; then
             echo "Build succeeded."
-            echo "::set-output name=build_status::SUCCESS"
             exit 0
           elif [ "$build_status" == "FAILURE" ]; then
             echo "Build failed."
-            echo "::set-output name=build_status::FAILURE"
             exit 1
           elif [ "$build_status" == "ABORTED" ]; then
             echo "Build was aborted."
-            echo "::set-output name=build_status::ABORTED"
             exit 1
           elif [ "$build_status" == "null" ]; then
             echo "Build is still running..."
           else
             echo "Unknown build status: $build_status"
-            echo "::set-output name=build_status::UNKNOWN"
             exit 1
           fi
           sleep 10
