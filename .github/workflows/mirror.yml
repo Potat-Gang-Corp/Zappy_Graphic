@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  BUILD_STATUS: null
+
 jobs:
   sync_graphic:
     runs-on: ubuntu-latest
@@ -31,24 +34,20 @@ jobs:
         last_build_number=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
 
         while true; do
-          build_status=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
-          if [ "$build_status" == "SUCCESS" ]; then
+          BUILD_STATUS=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
+          if [ "$BUILD_STATUS" == "SUCCESS" ]; then
             echo "Build succeeded."
-            echo "::set-output name=build_status::SUCCESS"
             exit 0
-          elif [ "$build_status" == "FAILURE" ]; then
-            echo "::set-output name=build_status::FAILURE"
+          elif [ "$BUILD_STATUS" == "FAILURE" ]; then
             echo "Build failed."
             exit 1
-          elif [ "$build_status" == "ABORTED" ]; then
+          elif [ "$BUILD_STATUS" == "ABORTED" ]; then
             echo "Build was aborted."
-            echo "::set-output name=build_status::ABORTED"
             exit 1
-          elif [ "$build_status" == "null" ]; then
+          elif [ "$BUILD_STATUS" == "null" ]; then
             echo "Build is still running..."
           else
-            echo "Unknown build status: $build_status"
-            echo "::set-output name=build_status::UNKNOWN"
+            echo "Unknown build status: $BUILD_STATUS"
             exit 1
           fi
           sleep 10
@@ -57,7 +56,7 @@ jobs:
 
 
     - name: Sync with Private Repository
-      if: steps.jenkins_build.outputs.build_status == 'SUCCESS'
+      if: $BUILD_STATUS == 'SUCCESS'
       env:
         SSH_PRIVATE_KEY: ${{ secrets.POTAT_KEY }}
       run: |
