@@ -34,7 +34,7 @@ jobs:
 
         # Fonction pour vérifier le statut du build
         check_build_status() {
-          build_status=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/${1}/api/json" --user ${JENKINS_USER}:1155db0fa8072219ec71fcd65c5f207072 | jq -r '.result')
+          build_status=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:1155db0fa8072219ec71fcd65c5f207072 | jq -r '.result')
           echo "Build status: $build_status"
           echo $build_status
         }
