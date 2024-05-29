@@ -24,6 +24,7 @@ jobs:
 
         echo "Obtained Jenkins crumb: $crumb"
 
+        echo "Triggering Jenkins build..."
         build_url=$(curl -X POST "https://potatgangcorp.fr/${JENKINS_JOB_NAME}build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
 
         queue_url=$(echo $build_url | sed 's,/queue/.*,/queue/,')
