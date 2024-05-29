@@ -26,7 +26,7 @@ jobs:
 
         echo "Triggering Jenkins build..."
 
-        build_url=$(curl -X POST "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
+        build_url=$(curl -X POST "https://potatgangcorp.fr/jenkins/job/${JENKINS_JOB_NAME}/build" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "'Jenkins-Crumb: $crumb'")
         
         echo "Triggered Jenkins build: $build_url"
 
