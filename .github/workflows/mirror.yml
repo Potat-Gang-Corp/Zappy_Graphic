@@ -20,25 +20,26 @@ jobs:
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
         JENKINS_JOB_NAME: "jenkins/job/Zappy/job/Graphic/job/Build_all/"
       run: |
-        crumb_response=$(curl -s "https://potatgangcorp.fr/jenkins/crumbIssuer/api/json" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
-        crumb=$(echo $crumb_response | jq -r '.crumb')
-        echo "Obtained Jenkins crumb: $crumb"
-
-        build_url="https://potatgangcorp.fr/${JENKINS_JOB_NAME}/build"
-        job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:${JENKINS_PASSWORD} -H "Jenkins-Crumb:$crumb")
+        # Démarrer le job sans besoin de Crumb
+        build_url="${JENKINS_URL}/${JENKINS_JOB_NAME}/build"
+        job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:1155db0fa8072219ec71fcd65c5f207072)
         echo "Job started: $job_response"
 
+        # Attendre quelques secondes pour permettre à Jenkins de démarrer le job et obtenir le numéro de build
         sleep 10
 
-        last_build_number=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_PASSWORD})
+        # Obtenir le numéro du dernier build
+        last_build_number=$(curl -s "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:1155db0fa8072219ec71fcd65c5f207072)
         echo "Last build number: $last_build_number"
 
+        # Fonction pour vérifier le statut du build
         check_build_status() {
-          build_status=$(curl -s "https://potatgangcorp.fr/job/${JENKINS_JOB_NAME}/${1}/api/json" --user ${JENKINS_USER}:${JENKINS_PASSWORD} | jq -r '.result')
+          build_status=$(curl -s "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/${1}/api/json" --user ${JENKINS_USER}:1155db0fa8072219ec71fcd65c5f207072 | jq -r '.result')
           echo "Build status: $build_status"
           echo $build_status
         }
 
+        # Boucle pour vérifier le statut du build jusqu'à ce qu'il soit terminé
         while true; do
           status=$(check_build_status $last_build_number)
           if [ "$status" == "SUCCESS" ]; then
