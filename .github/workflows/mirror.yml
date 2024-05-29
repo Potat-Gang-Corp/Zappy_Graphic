@@ -29,7 +29,7 @@ jobs:
         build_url="${JENKINS_URL}${JENKINS_JOB_NAME}/build"
         job_response=$(curl -s -X POST "$build_url" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
 
-        sleep 5
+        sleep 7
 
         last_build_number=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
 
