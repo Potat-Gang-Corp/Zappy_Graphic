@@ -19,7 +19,12 @@ jobs:
         JENKINS_USER: ${{ secrets.JENKINS_USER }}
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
         JENKINS_JOB_NAME: "Zappy/Graphic/Build_all"
-      run: |
+      run: |        
+        crumb=$(curl -u ${JENKINS_USER}:${JENKINS_PASSWORD} -s "${JENKINS_URL}/crumbIssuer/api/json" | jq -r '.crumb')
+        crumb_field=$(curl -u ${JENKINS_USER}:${JENKINS_PASSWORD} -s "${JENKINS_URL}/crumbIssuer/api/json" | jq -r '.crumbRequestField')
+
+        echo "Obtained Jenkins crumb: $crumb"
+
         echo "Triggering Jenkins build..."
         build_url=$(curl -X POST "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/buildWithParameters" \
           --user ${JENKINS_USER}:${JENKINS_PASSWORD} \
