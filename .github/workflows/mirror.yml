@@ -35,29 +35,24 @@ jobs:
         last_build_number=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/lastBuild/buildNumber" --user ${JENKINS_USER}:${JENKINS_API_TOKEN})
         echo "Last build number: $last_build_number"
 
-        # Fonction pour vérifier le statut du build
-        check_build_status() {
-          build_status=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
-          echo "Build status: $build_status"
-          echo $build_status
-        }
+        build_status=$(curl -s "https://potatgangcorp.fr/${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
+        echo "Build status: $build_status"
 
         # Boucle pour vérifier le statut du build jusqu'à ce qu'il soit terminé
         while true; do
-          status=$(check_build_status)
-          if [ "$status" == "SUCCESS" ]; then
+          if [ "$build_status" == "SUCCESS" ]; then
             echo "Build succeeded."
             exit 0
-          elif [ "$status" == "FAILURE" ]; then
+          elif [ "$build_status" == "FAILURE" ]; then
             echo "Build failed."
             exit 1
-          elif [ "$status" == "ABORTED" ]; then
+          elif [ "$build_status" == "ABORTED" ]; then
             echo "Build was aborted."
             exit 1
-          elif [ "$status" == "null" ]; then
+          elif [ "$build_status" == "null" ]; then
             echo "Build is still running..."
           else
-            echo "Unknown build status: $status"
+            echo "Unknown build status: $build_status"
             exit 1
           fi
           sleep 10
