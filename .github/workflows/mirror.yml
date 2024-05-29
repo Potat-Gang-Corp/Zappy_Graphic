@@ -20,7 +20,7 @@ jobs:
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
         JENKINS_JOB_NAME: "Zappy/Graphic/Build All"
       run: |
-        # Trigger Jenkins build
+        echo "Triggering Jenkins build..."
         build_url=$(curl -X POST "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/buildWithParameters" \
           --user ${JENKINS_USER}:${JENKINS_PASSWORD} \
           --silent --write-out "%{redirect_url}")
