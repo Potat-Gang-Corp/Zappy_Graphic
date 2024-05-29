@@ -18,7 +18,7 @@ jobs:
         JENKINS_URL: ${{ secrets.JENKINS_URL }}
         JENKINS_USER: ${{ secrets.JENKINS_USER }}
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
-        JENKINS_JOB_NAME: "job/Zappy/job/Graphic/job/Build_all/"
+        JENKINS_JOB_NAME: "jenkins/job/Zappy/job/Graphic/job/Build_all/"
       run: |        
         crumb=$(curl -v GET https://potatgangcorp.fr/jenkins/crumbIssuer/api/json --user ${JENKINS_USER}:${JENKINS_PASSWORD})
 
