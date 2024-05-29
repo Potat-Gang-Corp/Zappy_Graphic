@@ -57,7 +57,6 @@ jobs:
 
 
     - name: Sync with Private Repository
-      run: echo "Status $steps.jenkins_build.outputs.build_status"
       if: steps.jenkins_build.outputs.build_status == 'SUCCESS'
       env:
         SSH_PRIVATE_KEY: ${{ secrets.POTAT_KEY }}
