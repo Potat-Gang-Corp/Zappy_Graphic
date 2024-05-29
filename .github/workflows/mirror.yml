@@ -40,6 +40,7 @@ jobs:
           sleep 10
         done
 
+        echo "Jenkins build started"
         while true; do
           build_status=$(curl --user ${JENKINS_USER}:${JENKINS_PASSWORD} --silent "${JENKINS_URL}/job/${JENKINS_JOB_NAME}/${build_number}/api/json" | jq -r '.result')
 
