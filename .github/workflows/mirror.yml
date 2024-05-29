@@ -20,8 +20,7 @@ jobs:
         JENKINS_PASSWORD: ${{ secrets.JENKINS_PASSWORD }}
         JENKINS_JOB_NAME: "Zappy/Graphic/Build_all"
       run: |        
-        crumb=$(curl -u ${JENKINS_USER}:${JENKINS_PASSWORD} -s "${JENKINS_URL}/crumbIssuer/api/json" | jq -r '.crumb')
-        crumb_field=$(curl -u ${JENKINS_USER}:${JENKINS_PASSWORD} -s "${JENKINS_URL}/crumbIssuer/api/json" | jq -r '.crumbRequestField')
+        crumb=$(curl -v -X GET http://potatgangcorp.fr/jenkins/crumbIssuer/api/json ${JENKINS_USER}:${JENKINS_PASSWORD})
 
         echo "Obtained Jenkins crumb: $crumb"
 
