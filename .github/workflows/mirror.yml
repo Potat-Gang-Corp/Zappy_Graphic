@@ -37,26 +37,28 @@ jobs:
           BUILD_STATUS=$(curl -s "${JENKINS_URL}${JENKINS_JOB_NAME}/${last_build_number}/api/json" --user ${JENKINS_USER}:${JENKINS_API_TOKEN} | jq -r '.result')
           if [ "$BUILD_STATUS" == "SUCCESS" ]; then
             echo "Build succeeded."
+            echo "BUILD_STATUS=SUCCESS" >> $GITHUB_ENV
             exit 0
           elif [ "$BUILD_STATUS" == "FAILURE" ]; then
             echo "Build failed."
+            echo "BUILD_STATUS=FAILURE" >> $GITHUB_ENV
             exit 1
           elif [ "$BUILD_STATUS" == "ABORTED" ]; then
             echo "Build was aborted."
+            echo "BUILD_STATUS=ABORTED" >> $GITHUB_ENV
             exit 1
           elif [ "$BUILD_STATUS" == "null" ]; then
             echo "Build is still running..."
           else
             echo "Unknown build status: $BUILD_STATUS"
+            echo "BUILD_STATUS=UNKNOWN" >> $GITHUB_ENV
             exit 1
           fi
           sleep 10
         done
 
-
-
     - name: Sync with Private Repository
-      if: $BUILD_STATUS == 'SUCCESS'
+      if: env.BUILD_STATUS == 'SUCCESS'
       env:
         SSH_PRIVATE_KEY: ${{ secrets.POTAT_KEY }}
       run: |
