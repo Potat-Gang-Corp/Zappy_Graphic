@@ -80,5 +80,7 @@ jobs:
 
         cd private-repo
         git add Graphic/
-        git commit -m "[+] Sync Graphic repository with the final one"
+        git commit -m "[+] Sync Graphic repository with the final one
+        
+        Co-authored-by: Nom de l'Auteur <safwane.mkhinini@epitech.eu>"
         git push origin main
