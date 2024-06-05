@@ -11,6 +11,19 @@
 #include "Server.hpp"
 #include <raylib.h>
 
+void gameloop(Server &server)
+{
+    InitWindow(800, 600, "Zappy GUI");
+    SetTargetFPS(60);
+    while (!WindowShouldClose()) {
+        server.send_data("msz\n");
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        EndDrawing();
+    }
+    CloseWindow();
+}
+
 int main(int argc, char **argv) 
 {
     // Raylib raylib(800, 800, "Zappy", "LOG_NONE");
@@ -20,9 +33,6 @@ int main(int argc, char **argv)
     }
     std::string port = argv[2];
     std::string host = argv[4];
-
-    InitWindow(800, 600, "Zappy GUI");
-    SetTargetFPS(60);
     
     Server server;
     if (server.connect_server(port, host) != 0) {
@@ -30,22 +40,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    server.on_receive = [](const std::string& data) {
-        std::cout << "Data received from server: " << data << std::endl;
-    };
+    server.listening();
 
-    server.send_data("msz\n");
+    std::thread gameThread(gameloop, std::ref(server));
 
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-        EndDrawing();
-    }
-
+    gameThread.join();
     server.stop();
-
-    CloseWindow();
-
     return 0;
 }
