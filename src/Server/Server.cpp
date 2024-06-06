@@ -6,6 +6,7 @@
 */
 
 #include "Server.hpp"
+#include "Factory.hpp"
 
 Server::Server() : resolver(io_context), socket(io_context) {}
 
@@ -97,18 +98,15 @@ void Server::handle_read(const boost::system::error_code& error, std::size_t byt
 
 void Server::listening()
 {
-    std::unordered_map<std::string, std::function<void(const std::string&)>> dispatcher = {
-        {"msz", handle_msz},
-        {"bct", handle_bct},
-        {"tna", handle_tna}
-    };
-
-    on_receive = [&dispatcher](const std::string& data) {
+    on_receive = [](const std::string& data) {
+        std::cout << "Data received from server: " << data;
         std::string prefix = data.substr(0, 3);
-        auto it = dispatcher.find(prefix);
-        if (it != dispatcher.end())
-            it->second(data);
-        else
+
+        ICommand* command = CommandFactory::getInstance()->getCommand(prefix);
+        if (command) {
+            command->execute(data);
+        } else {
             std::cout << "Unknown message type: " << data << std::endl;
+        }
     };
 }

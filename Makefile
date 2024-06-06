@@ -13,7 +13,7 @@ RESET  := \033[0m
 
 SRC_DIR := src
 
-RAY_LIB := -lraylib -lm -lpthread -ldl -lrt -lX11
+RAY_LIB := -lraylib -lm -lpthread -ldl -lrt -lX11 -g3
 
 COVERAGE_FLAGS := -fprofile-arcs -ftest-coverage
 
@@ -24,7 +24,10 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Player/*.cpp \
 			$(SRC_DIR)/Team/*.cpp \
 			$(SRC_DIR)/Raylib/*.cpp \
-			$(SRC_DIR)/Server/*.cpp)
+			$(SRC_DIR)/Server/*.cpp \
+			$(SRC_DIR)/ICommand/*.cpp \
+			$(SRC_DIR)/Commands/*.cpp \
+			$(SRC_DIR)/Factory/*.cpp )
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -34,7 +37,10 @@ INCLUDES := -I./src \
 			-I./src/Player \
 			-I./src/Team \
 			-I./src/Raylib \
-			-I./src/Server
+			-I./src/Server \
+			-I./src/Commands \
+			-I./src/ICommand \
+			-I./src/Factory
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)

@@ -42,9 +42,15 @@ int main(int argc, char **argv)
 
     server.listening();
 
-    std::thread gameThread(gameloop, std::ref(server));
+    while (true)
+    {
+        // server.send_data("msz\n");
+        sleep(1);
+    }
+    
+    // std::thread gameThread(gameloop, std::ref(server));
 
-    gameThread.join();
+    // gameThread.join();
     server.stop();
     return 0;
 }
