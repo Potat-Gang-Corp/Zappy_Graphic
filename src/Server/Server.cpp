@@ -65,14 +65,14 @@ void Server::listening()
 {
     while (true)
     {
-        // server.send_data("msz\n");
+
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;
         if (response != "ko" && response != "WELCOME\n") {
             std::string prefix = response.substr(0, 3);
-
             ICommand* command = CommandFactory::getInstance()->getCommand(prefix);
             if (command) {
+                std::cout << "Executing command: " << command << std::endl;
                 command->execute(response);
             } else {
                 std::cout << "Unknown message type: " << response << std::endl;

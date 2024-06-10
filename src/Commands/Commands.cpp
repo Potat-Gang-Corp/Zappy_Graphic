@@ -1,21 +1,15 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2023
 ** Zappy_Graphic
 ** File description:
-** Msz
+** Commands.cpp
 */
 
-#pragma once
+#include <iostream>
+#include <sstream>
+#include <ostream>
 
-#ifndef MSZ_HPP_
-    #define MSZ_HPP_
-
-    #include "ICommand.hpp"
-    #include <iostream>
-
-class MszCommand : public ICommand {
-public:
-    void execute(const std::string& data) override {
+void msz_command(const std::string& data) {
         std::cout << "Handling msz: " << data << std::endl;
         std::istringstream iss(data);
         std::string command;
@@ -25,7 +19,4 @@ public:
         iss >> x;
         iss >> y;
         std::cout << "X: " << x << "Y: " << y << std::endl;
-    }
-};
-
-#endif /* !MSZ_HPP_ */
+}
