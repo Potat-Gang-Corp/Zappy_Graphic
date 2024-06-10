@@ -271,3 +271,110 @@ void tna_command(const std::string& data)
     iss >> team_name;
     std::cout << "Team name: " << team_name << std::endl;
 }
+
+void pdi_command(const std::string& data)
+{
+    std::cout << "Handling pdi: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string player_id;
+    iss >> command;
+    iss >> player_id;
+    std::cout << "Player id: " << player_id << std::endl;
+}
+
+void enw_command(const std::string &data)
+{
+    std::cout << "Handling enw: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string egg_id;
+    std::string player_id;
+    std::string x;
+    std::string y;
+    iss >> command;
+    iss >> egg_id;
+    iss >> player_id;
+    iss >> x;
+    iss >> y;
+    std::cout << "Egg id: " << egg_id << std::endl;
+    std::cout << "Player id: " << player_id << std::endl;
+    std::cout << "X: " << x << std::endl;
+    std::cout << "Y: " << y << std::endl;
+}
+
+void ebo_command(const std::string &data)
+{
+    std::cout << "Handling ebo: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string egg_id;
+    iss >> command;
+    iss >> egg_id;
+    std::cout << "Egg id: " << egg_id << std::endl;
+}
+
+void edi_command(const std::string &data)
+{
+    std::cout << "Handling edi: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string egg_id;
+    iss >> command;
+    iss >> egg_id;
+    std::cout << "Egg id: " << egg_id << std::endl;
+}
+
+void sgt_command (const std::string &data)
+{
+    std::cout << "Handling sgt: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string time_unit;
+    iss >> command;
+    iss >> time_unit;
+    std::cout << "Time unit: " << time_unit << std::endl;
+}
+
+void sst_command (const std::string &data)
+{
+    std::cout << "Handling sst: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string time_unit;
+    iss >> command;
+    iss >> time_unit;
+    std::cout << "Time unit: " << time_unit << std::endl;
+}
+
+void seg_command (const std::string &data)
+{
+    std::cout << "Handling seg: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string team_name;
+    iss >> command;
+    iss >> team_name;
+    std::cout << "Team name: " << team_name << std::endl;
+}
+
+void smg_command (const std::string &data)
+{
+    std::cout << "Handling smg: " << data << std::endl;
+    std::istringstream iss(data);
+    std::string command;
+    std::string message;
+    iss >> command;
+    iss >> message;
+    std::cout << "Message: " << message << std::endl;
+}
+
+void suc_command (const std::string &data)
+{
+    std::cout << "Handling suc: " << data << std::endl;
+}
+
+void sbp_command (const std::string &data)
+{
+    std::cout << "Handling sbp: " << data << std::endl;
+}

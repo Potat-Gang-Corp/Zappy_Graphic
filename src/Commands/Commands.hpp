@@ -24,5 +24,14 @@ void plv_command(const std::string& data);
 void pnw_command(const std::string& data);
 void ppo_command(const std::string& data);
 void tna_command(const std::string& data);
-
+void pdi_command(const std::string& data);
+void enw_command(const std::string &data);
+void ebo_command(const std::string &data);
+void edi_command(const std::string &data);
+void sgt_command (const std::string &data);
+void sst_command (const std::string &data);
+void seg_command (const std::string &data);
+void smg_command (const std::string &data);
+void suc_command (const std::string &data);
+void sbp_command (const std::string &data);
 #endif /* !COMMANDS_HPP_ */

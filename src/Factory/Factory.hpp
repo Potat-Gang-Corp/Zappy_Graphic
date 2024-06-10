@@ -37,7 +37,18 @@ class CommandFactory {
                 {"pic", pic_command},
                 {"pie", pie_command},
                 {"pfk", pfk_command},
-                {"pdr", pdr_command}
+                {"pdr", pdr_command},
+                {"pgt", pgt_command},
+                {"pdi", pdi_command},
+                {"enw", enw_command},
+                {"ebo", ebo_command},
+                {"edi", edi_command},
+                {"sgt", sgt_command},
+                {"sst", sst_command},
+                {"seg", seg_command},
+                {"smg", smg_command},
+                {"suc", suc_command},
+                {"sbp", sbp_command},
             };
             commands = mymap;
         }
