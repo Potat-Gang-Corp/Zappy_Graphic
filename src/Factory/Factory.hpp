@@ -10,21 +10,9 @@
 #ifndef FACTORY_HPP_
     #define FACTORY_HPP_
 
+    #include "Commands.hpp"
     #include <unordered_map>
     #include <memory>
-    #include "Msz.hpp"
-    #include "Bct.hpp"
-    #include "Tna.hpp"
-    #include "Pnw.hpp"
-    #include "Ppo.hpp"
-    #include "Plv.hpp"
-    #include "Pin.hpp"
-    #include "Pex.hpp"
-    #include "Pbc.hpp"
-    #include "Pic.hpp"
-    #include "Pie.hpp"
-    #include "Pfk.hpp"
-    #include "Pdr.hpp"
 
 class CommandFactory {
     public:
@@ -49,50 +37,34 @@ class CommandFactory {
                 {"pic", pic_command},
                 {"pie", pie_command},
                 {"pfk", pfk_command},
-                {"pdr", pdr_command},
-
-
-
-                // {"bct", std::make_shared<BctCommand>()},
-                // {"tna", std::make_shared<TnaCommand>()},
-                // {"pnw", std::make_shared<PnwCommand>()},
-                // {"ppo", std::make_shared<PpoCommand>()},
-                // {"plv", std::make_shared<PlvCommand>()}, 
-                // {"pin", std::make_shared<PinCommand>()},
-                // {"pex", std::make_shared<PexCommand>()},
-                // {"pbc", std::make_shared<PbcCommand>()},
-                // {"pic", std::make_shared<PicCommand>()},
-                // {"pie", std::make_shared<PieCommand>()},
-                // {"pfk", std::make_shared<PfkCommand>()},
-                // {"pdr", std::make_shared<PdrCommand>()},
-
-
+                {"pdr", pdr_command}
             };
             commands = mymap;
         }
 
-        std::map<std::string, std::shared_ptr<ICommand>> getCommands()
+        std::map<std::string, std::function<void(const std::string&)>> getCommands()
         {
             return commands;
         }
 
-        ICommand* getCommand(const std::string& commandType)
+        void execCommand(const std::string& commandType)
         {
-            if (commandType.empty()) {
+            std::string prefix = commandType.substr(0, 3);
+            if (prefix.empty()) {
                 std::cerr << "Error: Command type is empty." << std::endl;
-                return nullptr;
+                return;
             }
-            auto it = commands.find(commandType);
+            auto it = commands.find(prefix);
             if (it != commands.end()) {
-                return it->second.get();
+                return it->second(commandType);
             } else {
-                std::cerr << "Command not found: " << commandType << std::endl;
-                return nullptr;
+                std::cerr << "Command not found: " << prefix << std::endl;
+                return;
             }
         }
 
     private:
-        std::map<std::string, std::shared_ptr<ICommand>> commands;
+        std::map<std::string, std::function<void(const std::string&)>> commands;
 };
-void msz_command(const std::string& data);
+
 #endif /* !FACTORY_HPP_ */
