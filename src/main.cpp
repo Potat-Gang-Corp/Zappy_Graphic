@@ -10,6 +10,7 @@
 #include "PlayerData.hpp"
 #include "Server.hpp"
 #include <raylib.h>
+#include <unistd.h>
 
 void gameloop(Server &server)
 {
@@ -26,7 +27,6 @@ void gameloop(Server &server)
 
 int main(int argc, char **argv) 
 {
-    // Raylib raylib(800, 800, "Zappy", "LOG_NONE");
     if (argc != 5) {
         std::cerr << "USAGE: " << argv[0] << " -p port -h machine" << std::endl;
         return 1;
@@ -40,17 +40,15 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    server.listening();
-
     while (true)
     {
         // server.send_data("msz\n");
+        std::string response = server.receive_data();
+        std::cout << "Data received from server: " << response << std::endl;
         sleep(1);
     }
-    
-    // std::thread gameThread(gameloop, std::ref(server));
 
-    // gameThread.join();
     server.stop();
     return 0;
 }
+
