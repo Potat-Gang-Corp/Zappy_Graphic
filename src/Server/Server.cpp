@@ -1,4 +1,12 @@
+/*
+** EPITECH PROJECT, 2024
+** Zappy_Graphic
+** File description:
+** Server
+*/
+
 #include "Server.hpp"
+#include "Factory.hpp"
 
 Server::Server() : resolver(io_service), socket(io_service) {}
 
@@ -50,5 +58,25 @@ std::string Server::receive_data()
     } catch (const boost::system::system_error& e) {
         std::cerr << "Receive failed: " << e.what() << std::endl;
         return "";
+    }
+}
+
+void Server::listening()
+{
+    while (true)
+    {
+        // server.send_data("msz\n");
+        std::string response = receive_data();
+        std::cout << "Data received from server: " << response << std::endl;
+        if (response != "ko" && response != "WELCOME\n") {
+            std::string prefix = response.substr(0, 3);
+
+            ICommand* command = CommandFactory::getInstance()->getCommand(prefix);
+            if (command) {
+                command->execute(response);
+            } else {
+                std::cout << "Unknown message type: " << response << std::endl;
+            }
+        }
     }
 }

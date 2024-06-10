@@ -40,15 +40,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    while (true)
-    {
-        // server.send_data("msz\n");
-        std::string response = server.receive_data();
-        std::cout << "Data received from server: " << response << std::endl;
-        sleep(1);
-    }
+    std::thread listeningThread(&Server::listening, &server);
 
     server.stop();
+    listeningThread.join();
     return 0;
 }
 

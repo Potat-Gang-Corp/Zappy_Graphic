@@ -14,6 +14,8 @@ public:
     void stop();
     void send_data(const std::string& data);
     std::string receive_data();
+    void listening();
+    std::function<void(const std::string&)> on_receive;
 
 private:
     boost::asio::io_service io_service;
