@@ -59,3 +59,10 @@ std::map<Ressources::RessourceType, int> Player::getInventory()
 {
     return _playerData._inventory;
 }
+
+void Player::setPosition(int x, int y, Orientation orientation)
+{
+    _playerData._posX = x;
+    _playerData._posY = y;
+    _playerData._orientation = orientation;
+}

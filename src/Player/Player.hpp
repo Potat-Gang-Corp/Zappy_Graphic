@@ -23,6 +23,7 @@ class Player {
         int getPosX() const;
         int getPosY() const;
         int getLevel() const;
+        void setPosition(int x, int y, Orientation orientation);
         std::string getTeamName();
         Orientation getOrientation();
         PlayerData getPlayerData();

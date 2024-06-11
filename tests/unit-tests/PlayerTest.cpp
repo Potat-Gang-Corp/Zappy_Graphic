@@ -16,7 +16,7 @@ Test(PlayerTest, ConstructorTest) {
     Orientation orientation = Orientation::NORTH;
     int level = 2;
 
-    Player player(number, posX, posY, teamName, orientation, level);
+    Player player(number, posX, posY, teamName, orientation, {}, level);
     PlayerData data = player.getPlayerData();
 
     cr_assert_eq(data._number, number, "Expected number: %d, but got: %d", number, data._number);
@@ -35,7 +35,7 @@ Test(PlayerTest, GettersTest) {
     Orientation orientation = Orientation::NORTH;
     int level = 2;
 
-    Player player(number, posX, posY, teamName, orientation, level);
+    Player player(number, posX, posY, teamName, orientation, {}, level);
     PlayerData data = player.getPlayerData();
 
     cr_assert_eq(player.getNumber(), number, "Expected number: %d, but got: %d", number, player.getNumber());

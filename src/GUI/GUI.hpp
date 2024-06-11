@@ -28,6 +28,9 @@ class GUI {
         }
         void initWindow(int height, int width, const std::string &WindowName);
         void AddPlayer(Player player);
+        std::map<int, std::vector<Player>> getPlayers() {
+            return _players;
+        }
 
     private:
         std::map<int, std::vector<Player>> _players;

@@ -17,7 +17,7 @@ Test(TeamTest, ConstructorTest) {
 
 Test(TeamTest, AddPlayerTest) {
     Team team("Blue");
-    Player player(1, 0, 0, "Player1", Orientation::NORTH);
+    Player player(1, 0, 0, "Player1", Orientation::NORTH, {});
 
     team.addPlayer(player);
 
@@ -27,8 +27,8 @@ Test(TeamTest, AddPlayerTest) {
 
 Test(TeamTest, RemovePlayerTest) {
     Team team("Blue");
-    Player player1(1, 0, 0, "Player1", Orientation::NORTH);
-    Player player2(2, 0, 0, "Player2", Orientation::NORTH);
+    Player player1(1, 0, 0, "Player1", Orientation::NORTH, {});
+    Player player2(2, 0, 0, "Player2", Orientation::NORTH, {});
 
     team.addPlayer(player1);
     team.addPlayer(player2);

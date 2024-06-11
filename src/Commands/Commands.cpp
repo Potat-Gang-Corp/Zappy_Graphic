@@ -49,7 +49,6 @@ void bct_command(const std::string& data)
     }
 }
 
-
 void pbc_command(const std::string& data)
 {
     //broadcast player id message
@@ -239,15 +238,9 @@ void ppo_command(const std::string& data)
     std::string x;
     std::string y;
     std::string orientation;
-    iss >> command;
-    iss >> player_id;
-    iss >> x;
-    iss >> y;
-    iss >> orientation;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "X: " << x << std::endl;
-    std::cout << "Y: " << y << std::endl;
-    std::cout << "Orientation: " << orientation << std::endl;
+    iss >> command >> player_id >> x >> y >> orientation;
+    player_id = player_id.substr(1);
+    GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setPosition(std::stoi(x), std::stoi(y), static_cast<Orientation>(std::stoi(orientation)));
 }
 
 void tna_command(const std::string& data)
