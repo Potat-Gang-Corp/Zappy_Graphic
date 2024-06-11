@@ -12,6 +12,7 @@
 #include "Server.hpp"
 #include <raylib.h>
 #include <unistd.h>
+#include "Map.hpp"
 
 int main(int argc, char **argv) 
 {
@@ -21,7 +22,9 @@ int main(int argc, char **argv)
     }
     std::string port = argv[2];
     std::string host = argv[4];
-    
+
+
+    Map map;    
     Server server;
     if (server.connect_server(port, host) != 0) {
         std::cerr << "Failed to connect to server" << std::endl;
@@ -29,6 +32,8 @@ int main(int argc, char **argv)
     }
 
     std::thread listeningThread(&Server::listening, &server);
+
+    map.printMap();
 
     server.stop();
     listeningThread.join();

@@ -8,54 +8,50 @@
 #include <iostream>
 #include <sstream>
 #include <ostream>
+#include "Map.hpp"
 
 void msz_command(const std::string& data)
 {
-    std::cout << "Handling msz: " << data << std::endl;
+    // std::cout << "Handling msz: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string x;
     std::string y;
-    iss >> command;
-    iss >> x;
-    iss >> y;
-    std::cout << "X: " << x << "Y: " << y << std::endl;
+    iss >> command >> x >> y;
+    Map::getInstance()->setMapSize(std::stoi(x), std::stoi(y));
+    // std::cout << "X: " << x << "Y: " << y << std::endl;
 }
 
 void bct_command(const std::string& data)
 {
-    std::cout << "Handling bct: " << data << std::endl;
+    // std::cout << "Handling bct: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
-    std::string x;
-    std::string y;
-    std::string linemate;
-    std::string deraumere;
-    std::string sibur;
-    std::string mendiane;
-    std::string phiras;
-    std::string thystame;
-    std::string food;
-    iss >> command;
-    iss >> x;
-    iss >> y;
-    iss >> food;
-    iss >> linemate;
-    iss >> deraumere;
-    iss >> sibur;
-    iss >> mendiane;
-    iss >> phiras;
-    iss >> thystame;
-    std::cout << "X: " << x << std::endl;
-    std::cout << "Y: " << y << std::endl;
-    std::cout << "Food: " << food << std::endl;
-    std::cout << "Linemate: " << linemate << std::endl;
-    std::cout << "Deraumere: " << deraumere << std::endl;
-    std::cout << "Sibur: " << sibur << std::endl;
-    std::cout << "Mendiane: " << mendiane << std::endl;
-    std::cout << "Phiras: " << phiras << std::endl;
-    std::cout << "Thystame: " << thystame << std::endl;
+    int x, y;
+    int food, linemate, deraumere, sibur, mendiane, phiras, thystame;
+    Map *gameMap = Map::getInstance();
+
+    iss >> command >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
+
+    // std::cout << "X: " << x << std::endl;
+    // std::cout << "Y: " << y << std::endl;
+    // std::cout << "Food: " << food << std::endl;
+    // std::cout << "Linemate: " << linemate << std::endl;
+    // std::cout << "Deraumere: " << deraumere << std::endl;
+    // std::cout << "Sibur: " << sibur << std::endl;
+    // std::cout << "Mendiane: " << mendiane << std::endl;
+    // std::cout << "Phiras: " << phiras << std::endl;
+    // std::cout << "Thystame: " << thystame << std::endl;
+
+    gameMap->addResource(x, y, Resource::Food, food);
+    gameMap->addResource(x, y, Resource::Linemate, linemate);
+    gameMap->addResource(x, y, Resource::Deraumere, deraumere);
+    gameMap->addResource(x, y, Resource::Sibur, sibur);
+    gameMap->addResource(x, y, Resource::Mendiane, mendiane);
+    gameMap->addResource(x, y, Resource::Phiras, phiras);
+    gameMap->addResource(x, y, Resource::Thystame, thystame);
 }
+
 
 void pbc_command(const std::string& data)
 {

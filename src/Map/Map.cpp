@@ -10,3 +10,37 @@
 Map::Map() {}
 
 Map::~Map() {}
+
+void Map::setMapSize(int sizeX, int sizeY)
+{
+    _sizeX = sizeX;
+    _sizeY = sizeY;
+}
+
+void Map::addResource(int x, int y, Resource resource, int quantity)
+{
+    _map[{x, y}][resource] += quantity;
+}
+
+void Map::removeResource(int x, int y, Resource resource, int quantity)
+{
+    _map[{x, y}][resource] -= quantity;
+}
+
+void Map::printResources(int x, int y)
+{
+    ResourceMap resources = getResources(x, y);
+    std::cout << "Resources at (" << x << ", " << y << "):" << std::endl;
+    for (const auto& [resource, quantity] : resources) {
+        std::cout << "  Resource " << resourceToString(resource) << ": " << quantity << std::endl;
+    }
+}
+
+void Map::printMap()
+{
+    for (int y = 0; y < _sizeY; y++) {
+        for (int x = 0; x < _sizeX; x++) {
+            printResources(x, y);
+        }
+    }
+}
