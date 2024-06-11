@@ -13,13 +13,22 @@
     #include <iostream>
     #include <raylib.h>
     #include <string>
+    #include "Player.hpp"
 
 class GUI {
     public:
-        GUI(int height, int width, const std::string &WindowName);
+        GUI();
         ~GUI();
+        static GUI *getInstance()
+        {
+            static GUI instance;
+            return &instance;
+        }
+        void initWindow(int height, int width, const std::string &WindowName);
+        void AddPlayer(Player player);
 
     private:
+        std::vector<Player> _players;
         int _screenH, _screenW;
         
 };

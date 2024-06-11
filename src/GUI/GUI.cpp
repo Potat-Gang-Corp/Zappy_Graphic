@@ -7,10 +7,19 @@
 
 #include "GUI.hpp"
 
-GUI::GUI(int height, int width, const std::string &WindowName) : _screenH(height), _screenW(width)
+GUI::GUI() {}
+
+GUI::~GUI() {}
+
+void GUI::initWindow(int height, int width, const std::string &WindowName)
 {
+    _screenH = height;
+    _screenW = width;
     InitWindow(_screenH, _screenW, WindowName.c_str());
     SetTargetFPS(144);
 }
 
-GUI::~GUI() {}
+void GUI::AddPlayer(Player player)
+{
+    _players.push_back(player);
+}

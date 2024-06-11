@@ -9,6 +9,7 @@
 #include <sstream>
 #include <ostream>
 #include "Map.hpp"
+#include "Player.hpp"
 
 void msz_command(const std::string& data)
 {
@@ -32,16 +33,6 @@ void bct_command(const std::string& data)
     Map *gameMap = Map::getInstance();
 
     iss >> command >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
-
-    // std::cout << "X: " << x << std::endl;
-    // std::cout << "Y: " << y << std::endl;
-    // std::cout << "Food: " << food << std::endl;
-    // std::cout << "Linemate: " << linemate << std::endl;
-    // std::cout << "Deraumere: " << deraumere << std::endl;
-    // std::cout << "Sibur: " << sibur << std::endl;
-    // std::cout << "Mendiane: " << mendiane << std::endl;
-    // std::cout << "Phiras: " << phiras << std::endl;
-    // std::cout << "Thystame: " << thystame << std::endl;
 
     gameMap->addResource(x, y, Ressources::RessourceType::FOOD, food);
     gameMap->addResource(x, y, Ressources::RessourceType::LINEMATE, linemate);
@@ -218,7 +209,6 @@ void plv_command(const std::string& data)
 
 void pnw_command(const std::string& data)
 {
-    std::cout << "Handling pnw: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
@@ -234,12 +224,9 @@ void pnw_command(const std::string& data)
     iss >> orientation;
     iss >> level;
     iss >> team_name;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "X: " << x << std::endl;
-    std::cout << "Y: " << y << std::endl;
-    std::cout << "Orientation: " << orientation << std::endl;
-    std::cout << "Level: " << level << std::endl;
-    std::cout << "Team name: " << team_name << std::endl;
+    Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
+    GUI::getInstance()->AddPlayer(player);
+    
 }
 
 void ppo_command(const std::string& data)
