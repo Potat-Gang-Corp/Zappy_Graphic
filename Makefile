@@ -29,7 +29,7 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Commands/*.cpp \
 			$(SRC_DIR)/Factory/*.cpp \
 			$(SRC_DIR)/GUI/*.cpp \
-			$(SRC_DIR)/Map/*.cpp 	\
+			$(SRC_DIR)/Map/*.cpp \
 			$(SRC_DIR)/Ressources/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
@@ -72,7 +72,6 @@ tests_run: $(TTarget)
 $(TARGET): $(OBJS)
 	@echo -e "$(YELLOW)Linking object files to create the target...$(RESET)"
 	@$(CXX) $(OBJS) -o $@ $(RAY_LIB) $(INCLUDES)
-	@$(RM) $(OBJS)
 	@echo -e "$(GREEN)Build completed successfully!$(RESET)"
 
 %.o: %.cpp
