@@ -27,7 +27,10 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Server/*.cpp \
 			$(SRC_DIR)/ICommand/*.cpp \
 			$(SRC_DIR)/Commands/*.cpp \
-			$(SRC_DIR)/Factory/*.cpp )
+			$(SRC_DIR)/Factory/*.cpp \
+			$(SRC_DIR)/GUI/*.cpp \
+			$(SRC_DIR)/Map/*.cpp 	\
+			$(SRC_DIR)/Ressources/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -40,7 +43,10 @@ INCLUDES := -I./src \
 			-I./src/Server \
 			-I./src/Commands \
 			-I./src/ICommand \
-			-I./src/Factory
+			-I./src/Factory \
+			-I./src/GUI \
+			-I./src/Map \
+			-I./src/Ressources
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)

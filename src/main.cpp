@@ -7,23 +7,11 @@
 
 // #include "Raylib.hpp"
 #include "Team.hpp"
+#include "GUI.hpp"
 #include "PlayerData.hpp"
 #include "Server.hpp"
 #include <raylib.h>
 #include <unistd.h>
-
-void gameloop(Server &server)
-{
-    InitWindow(800, 600, "Zappy GUI");
-    SetTargetFPS(60);
-    while (!WindowShouldClose()) {
-        server.send_data("msz\n");
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        EndDrawing();
-    }
-    CloseWindow();
-}
 
 int main(int argc, char **argv) 
 {
