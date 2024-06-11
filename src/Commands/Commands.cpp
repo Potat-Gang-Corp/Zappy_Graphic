@@ -43,13 +43,18 @@ void bct_command(const std::string& data)
     // std::cout << "Phiras: " << phiras << std::endl;
     // std::cout << "Thystame: " << thystame << std::endl;
 
-    gameMap->addResource(x, y, Resource::Food, food);
-    gameMap->addResource(x, y, Resource::Linemate, linemate);
-    gameMap->addResource(x, y, Resource::Deraumere, deraumere);
-    gameMap->addResource(x, y, Resource::Sibur, sibur);
-    gameMap->addResource(x, y, Resource::Mendiane, mendiane);
-    gameMap->addResource(x, y, Resource::Phiras, phiras);
-    gameMap->addResource(x, y, Resource::Thystame, thystame);
+    gameMap->addResource(x, y, Ressources::RessourceType::FOOD, food);
+    gameMap->addResource(x, y, Ressources::RessourceType::LINEMATE, linemate);
+    gameMap->addResource(x, y, Ressources::RessourceType::DERAUMERE, deraumere);
+    gameMap->addResource(x, y, Ressources::RessourceType::SIBUR, sibur);
+    gameMap->addResource(x, y, Ressources::RessourceType::MENDIANE, mendiane);
+    gameMap->addResource(x, y, Ressources::RessourceType::PHIRAS, phiras);
+    gameMap->addResource(x, y, Ressources::RessourceType::THYSTAME, thystame);
+
+    if (x == 9 && y == 9) {
+        gameMap->printMap();
+        exit(0);
+    }
 }
 
 

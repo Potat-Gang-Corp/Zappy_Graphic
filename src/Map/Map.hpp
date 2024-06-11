@@ -12,20 +12,10 @@
 
     #include <iostream>
     #include <map>
-
-enum class Resource {
-    Food,
-    Linemate,
-    Deraumere,
-    Sibur,
-    Mendiane,
-    Phiras,
-    Thystame,
-    // Ajoutez d'autres ressources si nécessaire
-};
+    #include "Ressources.hpp"
 
 using Coordinates = std::pair<int, int>;
-using ResourceMap = std::map<Resource, int>;
+using ResourceMap = std::map<Ressources::RessourceType, int>;
 
 class Map {
     public:
@@ -36,22 +26,22 @@ class Map {
             static Map instance;
             return &instance;
         }
-        void addResource(int x, int y, Resource resource, int quantity);
-        void removeResource(int x, int y, Resource resource, int quantity);
+        void addResource(int x, int y, Ressources::RessourceType resource, int quantity);
+        void removeResource(int x, int y, Ressources::RessourceType resource, int quantity);
         ResourceMap getResources(int x, int y) {
             return _map[{x, y}];
         }
         void printResources(int x, int y);
         void printMap();
-        std::string resourceToString(Resource resource) {
-            switch (resource) {
-                case Resource::Food: return "Food";
-                case Resource::Linemate: return "Linemate";
-                case Resource::Deraumere: return "Deraumere";
-                case Resource::Sibur: return "Sibur";
-                case Resource::Mendiane: return "Mendiane";
-                case Resource::Phiras: return "Phiras";
-                case Resource::Thystame: return "Thystame";
+        std::string resourceToString(Ressources::RessourceType ressource) {
+            switch (ressource) {
+                case Ressources::RessourceType::FOOD: return "Food";
+                case Ressources::RessourceType::LINEMATE: return "Linemate";
+                case Ressources::RessourceType::DERAUMERE: return "Deraumere";
+                case Ressources::RessourceType::SIBUR: return "Sibur";
+                case Ressources::RessourceType::MENDIANE: return "Mendiane";
+                case Ressources::RessourceType::PHIRAS: return "Phiras";
+                case Ressources::RessourceType::THYSTAME: return "Thystame";
                 // Ajoutez d'autres cas pour chaque ressource
                 default: return "Unknown";
             }

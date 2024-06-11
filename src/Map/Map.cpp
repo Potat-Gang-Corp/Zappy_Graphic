@@ -17,14 +17,14 @@ void Map::setMapSize(int sizeX, int sizeY)
     _sizeY = sizeY;
 }
 
-void Map::addResource(int x, int y, Resource resource, int quantity)
+void Map::addResource(int x, int y, Ressources::RessourceType ressource, int quantity)
 {
-    _map[{x, y}][resource] += quantity;
+    _map[{x, y}][ressource] += quantity;
 }
 
-void Map::removeResource(int x, int y, Resource resource, int quantity)
+void Map::removeResource(int x, int y, Ressources::RessourceType ressource, int quantity)
 {
-    _map[{x, y}][resource] -= quantity;
+    _map[{x, y}][ressource] -= quantity;
 }
 
 void Map::printResources(int x, int y)

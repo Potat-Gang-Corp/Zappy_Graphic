@@ -10,7 +10,7 @@
 
 class Ressources {
     public:
-        enum RessourceType {
+        enum class RessourceType {
             FOOD,
             LINEMATE,
             DERAUMERE,
