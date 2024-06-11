@@ -10,6 +10,7 @@
 #include <ostream>
 #include "Map.hpp"
 #include "Player.hpp"
+#include "GUI.hpp"
 
 void msz_command(const std::string& data)
 {

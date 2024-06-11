@@ -13,7 +13,9 @@
     #include <iostream>
     #include <raylib.h>
     #include <string>
+    #include <vector>
     #include "Player.hpp"
+    #include <map>
 
 class GUI {
     public:
@@ -28,7 +30,7 @@ class GUI {
         void AddPlayer(Player player);
 
     private:
-        std::vector<Player> _players;
+        std::map<int, std::vector<Player>> _players;
         int _screenH, _screenW;
         
 };
