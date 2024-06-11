@@ -7,7 +7,7 @@
 
 #include "Player.hpp"
 
-Player::Player(int number, int posX, int posY, std::string teamName, Orientation orientation, int lvl)
+Player::Player(int number, int posX, int posY, std::string teamName, Orientation orientation, std::map<Ressources::RessourceType, int> inventory, int lvl)
 {
     _playerData._number = number;
     _playerData._posX = posX;
@@ -15,6 +15,7 @@ Player::Player(int number, int posX, int posY, std::string teamName, Orientation
     _playerData._level = lvl;
     _playerData._teamName = teamName;
     _playerData._orientation = orientation;
+    _playerData._inventory = inventory;
 }
 
 Player::~Player() {}
@@ -54,3 +55,7 @@ PlayerData Player::getPlayerData()
     return _playerData;
 }
 
+std::map<Ressources::RessourceType, int> Player::getInventory()
+{
+    return _playerData._inventory;
+}

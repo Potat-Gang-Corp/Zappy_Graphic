@@ -25,6 +25,7 @@ struct PlayerData {
     int _posX, _posY;
     Orientation _orientation;
     std::string _teamName;
+    std::map<Ressources::RessourceType, int> _inventory;
 };
 
 #endif /* !PLAYERDATA_HPP_ */

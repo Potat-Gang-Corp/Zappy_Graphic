@@ -12,10 +12,12 @@
 
 #include <iostream>
 #include "PlayerData.hpp"
+#include <map>
+#include "../Ressources/Ressources.hpp"
 
 class Player {
     public:
-        Player(int number, int posX, int posY, std::string teamName, Orientation orientation, int level = 1);
+        Player(int number, int posX, int posY, std::string teamName, Orientation orientation, std::map<Ressources::RessourceType, int> inventory, int level = 1);
         ~Player();
         int getNumber() const;
         int getPosX() const;
@@ -24,6 +26,8 @@ class Player {
         std::string getTeamName();
         Orientation getOrientation();
         PlayerData getPlayerData();
+        std::map<Ressources::RessourceType, int> getInventory();
+
 
     private:
         PlayerData _playerData;

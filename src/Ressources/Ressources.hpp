@@ -9,16 +9,18 @@
 #define RESSOURCES_HPP_
 
 class Ressources {
-    enum Tristate {
-        
-    }
     public:
-        Ressources();
-        ~Ressources();
-
-    protected:
-
-    private:
+        enum RessourceType {
+            FOOD,
+            LINEMATE,
+            DERAUMERE,
+            SIBUR,
+            MENDIANE,
+            PHIRAS,
+            THYSTAME
+        };
+        Ressources() = default;
+        ~Ressources() = default;
 };
 
 #endif /* !RESSOURCES_HPP_ */
