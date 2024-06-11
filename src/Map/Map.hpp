@@ -28,7 +28,7 @@ class Map {
         }
         void addResource(int x, int y, Ressources::RessourceType resource, int quantity);
         void removeResource(int x, int y, Ressources::RessourceType resource, int quantity);
-        ResourceMap getResources(int x, int y) {
+        ResourceMap &getResources(int x, int y) {
             return _map[{x, y}];
         }
         void printResources(int x, int y);
@@ -47,6 +47,8 @@ class Map {
             }
         }
         void setMapSize(int sizeX, int sizeY);
+        int getMapSizeX() const { return _sizeX; }
+        int getMapSizeY() const { return _sizeY; }
 
     private:
         int _sizeX, _sizeY;

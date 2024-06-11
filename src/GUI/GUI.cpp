@@ -21,5 +21,6 @@ void GUI::initWindow(int height, int width, const std::string &WindowName)
 
 void GUI::AddPlayer(Player player)
 {
-    _players[player.getNumber()].push_back(player);
+    int playerId = player.getNumber();
+    _players[playerId].push_back(player);
 }

@@ -14,19 +14,16 @@
 
 void msz_command(const std::string& data)
 {
-    // std::cout << "Handling msz: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string x;
     std::string y;
     iss >> command >> x >> y;
     Map::getInstance()->setMapSize(std::stoi(x), std::stoi(y));
-    // std::cout << "X: " << x << "Y: " << y << std::endl;
 }
 
 void bct_command(const std::string& data)
 {
-    // std::cout << "Handling bct: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     int x, y;
@@ -42,16 +39,10 @@ void bct_command(const std::string& data)
     gameMap->addResource(x, y, Ressources::RessourceType::MENDIANE, mendiane);
     gameMap->addResource(x, y, Ressources::RessourceType::PHIRAS, phiras);
     gameMap->addResource(x, y, Ressources::RessourceType::THYSTAME, thystame);
-
-    if (x == 9 && y == 9) {
-        gameMap->printMap();
-        exit(0);
-    }
 }
 
 void pbc_command(const std::string& data)
 {
-    //broadcast player id message
     std::cout << "Handling pbc: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
@@ -226,12 +217,10 @@ void pnw_command(const std::string& data)
     iss >> team_name;
     Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
     GUI::getInstance()->AddPlayer(player);
-    
 }
 
 void ppo_command(const std::string& data)
 {
-    std::cout << "Handling ppo: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
@@ -240,6 +229,7 @@ void ppo_command(const std::string& data)
     std::string orientation;
     iss >> command >> player_id >> x >> y >> orientation;
     player_id = player_id.substr(1);
+
     GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setPosition(std::stoi(x), std::stoi(y), static_cast<Orientation>(std::stoi(orientation)));
 }
 
