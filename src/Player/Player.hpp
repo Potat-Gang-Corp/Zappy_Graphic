@@ -13,7 +13,7 @@
 #include <iostream>
 #include "PlayerData.hpp"
 #include <map>
-#include "../Ressources/Ressources.hpp"
+#include "Ressources.hpp"
 
 class Player {
     public:
@@ -27,7 +27,6 @@ class Player {
         Orientation getOrientation();
         PlayerData getPlayerData();
         std::map<Ressources::RessourceType, int> getInventory();
-
 
     private:
         PlayerData _playerData;

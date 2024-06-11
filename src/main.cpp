@@ -33,8 +33,6 @@ int main(int argc, char **argv)
 
     std::thread listeningThread(&Server::listening, &server);
 
-    map.printMap();
-
     server.stop();
     listeningThread.join();
     return 0;

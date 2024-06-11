@@ -11,6 +11,8 @@
     #define PLAYERDATA_HPP_
 
 #include <string>
+#include <map>
+#include "Ressources.hpp"
 
 enum Orientation {
     NORTH = 1,  
