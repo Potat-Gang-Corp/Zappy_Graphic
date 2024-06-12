@@ -24,17 +24,20 @@ int main(int argc, char **argv)
     std::string host = argv[4];
 
 
-    Map map;    
+    GUI gui;
     Server server;
     if (server.connect_server(port, host) != 0) {
         std::cerr << "Failed to connect to server" << std::endl;
         return 1;
     }
+    gui.initWindow(800, 800, "Zappy");
 
     std::thread listeningThread(&Server::listening, &server);
+    std::thread gameThread(&GUI::run, &gui);
 
+    gameThread.join();
     server.stop();
-    listeningThread.join();
+    listeningThread.join(); 
     return 0;
 }
 

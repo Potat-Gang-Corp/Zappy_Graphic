@@ -32,6 +32,7 @@ class GUI {
         {
             return _players;
         }
+        void run();
 
     private:
         std::map<int, std::vector<Player>> _players;

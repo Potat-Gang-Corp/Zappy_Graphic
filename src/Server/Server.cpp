@@ -42,16 +42,13 @@ void Server::send_data(const std::string& data)
 std::string Server::receive_data()
 {
     try {
-        // Lire jusqu'au délimiteur '\n'
         size_t bytes_transferred = boost::asio::read_until(socket, buffer, '\n');
         
-        // Créer un std::string à partir du buffer jusqu'à 'bytes_transferred'
         std::string response(
             boost::asio::buffers_begin(buffer.data()),
             boost::asio::buffers_begin(buffer.data()) + bytes_transferred
         );
         
-        // Consommer les données lues du buffer
         buffer.consume(bytes_transferred);
         
         return response;
@@ -66,7 +63,7 @@ void Server::listening()
     while (true) {
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;
-        if (response != "ko\n" && response != "WELCOME\n") {
+        if (response != "ko\n" && response != "WELCOME\n" && response != "Connected\n") {
             CommandFactory::getInstance()->execCommand(response);
         }
     }
