@@ -20,42 +20,42 @@ Player::Player(int number, int posX, int posY, std::string teamName, Orientation
 
 Player::~Player() {}
 
-int Player::getNumber() const
+const int &Player::getNumber() const
 {
     return _playerData._number;
 }
 
-int Player::getPosX() const
+const int &Player::getPosX() const
 {
     return _playerData._posX;
 }
 
-int Player::getPosY() const
+const int &Player::getPosY() const
 {
     return _playerData._posY;
 }
 
-int Player::getLevel() const
+const int &Player::getLevel() const
 {
     return _playerData._level;
 }
 
-std::string Player::getTeamName()
+const std::string &Player::getTeamName()
 {
     return _playerData._teamName;
 }
 
-Orientation Player::getOrientation()
+const Orientation &Player::getOrientation()
 {
     return _playerData._orientation;
 }
 
-PlayerData Player::getPlayerData()
+const PlayerData &Player::getPlayerData()
 {
     return _playerData;
 }
 
-std::map<Ressources::RessourceType, int> Player::getInventory()
+const std::map<Ressources::RessourceType, int> &Player::getInventory()
 {
     return _playerData._inventory;
 }
@@ -65,4 +65,19 @@ void Player::setPosition(int x, int y, Orientation orientation)
     _playerData._posX = x;
     _playerData._posY = y;
     _playerData._orientation = orientation;
+}
+
+void Player::setLevel(int level)
+{
+    _playerData._level = level;
+}
+
+void Player::addInventory(Ressources::RessourceType resource, int quantity)
+{
+    _playerData._inventory[resource] += quantity;
+}
+
+void Player::removeInventory(Ressources::RessourceType resource, int quantity)
+{
+    _playerData._inventory[resource] -= quantity;
 }

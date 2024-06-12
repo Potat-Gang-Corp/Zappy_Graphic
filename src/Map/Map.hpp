@@ -29,7 +29,7 @@ class Map {
         void addResource(int x, int y, Ressources::RessourceType resource, int quantity);
         void removeResource(int x, int y, Ressources::RessourceType resource, int quantity);
         ResourceMap &getResources(int x, int y) {
-            return _map[{x, y}];
+            return _map.at({x, y});
         }
         void printResources(int x, int y);
         void printMap();

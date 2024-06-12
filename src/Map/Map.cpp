@@ -25,6 +25,9 @@ void Map::addResource(int x, int y, Ressources::RessourceType ressource, int qua
 void Map::removeResource(int x, int y, Ressources::RessourceType ressource, int quantity)
 {
     _map[{x, y}][ressource] -= quantity;
+    if (_map[{x, y}][ressource] <= 0) {
+        _map[{x, y}].erase(ressource);
+    }
 }
 
 void Map::printResources(int x, int y)

@@ -56,3 +56,102 @@ Test(ppo_command, update_player_position)
     cr_assert_eq(updatedPlayer.getPosY(), 20, "Expected Y position to be 20, but was %d", updatedPlayer.getPosY());
     cr_assert_eq(updatedPlayer.getOrientation(), EAST, "Expected orientation to be SOUTH, but was %d", updatedPlayer.getOrientation());
 }
+
+Test(plv_command, update_player_level)
+{
+    GUI* gui = GUI::getInstance();
+    Player player(1, 0, 0, "TeamA", NORTH, {}, 7);
+    gui->getPlayers()[1].push_back(player);
+
+    std::string data = "plv #1 5";
+    plv_command(data);
+
+    Player updatedPlayer = gui->getPlayers()[1][0];
+    cr_assert_eq(updatedPlayer.getLevel(), 5, "Expected level to be 5, but was %d", updatedPlayer.getLevel());
+}
+
+
+Test(pin_command, update_player_inventory)
+{
+    GUI* gui = GUI::getInstance();
+    std::map<Ressources::RessourceType, int> inventory = {
+        {Ressources::RessourceType::FOOD, 0},
+        {Ressources::RessourceType::LINEMATE, 0},
+        {Ressources::RessourceType::DERAUMERE, 0},
+        {Ressources::RessourceType::SIBUR, 0},
+        {Ressources::RessourceType::MENDIANE, 0},
+        {Ressources::RessourceType::PHIRAS, 0},
+        {Ressources::RessourceType::THYSTAME, 0}
+    };
+    Player player(1, 0, 0, "TeamA", NORTH, inventory);
+    gui->getPlayers()[1].push_back(player);
+
+    std::string data = "pin #1 10 20 5 4 3 2 1 0 6";
+    pin_command(data);
+
+    Player updatedPlayer = gui->getPlayers()[1][0];
+    const auto& updatedInventory = updatedPlayer.getInventory();
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::FOOD), 5, "Expected FOOD quantity to be 5, but was %d", updatedInventory.at(Ressources::RessourceType::FOOD));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::LINEMATE), 4, "Expected LINEMATE quantity to be 4, but was %d", updatedInventory.at(Ressources::RessourceType::LINEMATE));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::DERAUMERE), 3, "Expected DERAUMERE quantity to be 3, but was %d", updatedInventory.at(Ressources::RessourceType::DERAUMERE));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::SIBUR), 2, "Expected SIBUR quantity to be 2, but was %d", updatedInventory.at(Ressources::RessourceType::SIBUR));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::MENDIANE), 1, "Expected MENDIANE quantity to be 1, but was %d", updatedInventory.at(Ressources::RessourceType::MENDIANE));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::PHIRAS), 0, "Expected PHIRAS quantity to be 0, but was %d", updatedInventory.at(Ressources::RessourceType::PHIRAS));
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::THYSTAME), 6, "Expected THYSTAME quantity to be 6, but was %d", updatedInventory.at(Ressources::RessourceType::THYSTAME));
+}
+
+Test(pdr_command, remove_inventory_and_add_to_map)
+{
+    GUI* gui = GUI::getInstance();
+    std::map<Ressources::RessourceType, int> inventory = {
+        {Ressources::RessourceType::FOOD, 5},
+        {Ressources::RessourceType::LINEMATE, 3},
+        {Ressources::RessourceType::DERAUMERE, 2},
+        {Ressources::RessourceType::SIBUR, 4},
+        {Ressources::RessourceType::MENDIANE, 1},
+        {Ressources::RessourceType::PHIRAS, 0},
+        {Ressources::RessourceType::THYSTAME, 6}
+    };
+    Player player(1, 10, 20, "TeamA", NORTH, inventory);
+    gui->getPlayers()[1].push_back(player);
+
+    std::string data = "pdr #1 2";
+    pdr_command(data);
+
+    Player updatedPlayer = gui->getPlayers()[1][0];
+    const auto& updatedInventory = updatedPlayer.getInventory();
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::DERAUMERE), 1, "Expected DERAUMERE quantity to be 1, but was %d", updatedInventory.at(Ressources::RessourceType::DERAUMERE));
+
+    Map* map = Map::getInstance();
+    const auto& resourcesAtPos = map->getResources(10, 20);
+    cr_assert_eq(resourcesAtPos.at(Ressources::RessourceType::DERAUMERE), 1, "Expected DERAUMERE quantity on the map to be 1, but was %d", resourcesAtPos.at(Ressources::RessourceType::DERAUMERE));
+}
+
+Test(pgt_command, add_inventory_and_remove_from_map)
+{
+    GUI* gui = GUI::getInstance();
+    std::map<Ressources::RessourceType, int> inventory = {
+        {Ressources::RessourceType::FOOD, 5},
+        {Ressources::RessourceType::LINEMATE, 3},
+        {Ressources::RessourceType::DERAUMERE, 2},
+        {Ressources::RessourceType::SIBUR, 4},
+        {Ressources::RessourceType::MENDIANE, 1},
+        {Ressources::RessourceType::PHIRAS, 0},
+        {Ressources::RessourceType::THYSTAME, 6}
+    };
+    Player player(1, 10, 20, "TeamA", NORTH, inventory);
+    gui->getPlayers()[1].push_back(player);
+
+    Map* map = Map::getInstance();
+    map->addResource(10, 20, Ressources::RessourceType::DERAUMERE, 1);
+
+    std::string data = "pgt #1 2";
+    pgt_command(data);
+
+    Player updatedPlayer = gui->getPlayers()[1][0];
+    const auto& updatedInventory = updatedPlayer.getInventory();
+    cr_assert_eq(updatedInventory.at(Ressources::RessourceType::DERAUMERE), 3, "Expected DERAUMERE quantity to be 3, but was %d", updatedInventory.at(Ressources::RessourceType::DERAUMERE));
+
+    const auto& resourcesAtPos = map->getResources(10, 20);
+    cr_assert_eq(resourcesAtPos.find(Ressources::RessourceType::DERAUMERE), resourcesAtPos.end(), "Expected no DERAUMERE on the map, but found some.");
+}

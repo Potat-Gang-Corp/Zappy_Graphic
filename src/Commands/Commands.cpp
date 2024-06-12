@@ -57,17 +57,17 @@ void pbc_command(const std::string& data)
 
 void pdr_command(const std::string& data)
 {
-    //player drop an object
-    std::cout << "Handling pdr: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     std::string ressource_number;
-    iss >> command;
-    iss >> player_id;
-    iss >> ressource_number;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "Ressource number: " << ressource_number << std::endl;
+    iss >> command >> player_id >> ressource_number;
+    player_id = player_id.substr(1);
+
+    GUI* gui = GUI::getInstance();
+    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    player.removeInventory(static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
+    Map::getInstance()->addResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
 void pex_command(const std::string& data)
@@ -96,17 +96,17 @@ void pfk_command(const std::string& data)
 
 void pgt_command(const std::string& data)
 {
-    //player take an object
-    std::cout << "Handling pgt: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     std::string ressource_number;
-    iss >> command;
-    iss >> player_id;
-    iss >> ressource_number;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "Ressource number: " << ressource_number << std::endl;
+    iss >> command >> player_id >> ressource_number;
+    player_id = player_id.substr(1);
+
+    GUI* gui = GUI::getInstance();
+    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    player.addInventory(static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
+    Map::getInstance()->removeResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
 void pic_command(const std::string& data)
@@ -148,7 +148,6 @@ void pie_command(const std::string& data)
 
 void pin_command(const std::string& data)
 {
-    std::cout << "Handling pin: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
@@ -161,41 +160,31 @@ void pin_command(const std::string& data)
     std::string phiras;
     std::string thystame;
     std::string food;
-    iss >> command;
-    iss >> player_id;
-    iss >> x;
-    iss >> y;
-    iss >> food;
-    iss >> linemate;
-    iss >> deraumere;
-    iss >> sibur;
-    iss >> mendiane;
-    iss >> phiras;
-    iss >> thystame;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "X: " << x << std::endl;
-    std::cout << "Y: " << y << std::endl;
-    std::cout << "Food: " << food << std::endl;
-    std::cout << "Linemate: " << linemate << std::endl;
-    std::cout << "Deraumere: " << deraumere << std::endl;
-    std::cout << "Sibur: " << sibur << std::endl;
-    std::cout << "Mendiane: " << mendiane << std::endl;
-    std::cout << "Phiras: " << phiras << std::endl;
-    std::cout << "Thystame: " << thystame << std::endl;
+    iss >> command >> player_id >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
+    player_id = player_id.substr(1);
+
+    GUI* gui = GUI::getInstance();
+    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    player.setPosition(std::stoi(x), std::stoi(y), player.getOrientation());
+    player.addInventory(Ressources::RessourceType::FOOD, std::stoi(food));
+    player.addInventory(Ressources::RessourceType::LINEMATE, std::stoi(linemate));
+    player.addInventory(Ressources::RessourceType::DERAUMERE, std::stoi(deraumere));
+    player.addInventory(Ressources::RessourceType::SIBUR, std::stoi(sibur));
+    player.addInventory(Ressources::RessourceType::MENDIANE, std::stoi(mendiane));
+    player.addInventory(Ressources::RessourceType::PHIRAS, std::stoi(phiras));
+    player.addInventory(Ressources::RessourceType::THYSTAME, std::stoi(thystame));
 }
 
 void plv_command(const std::string& data)
 {
-    std::cout << "Handling plv: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     std::string level;
-    iss >> command;
-    iss >> player_id;
-    iss >> level;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "Level: " << level << std::endl;
+    iss >> command >> player_id >> level;
+    player_id = player_id.substr(1);
+
+    GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setLevel(std::stoi(level));
 }
 
 void pnw_command(const std::string& data)
@@ -208,13 +197,7 @@ void pnw_command(const std::string& data)
     std::string orientation;
     std::string level;
     std::string team_name;
-    iss >> command;
-    iss >> player_id;
-    iss >> x;
-    iss >> y;
-    iss >> orientation;
-    iss >> level;
-    iss >> team_name;
+    iss >> command >> player_id >> x >> y >> orientation >> level >> team_name;
     Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
     GUI::getInstance()->AddPlayer(player);
 }

@@ -19,15 +19,18 @@ class Player {
     public:
         Player(int number, int posX, int posY, std::string teamName, Orientation orientation, std::map<Ressources::RessourceType, int> inventory, int level = 1);
         ~Player();
-        int getNumber() const;
-        int getPosX() const;
-        int getPosY() const;
-        int getLevel() const;
+        const int &getNumber() const;
+        const int &getPosX() const;
+        const int &getPosY() const;
+        const int &getLevel() const;
         void setPosition(int x, int y, Orientation orientation);
-        std::string getTeamName();
-        Orientation getOrientation();
-        PlayerData getPlayerData();
-        std::map<Ressources::RessourceType, int> getInventory();
+        void setLevel(int level);
+        const std::string &getTeamName();
+        const Orientation &getOrientation();
+        const PlayerData &getPlayerData();
+        const std::map<Ressources::RessourceType, int> &getInventory();
+        void addInventory(Ressources::RessourceType resource, int quantity);
+        void removeInventory(Ressources::RessourceType resource, int quantity);
 
     private:
         PlayerData _playerData;
