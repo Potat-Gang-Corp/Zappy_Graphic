@@ -17,7 +17,8 @@ class Ressources {
             SIBUR,
             MENDIANE,
             PHIRAS,
-            THYSTAME
+            THYSTAME,
+            EGG
         };
         Ressources() = default;
         ~Ressources() = default;

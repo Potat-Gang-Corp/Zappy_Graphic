@@ -240,22 +240,17 @@ void pdi_command(const std::string& data)
 
 void enw_command(const std::string &data)
 {
-    std::cout << "Handling enw: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string egg_id;
     std::string player_id;
     std::string x;
     std::string y;
-    iss >> command;
-    iss >> egg_id;
-    iss >> player_id;
-    iss >> x;
-    iss >> y;
-    std::cout << "Egg id: " << egg_id << std::endl;
-    std::cout << "Player id: " << player_id << std::endl;
-    std::cout << "X: " << x << std::endl;
-    std::cout << "Y: " << y << std::endl;
+    iss >> command >> egg_id >> player_id >> x >> y;
+    player_id = player_id.substr(1);
+    GUI* gui = GUI::getInstance();
+    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    Map::getInstance()->addResource(std::stoi(x), std::stoi(y) Ressources::RessourceType::EGG, 1);
 }
 
 void ebo_command(const std::string &data)
