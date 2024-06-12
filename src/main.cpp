@@ -30,7 +30,6 @@ int main(int argc, char **argv)
         std::cerr << "Failed to connect to server" << std::endl;
         return 1;
     }
-    gui.initWindow(800, 800, "Zappy");
 
     std::thread listeningThread(&Server::listening, &server);
     std::thread gameThread(&GUI::run, &gui);
