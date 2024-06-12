@@ -16,15 +16,15 @@
     #include <vector>
     #include "Player.hpp"
     #include <map>
+    #include <memory>
 
 class GUI {
     public:
         GUI();
         ~GUI();
-        static GUI *getInstance()
-        {
-            static GUI instance;
-            return &instance;
+        static std::shared_ptr<GUI> getInstance() {
+            static std::shared_ptr<GUI> instance(new GUI());
+            return instance;
         }
         void initWindow(int height, int width, const std::string &WindowName);
         void AddPlayer(Player player);
@@ -38,5 +38,7 @@ class GUI {
         int _screenH, _screenW;
         
 };
+
+typedef std::shared_ptr<GUI> GuiPtr;
 
 #endif /* !GUI_HPP_ */

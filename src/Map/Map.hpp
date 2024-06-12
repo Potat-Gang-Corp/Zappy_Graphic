@@ -13,6 +13,7 @@
     #include <iostream>
     #include <map>
     #include "Ressources.hpp"
+    #include <memory>
 
 using Coordinates = std::pair<int, int>;
 using ResourceMap = std::map<Ressources::RessourceType, int>;
@@ -21,10 +22,9 @@ class Map {
     public:
         Map();
         ~Map();
-        static Map *getInstance()
-        {
-            static Map instance;
-            return &instance;
+        static std::shared_ptr<Map> getInstance() {
+            static std::shared_ptr<Map> instance(new Map());
+            return instance;
         }
         void addResource(int x, int y, Ressources::RessourceType resource, int quantity);
         void removeResource(int x, int y, Ressources::RessourceType resource, int quantity);
@@ -42,6 +42,7 @@ class Map {
                 case Ressources::RessourceType::MENDIANE: return "Mendiane";
                 case Ressources::RessourceType::PHIRAS: return "Phiras";
                 case Ressources::RessourceType::THYSTAME: return "Thystame";
+                case Ressources::RessourceType::EGG: return "Egg";
                 // Ajoutez d'autres cas pour chaque ressource
                 default: return "Unknown";
             }
@@ -49,10 +50,17 @@ class Map {
         void setMapSize(int sizeX, int sizeY);
         int getMapSizeX() const { return _sizeX; }
         int getMapSizeY() const { return _sizeY; }
+        void addEgg(int x, int y, int number);
+        void removeEgg(int number);
+        int &getEggX(int number) { return _eggs[number].first; }
+        int &getEggY(int number) { return _eggs[number].second; }
 
     private:
         int _sizeX, _sizeY;
         std::map<Coordinates, ResourceMap> _map;
+        std::map<int, Coordinates> _eggs;
 };
+
+typedef std::shared_ptr<Map> MapPtr;
 
 #endif /* !MAP_HPP_ */

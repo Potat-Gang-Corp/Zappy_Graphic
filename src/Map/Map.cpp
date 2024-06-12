@@ -30,6 +30,16 @@ void Map::removeResource(int x, int y, Ressources::RessourceType ressource, int 
     }
 }
 
+void Map::addEgg(int x, int y, int number)
+{
+    _eggs[number] = {x, y};
+}
+
+void Map::removeEgg(int number)
+{
+    _eggs.erase(number);
+}
+
 void Map::printResources(int x, int y)
 {
     ResourceMap resources = getResources(x, y);
