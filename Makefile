@@ -13,7 +13,7 @@ RESET  := \033[0m
 
 SRC_DIR := src
 
-RAY_LIB := -lraylib -lm -lpthread -ldl -lrt -lX11 -g3
+RAY_LIB := -lraylib -lm -lpthread -ldl -lrt -lX11
 
 COVERAGE_FLAGS := -fprofile-arcs -ftest-coverage
 
@@ -30,7 +30,9 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Factory/*.cpp \
 			$(SRC_DIR)/GUI/*.cpp \
 			$(SRC_DIR)/Map/*.cpp \
-			$(SRC_DIR)/Ressources/*.cpp)
+			$(SRC_DIR)/Ressources/*.cpp \
+			$(SRC_DIR)/GUI/Camera/*.cpp \
+			$(SRC_DIR)/GUI/Window/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -46,7 +48,9 @@ INCLUDES := -I./src \
 			-I./src/Factory \
 			-I./src/GUI \
 			-I./src/Map \
-			-I./src/Ressources
+			-I./src/Ressources \
+			-I./src/GUI/Camera \
+			-I./src/GUI/Window
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)

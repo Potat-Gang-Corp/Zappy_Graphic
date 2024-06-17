@@ -61,6 +61,7 @@ std::string Server::receive_data()
 void Server::listening()
 {
     while (true) {
+        // send_data("msz\n");
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;
         if (response != "ko\n" && response != "WELCOME\n" && response != "Connected\n") {

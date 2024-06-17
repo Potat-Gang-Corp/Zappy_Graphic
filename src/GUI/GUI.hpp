@@ -16,7 +16,9 @@
     #include <vector>
     #include "Player.hpp"
     #include <map>
-    #include <memory>
+    #include "Map.hpp"
+    #include "Camera.hpp"
+    #include "Window.hpp"
 
 class GUI {
     public:
@@ -26,7 +28,6 @@ class GUI {
             static std::shared_ptr<GUI> instance(new GUI());
             return instance;
         }
-        void initWindow(int height, int width, const std::string &WindowName);
         void AddPlayer(Player player);
         std::map<int, std::vector<Player>> &getPlayers()
         {
@@ -36,7 +37,6 @@ class GUI {
 
     private:
         std::map<int, std::vector<Player>> _players;
-        int _screenH, _screenW;
         
 };
 
