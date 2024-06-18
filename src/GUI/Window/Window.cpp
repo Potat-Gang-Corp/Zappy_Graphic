@@ -78,7 +78,28 @@ void Window::DrawMap(int mapSizeX, int mapSizeY)
     for (float i = 0; i < mapSizeX; i++) {
         for (float j = 0; j < mapSizeY; j++) {
             int randomIndex = rand() % _loadedModels.size();
-            DrawModel(_loadedModels[0], (Vector3){(float)(i) * 10, 0.0f, (float)(j) * 10}, 0.2f, WHITE);
+            Vector3 modelPosition = { (float)(i) * 10, 0.0f, (float)(j) * 10 };
+            float modelScale = 0.2f;
+
+            BoundingBox box = GetModelBoundingBox(_loadedModels[0]);
+            box.min.x *= modelScale;
+            box.min.y *= modelScale;
+            box.min.z *= modelScale;
+
+            box.max.x *= modelScale;
+            box.max.y *= modelScale;
+            box.max.z *= modelScale;
+
+            box.min.x += modelPosition.x;
+            box.min.y += modelPosition.y;
+            box.min.z += modelPosition.z;
+
+            box.max.x += modelPosition.x;
+            box.max.y += modelPosition.y;
+            box.max.z += modelPosition.z;
+
+            DrawModel(_loadedModels[0], modelPosition, modelScale, WHITE);
+            // DrawBoundingBox(box, RED);
         }
     }
 }

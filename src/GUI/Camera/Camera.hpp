@@ -10,7 +10,7 @@
 #ifndef CAMERA_HPP_
     #define CAMERA_HPP_
 
-    #include "raylib.h"
+    #include <raylib.h>
 
 class CameraWrapper {
     public:

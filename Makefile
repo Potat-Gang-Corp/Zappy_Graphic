@@ -23,7 +23,6 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/*.cpp \
 			$(SRC_DIR)/Player/*.cpp \
 			$(SRC_DIR)/Team/*.cpp \
-			$(SRC_DIR)/Raylib/*.cpp \
 			$(SRC_DIR)/Server/*.cpp \
 			$(SRC_DIR)/ICommand/*.cpp \
 			$(SRC_DIR)/Commands/*.cpp \
@@ -32,7 +31,8 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Map/*.cpp \
 			$(SRC_DIR)/Ressources/*.cpp \
 			$(SRC_DIR)/GUI/Camera/*.cpp \
-			$(SRC_DIR)/GUI/Window/*.cpp)
+			$(SRC_DIR)/GUI/Window/*.cpp \
+			$(SRC_DIR)/GUI/Light/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -41,7 +41,6 @@ OBJS_NO_MAIN = $(SRCS_NO_MAIN:.c=.o)
 INCLUDES := -I./src \
 			-I./src/Player \
 			-I./src/Team \
-			-I./src/Raylib \
 			-I./src/Server \
 			-I./src/Commands \
 			-I./src/ICommand \
@@ -50,7 +49,8 @@ INCLUDES := -I./src \
 			-I./src/Map \
 			-I./src/Ressources \
 			-I./src/GUI/Camera \
-			-I./src/GUI/Window
+			-I./src/GUI/Window \
+			-I./src/GUI/Light
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)

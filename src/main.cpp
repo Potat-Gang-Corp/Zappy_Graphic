@@ -5,14 +5,8 @@
 ** main
 */
 
-// #include "Raylib.hpp"
-#include "Team.hpp"
 #include "GUI.hpp"
-#include "PlayerData.hpp"
 #include "Server.hpp"
-#include <raylib.h>
-#include <unistd.h>
-#include "Map.hpp"
 
 int main(int argc, char **argv) 
 {
