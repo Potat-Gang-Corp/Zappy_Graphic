@@ -33,11 +33,12 @@ class GUI {
         {
             return _players;
         }
+        void setFreq(int freq) { _freq = freq; }
         void run();
 
     private:
         std::map<int, std::vector<Player>> _players;
-        
+        int _freq = 10;
 };
 
 typedef std::shared_ptr<GUI> GuiPtr;

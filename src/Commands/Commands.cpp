@@ -287,9 +287,8 @@ void sgt_command (const std::string &data)
     std::istringstream iss(data);
     std::string command;
     std::string time_unit;
-    iss >> command;
-    iss >> time_unit;
-    std::cout << "Time unit: " << time_unit << std::endl;
+    iss >> command >> time_unit;
+    GUI::getInstance()->setFreq(std::stoi(time_unit));
 }
 
 void sst_command (const std::string &data)

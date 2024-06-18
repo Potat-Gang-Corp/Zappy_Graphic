@@ -54,8 +54,8 @@ int main(void)
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
 
     // Load basic lighting shader
-    Shader shader = LoadShader(TextFormat("lighting.vs", GLSL_VERSION),
-                               TextFormat("lighting.fs", GLSL_VERSION));
+    Shader shader = LoadShader(TextFormat("assets/lighting.vs", GLSL_VERSION),
+                               TextFormat("assets/lighting.fs", GLSL_VERSION));
     // Get some required shader locations
     shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
     // NOTE: "matModel" location name is automatically assigned on shader loading, 
@@ -68,25 +68,30 @@ int main(void)
     SetShaderValue(shader, ambientLoc, ambient, SHADER_UNIFORM_VEC4);
 
     // Load the model
-    Model model = LoadModel("assets/low_poly_island.glb");
+    Model model = LoadModel("assets/mine1.glb");
 
     // Apply rotation to correct the model orientation
-    Matrix rotation = MatrixRotateX(DEG2RAD * 270);
-    model.transform = MatrixMultiply(model.transform, rotation);
+    // Matrix rotation = MatrixRotateX(DEG2RAD);
+    // model.transform = MatrixMultiply(model.transform, rotation);
 
     // Assign the shader to each material in the model
     for (int i = 0; i < model.materialCount; i++) {
         model.materials[i].shader = shader;
     }
 
+    // int animsCount = 0;
+    // ModelAnimation *anims = LoadModelAnimations("assets/mine5.glb", &animsCount);
+    // int animFrameCounter = 0;
+
+
     // Load skybox shader and textures
-    Shader skyboxShader = LoadShader("skybox.vs", "skybox.fs");
-        Texture2D skyboxTexture = LoadTexture("skybox.png");
-        Model skybox = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
-        skybox.materials[0].shader = skyboxShader;
-        skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = skyboxTexture;
-        int cubemapValue[1] = { MATERIAL_MAP_CUBEMAP };
-        SetShaderValue(skyboxShader, GetShaderLocation(skyboxShader, "environmentMap"), cubemapValue, SHADER_UNIFORM_INT);
+    // Shader skyboxShader = LoadShader("skybox.vs", "skybox.fs");
+    //     Texture2D skyboxTexture = LoadTexture("skybox.png");
+    //     Model skybox = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
+    //     skybox.materials[0].shader = skyboxShader;
+    //     skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = skyboxTexture;
+    //     int cubemapValue[1] = { MATERIAL_MAP_CUBEMAP };
+    //     SetShaderValue(skyboxShader, GetShaderLocation(skyboxShader, "environmentMap"), cubemapValue, SHADER_UNIFORM_INT);
 
     // Create lights
     Light lights[MAX_LIGHTS] = { 0 };
@@ -104,6 +109,13 @@ int main(void)
         // Update
         //----------------------------------------------------------------------------------
         UpdateCamera(&camera, CAMERA_ORBITAL);
+
+        // if (IsKeyDown(KEY_SPACE))
+        // {
+            // animFrameCounter++;
+            // UpdateModelAnimation(model, anims[0], animFrameCounter);
+            // if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
+        // }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { camera.position.x, camera.position.y, camera.position.z };
@@ -128,14 +140,20 @@ int main(void)
             BeginMode3D(camera);
 
                 // Draw skybox
-                rlDisableBackfaceCulling();
-                rlDisableDepthMask();
-                    DrawModel(skybox, Vector3Zero(), 1.0f, WHITE);
-                rlEnableBackfaceCulling();
-                rlEnableDepthMask();     // Enable backface culling again
+                // rlDisableBackfaceCulling();
+                // rlDisableDepthMask();
+                    // DrawModel(skybox, Vector3Zero(), 1.0f, WHITE);
+                // rlEnableBackfaceCulling();
+                // rlEnableDepthMask();     // Enable backface culling again
 
                 // Draw model
-                DrawModel(model, (Vector3){0.0f, 1.0f, 0.0f}, 0.05f, WHITE);
+                DrawModel(model, (Vector3){0.0f, 1.0f, 0.0f}, 1.0f, WHITE);
+                // DrawModel(model, (Vector3){1.0f, 1.0f, 1.0f}, 0.5f, WHITE);
+
+                for (int i = 0; i < model.boneCount; i++)
+                {
+                    // DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
+                }
 
                 // Draw spheres to show where the lights are
                 for (int i = 0; i < MAX_LIGHTS; i++)
@@ -160,9 +178,9 @@ int main(void)
     //--------------------------------------------------------------------------------------
     UnloadShader(shader);      // Unload shader
     UnloadModel(model);        // Unload model
-    UnloadShader(skyboxShader);// Unload skybox shader
-    UnloadTexture(skyboxTexture); // Unload skybox texture
-    UnloadModel(skybox);       // Unload skybox
+    // UnloadShader(skyboxShader);// Unload skybox shader
+    // UnloadTexture(skyboxTexture); // Unload skybox texture
+    // UnloadModel(skybox);       // Unload skybox
 
     CloseWindow();             // Close window and OpenGL context
     //--------------------------------------------------------------------------------------

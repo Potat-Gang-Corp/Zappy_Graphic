@@ -15,6 +15,11 @@ void Map::setMapSize(int sizeX, int sizeY)
 {
     _sizeX = sizeX;
     _sizeY = sizeY;
+    for (int y = 0; y < sizeY; y++) {
+        for (int x = 0; x < sizeX; x++) {
+            _map[{x, y}] = {};
+        }
+    }
 }
 
 void Map::addResource(int x, int y, Ressources::RessourceType ressource, int quantity)

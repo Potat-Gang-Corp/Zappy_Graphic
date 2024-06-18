@@ -26,6 +26,9 @@ class CameraWrapper {
         void update() {
             UpdateCamera(&_camera, CAMERA_ORTHOGRAPHIC);
         }
+        float getX() { return _camera.position.x; }
+        float getY() { return _camera.position.y; }
+        float getZ() { return _camera.position.z; }
 
     private:
         Camera3D _camera;
