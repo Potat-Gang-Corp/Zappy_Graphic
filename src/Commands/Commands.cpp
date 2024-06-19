@@ -5,6 +5,11 @@
 ** Commands.cpp
 */
 
+/**
+ * @file Commands.cpp
+ * @brief Contains the implementation of the commands functions
+ */
+
 #include <iostream>
 #include <sstream>
 #include <ostream>
@@ -12,6 +17,12 @@
 #include "Player.hpp"
 #include "GUI.hpp"
 
+/**
+ * @brief Handle the msz command (map size)
+ * @param data The data to handle
+ * @param x The x size of the map
+ * @param y The y size of the map
+ */
 void msz_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -22,6 +33,19 @@ void msz_command(const std::string& data)
     Map::getInstance()->setMapSize(std::stoi(x), std::stoi(y));
 }
 
+/**
+ * @brief Handle the bct command (tile content) add the resources to the map
+ * @param data The data to handle
+ * @param x The x position of the tile
+ * @param y The y position of the tile
+ * @param food The food quantity on the tile
+ * @param linemate The linemate quantity on the tile
+ * @param deraumere The deraumere quantity on the tile
+ * @param sibur The sibur quantity on the tile
+ * @param mendiane The mendiane quantity on the tile
+ * @param phiras The phiras quantity on the tile
+ * @param thystame The thystame quantity on the tile
+ */
 void bct_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -41,6 +65,13 @@ void bct_command(const std::string& data)
     gameMap->addResource(x, y, Ressources::RessourceType::THYSTAME, thystame);
 }
 
+/**
+ * @brief Handle the pbc command (broadcast)
+ * @param data The data to handle
+ * @param player_id The id of the player who broadcasted
+ * @param message The message broadcasted
+ */
+
 void pbc_command(const std::string& data)
 {
     std::cout << "Handling pbc: " << data << std::endl;
@@ -54,6 +85,13 @@ void pbc_command(const std::string& data)
     std::cout << "Player id: " << player_id << std::endl;
     std::cout << "Message: " << message << std::endl;
 }
+
+/**
+ * @brief Handle the pdr command (player drop ressource)
+ * @param data The data to handle
+ * @param player_id The id of the player who dropped
+ * @param ressource_number The ressource number dropped
+ */
 
 void pdr_command(const std::string& data)
 {
@@ -70,6 +108,12 @@ void pdr_command(const std::string& data)
     Map::getInstance()->addResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
+/**
+ * @brief Handle the pex command (player expulsion)
+ * @param data The data to handle
+ * @param player_id The id of the player who got expelled
+ */
+
 void pex_command(const std::string& data)
 {
     //explusion player id
@@ -82,6 +126,12 @@ void pex_command(const std::string& data)
     std::cout << "Player id: " << player_id << std::endl;
 }
 
+/**
+ * @brief Handle the pfk command (egg layed by player)
+ * @param data The data to handle
+ * @param player_id The id of the player who forked
+ */
+
 void pfk_command(const std::string& data)
 {
     //egg layed by player id
@@ -93,6 +143,13 @@ void pfk_command(const std::string& data)
     iss >> player_id;
     std::cout << "Player id: " << player_id << std::endl;
 }
+
+/**
+ * @brief Handle the pgt command (player get ressource)
+ * @param data The data to handle
+ * @param player_id The id of the player who got the ressource
+ * @param ressource_number The ressource number got
+ */
 
 void pgt_command(const std::string& data)
 {
@@ -109,6 +166,14 @@ void pgt_command(const std::string& data)
     Map::getInstance()->removeResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
+/**
+ * @brief Handle the pic command (start incantation)
+ * @param data The data to handle
+ * @param player_id The id of the player who started the incantation
+ * @param x The x position of the player
+ * @param y The y position of the player
+ * @param level The level of the incantation
+ */
 void pic_command(const std::string& data)
 {
     //player id, x, y, level
@@ -129,6 +194,14 @@ void pic_command(const std::string& data)
     std::cout << "Player id: " << player_id << std::endl;
 }
 
+/**
+ * @brief Handle the pie command (end incantation)
+ * @param data The data to handle
+ * @param x The x position of the incantation
+ * @param y The y position of the incantation
+ * @param result The result of the incantation
+ */
+
 void pie_command(const std::string& data)
 {
     //end of an incantation
@@ -146,6 +219,20 @@ void pie_command(const std::string& data)
     std::cout << "Result: " << result << std::endl;
 }
 
+/**
+ * @brief Handle the pin command (player inventory)
+ * @param data The data to handle
+ * @param player_id The id of the player
+ * @param x The x position of the player
+ * @param y The y position of the player
+ * @param food The food quantity of the player
+ * @param linemate The linemate quantity of the player
+ * @param deraumere The deraumere quantity of the player
+ * @param sibur The sibur quantity of the player
+ * @param mendiane The mendiane quantity of the player
+ * @param phiras The phiras quantity of the player
+ * @param thystame The thystame quantity of the player
+ */
 void pin_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -175,6 +262,12 @@ void pin_command(const std::string& data)
     player.addInventory(Ressources::RessourceType::THYSTAME, std::stoi(thystame));
 }
 
+/**
+ * @brief Handle the plv command (player level)
+ * @param data The data to handle
+ * @param player_id The id of the player
+ * @param level The level of the player
+ */
 void plv_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -187,6 +280,16 @@ void plv_command(const std::string& data)
     GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setLevel(std::stoi(level));
 }
 
+/**
+ * @brief Handle the pnw command (new player)
+ * @param data The data to handle
+ * @param player_id The id of the player
+ * @param x The x position of the player
+ * @param y The y position of the player
+ * @param orientation The orientation of the player
+ * @param level The level of the player
+ * @param team_name The team name of the player
+ */
 void pnw_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -203,6 +306,14 @@ void pnw_command(const std::string& data)
     GUI::getInstance()->AddPlayer(player);
 }
 
+/**
+ * @brief Handle the ppo command (player position)
+ * @param data The data to handle
+ * @param player_id The id of the player
+ * @param x The x position of the player
+ * @param y The y position of the player
+ * @param orientation The orientation of the player
+ */
 void ppo_command(const std::string& data)
 {
     std::istringstream iss(data);
@@ -217,6 +328,12 @@ void ppo_command(const std::string& data)
     GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setPosition(std::stoi(x), std::stoi(y), static_cast<Orientation>(std::stoi(orientation)));
 }
 
+/**
+ * @brief Handle the tna command (name of all teams)
+ * @param data The data to handle
+ * @param team_name The name of the team
+ */
+
 void tna_command(const std::string& data)
 {
     std::cout << "Handling tna: " << data << std::endl;
@@ -227,6 +344,12 @@ void tna_command(const std::string& data)
     iss >> team_name;
     std::cout << "Team name: " << team_name << std::endl;
 }
+
+/**
+ * @brief Handle the pdi command (player died)
+ * @param data The data to handle
+ * @param player_id The id of the player who died
+ */
 
 void pdi_command(const std::string& data)
 {
@@ -239,6 +362,14 @@ void pdi_command(const std::string& data)
     std::cout << "Player id: " << player_id << std::endl;
 }
 
+/**
+ * @brief Handle the enw command (egg layed by player)
+ * @param data The data to handle
+ * @param egg_id The id of the egg
+ * @param player_id The id of the player who layed the egg
+ * @param x The x position of the egg
+ * @param y The y position of the egg
+ */
 void enw_command(const std::string &data)
 {
     std::istringstream iss(data);
@@ -257,6 +388,12 @@ void enw_command(const std::string &data)
     map->addEgg(std::stoi(x), std::stoi(y), std::stoi(egg_id));
 }
 
+/**
+ * @brief Handle the ebo command (egg hatched)
+ * @param data The data to handle
+ * @param egg_id The id of the egg
+ */
+
 void ebo_command(const std::string &data)
 {
     std::istringstream iss(data);
@@ -269,6 +406,11 @@ void ebo_command(const std::string &data)
     map->removeEgg(std::stoi(egg_id));
 }
 
+/**
+ * @brief Handle the edi command (egg died)
+ * @param data The data to handle
+ * @param egg_id The id of the egg
+ */
 void edi_command(const std::string &data)
 {
     std::istringstream iss(data);
@@ -281,6 +423,12 @@ void edi_command(const std::string &data)
     map->removeEgg(std::stoi(egg_id));
 }
 
+
+/**
+ * @brief Handle the sgt command (time unit)
+ * @param data The data to handle
+ * @param time_unit The time unit
+ */
 void sgt_command (const std::string &data)
 {
     std::cout << "Handling sgt: " << data << std::endl;
@@ -291,6 +439,11 @@ void sgt_command (const std::string &data)
     GUI::getInstance()->setFreq(std::stoi(time_unit));
 }
 
+/**
+ * @brief Handle the sst command (time unit modification)
+ * @param data The data to handle
+ * @param time_unit The time unit
+ */
 void sst_command (const std::string &data)
 {
     std::cout << "Handling sst: " << data << std::endl;
@@ -302,6 +455,11 @@ void sst_command (const std::string &data)
     std::cout << "Time unit: " << time_unit << std::endl;
 }
 
+/**
+ * @brief Handle the seg command (end of the game)
+ * @param data The data to handle
+ * @param team_name The name of the team who won
+ */
 void seg_command (const std::string &data)
 {
     std::cout << "Handling seg: " << data << std::endl;
@@ -312,6 +470,12 @@ void seg_command (const std::string &data)
     iss >> team_name;
     std::cout << "Team name: " << team_name << std::endl;
 }
+
+/**
+ * @brief Handle the smg command (server message)
+ * @param data The data to handle
+ * @param message The message
+ */
 
 void smg_command (const std::string &data)
 {
@@ -324,11 +488,19 @@ void smg_command (const std::string &data)
     std::cout << "Message: " << message << std::endl;
 }
 
+/**
+ * @brief Handle the suc command (unknown command)
+ * @param data The data to handle
+ */
 void suc_command (const std::string &data)
 {
     std::cout << "Handling suc: " << data << std::endl;
 }
 
+/**
+ * @brief Handle the sbp command (bad parameter)
+ * @param data The data to handle
+ */
 void sbp_command (const std::string &data)
 {
     std::cout << "Handling sbp: " << data << std::endl;
