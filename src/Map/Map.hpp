@@ -12,11 +12,11 @@
 
     #include <iostream>
     #include <map>
-    #include "Ressources.hpp"
+    #include "Resource.hpp"
     #include <memory>
 
 using Coordinates = std::pair<int, int>;
-using ResourceMap = std::map<Ressources::RessourceType, int>;
+using ResourceMap = std::map<Resource::RessourceType, int>;
 
 class Map {
     public:
@@ -26,27 +26,14 @@ class Map {
             static std::shared_ptr<Map> instance(new Map());
             return instance;
         }
-        void addResource(int x, int y, Ressources::RessourceType resource, int quantity);
-        void removeResource(int x, int y, Ressources::RessourceType resource, int quantity);
+        void addResource(int x, int y, Resource::RessourceType resource, int quantity);
+        void removeResource(int x, int y, Resource::RessourceType resource, int quantity);
         ResourceMap &getResources(int x, int y) {
             return _map.at({x, y});
         }
         void printResources(int x, int y);
         void printMap();
-        std::string resourceToString(Ressources::RessourceType ressource) {
-            switch (ressource) {
-                case Ressources::RessourceType::FOOD: return "Food";
-                case Ressources::RessourceType::LINEMATE: return "Linemate";
-                case Ressources::RessourceType::DERAUMERE: return "Deraumere";
-                case Ressources::RessourceType::SIBUR: return "Sibur";
-                case Ressources::RessourceType::MENDIANE: return "Mendiane";
-                case Ressources::RessourceType::PHIRAS: return "Phiras";
-                case Ressources::RessourceType::THYSTAME: return "Thystame";
-                case Ressources::RessourceType::EGG: return "Egg";
-                // Ajoutez d'autres cas pour chaque ressource
-                default: return "Unknown";
-            }
-        }
+        std::string resourceToString(Resource::RessourceType ressource);
         void setMapSize(int sizeX, int sizeY);
         int getMapSizeX() const { return _sizeX; }
         int getMapSizeY() const { return _sizeY; }

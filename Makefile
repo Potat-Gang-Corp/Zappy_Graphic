@@ -29,7 +29,6 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Factory/*.cpp \
 			$(SRC_DIR)/GUI/*.cpp \
 			$(SRC_DIR)/Map/*.cpp \
-			$(SRC_DIR)/Ressources/*.cpp \
 			$(SRC_DIR)/GUI/Camera/*.cpp \
 			$(SRC_DIR)/GUI/Window/*.cpp \
 			$(SRC_DIR)/GUI/Light/*.cpp 	\
@@ -48,7 +47,6 @@ INCLUDES := -I./src \
 			-I./src/Factory \
 			-I./src/GUI \
 			-I./src/Map \
-			-I./src/Ressources \
 			-I./src/GUI/Camera \
 			-I./src/GUI/Window \
 			-I./src/GUI/Light 	\

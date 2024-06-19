@@ -10,28 +10,29 @@
 void AModels::drawModel()
 {
     DrawModel(_model, _position, _scale, WHITE);
-    DrawBoundingBox(_boundbox, WHITE);
+    DrawBoundingBox(_boundbox, BLACK);
 }
 
 void AModels::setPosition(Vector3 position)
 {
     _position = position;
-
-    _boundbox.min.x += position.x;
-    _boundbox.min.y += position.y;
-    _boundbox.min.z += position.z;
-    _boundbox.max.x += position.x;
-    _boundbox.max.y += position.y;
-    _boundbox.max.z += position.z;
+    updateBoundingBox();
 }
 
 void AModels::setScale(float scale)
 {
     _scale = scale;
-    _boundbox.min.x *= scale;
-    _boundbox.min.y *= scale;
-    _boundbox.min.z *= scale;
-    _boundbox.max.x *= scale;
-    _boundbox.max.y *= scale;
-    _boundbox.max.z *= scale;
-}   
+    updateBoundingBox();
+}
+
+void AModels::updateBoundingBox()
+{
+    BoundingBox originalBoundBox = _originalBoundBox;
+
+    _boundbox.min.x = originalBoundBox.min.x * _scale + _position.x;
+    _boundbox.min.y = originalBoundBox.min.y * _scale + _position.y;
+    _boundbox.min.z = originalBoundBox.min.z * _scale + _position.z;
+    _boundbox.max.x = originalBoundBox.max.x * _scale + _position.x;
+    _boundbox.max.y = originalBoundBox.max.y * _scale + _position.y;
+    _boundbox.max.z = originalBoundBox.max.z * _scale + _position.z;
+}

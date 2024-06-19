@@ -13,7 +13,15 @@ ModelsLoader::ModelsLoader()
     _models = {
         {"Island_farm", LoadModel("assets/island_farm.glb")},
         {"Island_tree", LoadModel("assets/island_tree.glb")},
-        {"Island", LoadModel("assets/island.glb")}
+        {"Island", LoadModel("assets/island.glb")},
+        {"FOOD", LoadModel("assets/potato.glb")},
+        {"LINEMATE", LoadModel("assets/mine1.glb")},
+        {"DERAUMERE", LoadModel("assets/mine2.glb")},
+        {"SIBUR", LoadModel("assets/mine3.glb")},
+        {"MENDIANE", LoadModel("assets/mine4.glb")},
+        {"PHIRAS", LoadModel("assets/mine5.glb")},
+        {"THYSTAME", LoadModel("assets/mine6.glb")},
+        {"EGG", LoadModel("assets/Egg.glb")},
 
         // {"Player", LoadModel("assets/Player.obj")},
         // {"Egg", LoadModel("assets/Egg.obj")},

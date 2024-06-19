@@ -37,10 +37,13 @@ class GUI {
         void setFreq(int freq) { _freq = freq; }
         void run();
         void LoadIsland();
+        void loadResources();
+        void UpdateMapContent();
 
     private:
         std::map<int, std::vector<Player>> _players;
         std::vector<std::shared_ptr<IModels>> _models;
+        std::vector<std::shared_ptr<IModels>> _resource;
         int _freq = 10;
 };
 

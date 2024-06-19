@@ -12,7 +12,7 @@
 
 #include <string>
 #include <map>
-#include "Ressources.hpp"
+#include "Resource.hpp"
 
 enum Orientation {
     NORTH = 1,  
@@ -27,7 +27,7 @@ struct PlayerData {
     int _posX, _posY;
     Orientation _orientation;
     std::string _teamName;
-    std::map<Ressources::RessourceType, int> _inventory;
+    std::map<Resource::RessourceType, int> _inventory;
 };
 
 #endif /* !PLAYERDATA_HPP_ */

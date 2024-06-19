@@ -56,13 +56,13 @@ void bct_command(const std::string& data)
 
     iss >> command >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
 
-    gameMap->addResource(x, y, Ressources::RessourceType::FOOD, food);
-    gameMap->addResource(x, y, Ressources::RessourceType::LINEMATE, linemate);
-    gameMap->addResource(x, y, Ressources::RessourceType::DERAUMERE, deraumere);
-    gameMap->addResource(x, y, Ressources::RessourceType::SIBUR, sibur);
-    gameMap->addResource(x, y, Ressources::RessourceType::MENDIANE, mendiane);
-    gameMap->addResource(x, y, Ressources::RessourceType::PHIRAS, phiras);
-    gameMap->addResource(x, y, Ressources::RessourceType::THYSTAME, thystame);
+    gameMap->addResource(x, y, Resource::RessourceType::FOOD, food);
+    gameMap->addResource(x, y, Resource::RessourceType::LINEMATE, linemate);
+    gameMap->addResource(x, y, Resource::RessourceType::DERAUMERE, deraumere);
+    gameMap->addResource(x, y, Resource::RessourceType::SIBUR, sibur);
+    gameMap->addResource(x, y, Resource::RessourceType::MENDIANE, mendiane);
+    gameMap->addResource(x, y, Resource::RessourceType::PHIRAS, phiras);
+    gameMap->addResource(x, y, Resource::RessourceType::THYSTAME, thystame);
 }
 
 /**
@@ -104,8 +104,8 @@ void pdr_command(const std::string& data)
 
     GuiPtr gui = GUI::getInstance();
     auto& player = gui->getPlayers()[std::stoi(player_id)][0];
-    player.removeInventory(static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
-    Map::getInstance()->addResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
+    player.removeInventory(static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
+    Map::getInstance()->addResource(player.getPosX(), player.getPosY(), static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
 /**
@@ -162,8 +162,8 @@ void pgt_command(const std::string& data)
 
     GuiPtr gui = GUI::getInstance();
     auto& player = gui->getPlayers()[std::stoi(player_id)][0];
-    player.addInventory(static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
-    Map::getInstance()->removeResource(player.getPosX(), player.getPosY(), static_cast<Ressources::RessourceType>(std::stoi(ressource_number)), 1);
+    player.addInventory(static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
+    Map::getInstance()->removeResource(player.getPosX(), player.getPosY(), static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
 }
 
 /**
@@ -253,13 +253,13 @@ void pin_command(const std::string& data)
     GuiPtr gui = GUI::getInstance();
     auto& player = gui->getPlayers()[std::stoi(player_id)][0];
     player.setPosition(std::stoi(x), std::stoi(y), player.getOrientation());
-    player.addInventory(Ressources::RessourceType::FOOD, std::stoi(food));
-    player.addInventory(Ressources::RessourceType::LINEMATE, std::stoi(linemate));
-    player.addInventory(Ressources::RessourceType::DERAUMERE, std::stoi(deraumere));
-    player.addInventory(Ressources::RessourceType::SIBUR, std::stoi(sibur));
-    player.addInventory(Ressources::RessourceType::MENDIANE, std::stoi(mendiane));
-    player.addInventory(Ressources::RessourceType::PHIRAS, std::stoi(phiras));
-    player.addInventory(Ressources::RessourceType::THYSTAME, std::stoi(thystame));
+    player.addInventory(Resource::RessourceType::FOOD, std::stoi(food));
+    player.addInventory(Resource::RessourceType::LINEMATE, std::stoi(linemate));
+    player.addInventory(Resource::RessourceType::DERAUMERE, std::stoi(deraumere));
+    player.addInventory(Resource::RessourceType::SIBUR, std::stoi(sibur));
+    player.addInventory(Resource::RessourceType::MENDIANE, std::stoi(mendiane));
+    player.addInventory(Resource::RessourceType::PHIRAS, std::stoi(phiras));
+    player.addInventory(Resource::RessourceType::THYSTAME, std::stoi(thystame));
 }
 
 /**
@@ -384,7 +384,7 @@ void enw_command(const std::string &data)
     GuiPtr gui = GUI::getInstance();
     auto& player = gui->getPlayers()[std::stoi(player_id)][0];
     MapPtr map = Map::getInstance();
-    map->addResource(std::stoi(x), std::stoi(y), Ressources::RessourceType::EGG, 1);
+    map->addResource(std::stoi(x), std::stoi(y), Resource::RessourceType::EGG, 1);
     map->addEgg(std::stoi(x), std::stoi(y), std::stoi(egg_id));
 }
 
@@ -402,7 +402,7 @@ void ebo_command(const std::string &data)
     iss >> command >> egg_id;
     egg_id = egg_id.substr(1);
     MapPtr map = Map::getInstance();
-    map->removeResource(map->getEggX(std::stoi(egg_id)), map->getEggY(std::stoi(egg_id)),  Ressources::RessourceType::EGG, 1);
+    map->removeResource(map->getEggX(std::stoi(egg_id)), map->getEggY(std::stoi(egg_id)),  Resource::RessourceType::EGG, 1);
     map->removeEgg(std::stoi(egg_id));
 }
 
@@ -419,7 +419,7 @@ void edi_command(const std::string &data)
     iss >> command >> egg_id;
     egg_id = egg_id.substr(1);
     MapPtr map = Map::getInstance();
-    map->removeResource(map->getEggX(std::stoi(egg_id)), map->getEggY(std::stoi(egg_id)),  Ressources::RessourceType::EGG, 1);
+    map->removeResource(map->getEggX(std::stoi(egg_id)), map->getEggY(std::stoi(egg_id)),  Resource::RessourceType::EGG, 1);
     map->removeEgg(std::stoi(egg_id));
 }
 

@@ -13,11 +13,11 @@
 #include <iostream>
 #include "PlayerData.hpp"
 #include <map>
-#include "Ressources.hpp"
+#include "Resource.hpp"
 
 class Player {
     public:
-        Player(int number, int posX, int posY, std::string teamName, Orientation orientation, std::map<Ressources::RessourceType, int> inventory, int level = 1);
+        Player(int number, int posX, int posY, std::string teamName, Orientation orientation, std::map<Resource::RessourceType, int> inventory, int level = 1);
         ~Player();
         const int &getNumber() const;
         const int &getPosX() const;
@@ -28,9 +28,9 @@ class Player {
         const std::string &getTeamName();
         const Orientation &getOrientation();
         const PlayerData &getPlayerData();
-        const std::map<Ressources::RessourceType, int> &getInventory();
-        void addInventory(Ressources::RessourceType resource, int quantity);
-        void removeInventory(Ressources::RessourceType resource, int quantity);
+        const std::map<Resource::RessourceType, int> &getInventory();
+        void addInventory(Resource::RessourceType resource, int quantity);
+        void removeInventory(Resource::RessourceType resource, int quantity);
 
     private:
         PlayerData _playerData;

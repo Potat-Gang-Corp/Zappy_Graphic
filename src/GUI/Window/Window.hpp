@@ -19,7 +19,6 @@
 
 class Window {
     public:
-        Window(int mapSizeX, int mapSizeY);
         Window();
         ~Window();
         static std::shared_ptr<Window> getInstance() {
@@ -28,17 +27,13 @@ class Window {
         }
         void setLogInfo(const std::string &log);
         void initWindow(int height, int width, const std::string &WindowName, int fps);
-        void DrawMap(int mapSizeX, int mapSizeY);
         void DrawFps(int x, int y);
         void loadModels();
         void updateMap(std::shared_ptr<Map> map);
-        std::vector<Model> getLoadedModels() { return _loadedModels; }
         std::vector<Model> getResourceModels() { return _resourceModels; }
 
     private:
-        int _screenH, _screenW, _fps, _mapSizeX, _mapSizeY;
-        std::vector<std::string> _islands;
-        std::vector<Model> _loadedModels;
+        int _screenH, _screenW, _fps;
         std::vector<Model> _resourceModels;
 };
 

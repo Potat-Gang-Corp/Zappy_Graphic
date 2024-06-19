@@ -1,25 +1,4 @@
-/*******************************************************************************************
-*
-*   raylib [shaders] example - basic lighting
-*
-*   NOTE: This example requires raylib OpenGL 3.3 or ES2 versions for shaders support,
-*         OpenGL 1.1 does not support shaders, recompile raylib to OpenGL 3.3 version.
-*
-*   NOTE: Shaders used in this example are #version 330 (OpenGL 3.3).
-*
-*   Example originally created with raylib 3.0, last time updated with raylib 4.2
-*
-*   Example contributed by Chris Camacho (@codifies) and reviewed by Ramon Santamaria (@raysan5)
-*
-*   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
-*   BSD-like license that allows static linking with closed source software
-*
-*   Copyright (c) 2019-2024 Chris Camacho (@codifies) and Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
-
 #include "rlgl.h"
 #include "raymath.h"  
 
@@ -68,7 +47,7 @@ int main(void)
     SetShaderValue(shader, ambientLoc, ambient, SHADER_UNIFORM_VEC4);
 
     // Load the model
-    Model model = LoadModel("assets/mine1.glb");
+    Model model = LoadModel("assets/player_breath.glb");
 
     // Apply rotation to correct the model orientation
     // Matrix rotation = MatrixRotateX(DEG2RAD);
@@ -79,19 +58,14 @@ int main(void)
         model.materials[i].shader = shader;
     }
 
-    // int animsCount = 0;
-    // ModelAnimation *anims = LoadModelAnimations("assets/mine5.glb", &animsCount);
-    // int animFrameCounter = 0;
+    // Load animations
+    int animsCount = 0;
+    ModelAnimation *anims = LoadModelAnimations("assets/player_breath.glb", &animsCount);
+    ModelAnimation *dyingAnim = LoadModelAnimations("assets/player_breath.glb", &animsCount);
+    int animFrameCounter = 0;
 
-
-    // Load skybox shader and textures
-    // Shader skyboxShader = LoadShader("skybox.vs", "skybox.fs");
-    //     Texture2D skyboxTexture = LoadTexture("skybox.png");
-    //     Model skybox = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
-    //     skybox.materials[0].shader = skyboxShader;
-    //     skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = skyboxTexture;
-    //     int cubemapValue[1] = { MATERIAL_MAP_CUBEMAP };
-    //     SetShaderValue(skyboxShader, GetShaderLocation(skyboxShader, "environmentMap"), cubemapValue, SHADER_UNIFORM_INT);
+    // Current animation state
+    bool isDying = false;
 
     // Create lights
     Light lights[MAX_LIGHTS] = { 0 };
@@ -110,12 +84,23 @@ int main(void)
         //----------------------------------------------------------------------------------
         UpdateCamera(&camera, CAMERA_ORBITAL);
 
-        // if (IsKeyDown(KEY_SPACE))
-        // {
-            // animFrameCounter++;
-            // UpdateModelAnimation(model, anims[0], animFrameCounter);
-            // if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
-        // }
+        if (IsKeyPressed(KEY_P))
+        {
+            isDying = !isDying;
+            animFrameCounter = 0;  // Reset animation frame counter when switching animations
+        }
+
+        animFrameCounter++;
+        if (isDying)
+        {
+            UpdateModelAnimation(model, dyingAnim[0], animFrameCounter);
+            if (animFrameCounter >= dyingAnim[0].frameCount) animFrameCounter = 0;
+        }
+        else
+        {
+            UpdateModelAnimation(model, anims[0], animFrameCounter);
+            if (animFrameCounter >= anims[0].frameCount) animFrameCounter = 0;
+        }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { camera.position.x, camera.position.y, camera.position.z };
@@ -139,21 +124,8 @@ int main(void)
 
             BeginMode3D(camera);
 
-                // Draw skybox
-                // rlDisableBackfaceCulling();
-                // rlDisableDepthMask();
-                    // DrawModel(skybox, Vector3Zero(), 1.0f, WHITE);
-                // rlEnableBackfaceCulling();
-                // rlEnableDepthMask();     // Enable backface culling again
-
                 // Draw model
-                DrawModel(model, (Vector3){0.0f, 1.0f, 0.0f}, 1.0f, WHITE);
-                // DrawModel(model, (Vector3){1.0f, 1.0f, 1.0f}, 0.5f, WHITE);
-
-                for (int i = 0; i < model.boneCount; i++)
-                {
-                    // DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED);
-                }
+                DrawModel(model, (Vector3){0.0f, 1.0f, 0.0f}, 0.4f, WHITE);
 
                 // Draw spheres to show where the lights are
                 for (int i = 0; i < MAX_LIGHTS; i++)
@@ -178,15 +150,15 @@ int main(void)
     //--------------------------------------------------------------------------------------
     UnloadShader(shader);      // Unload shader
     UnloadModel(model);        // Unload model
-    // UnloadShader(skyboxShader);// Unload skybox shader
-    // UnloadTexture(skyboxTexture); // Unload skybox texture
-    // UnloadModel(skybox);       // Unload skybox
+    UnloadModelAnimations(anims, animsCount);  // Unload animations
+    UnloadModelAnimations(dyingAnim, animsCount);  // Unload dying animation
 
     CloseWindow();             // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
     return 0;
 }
+
 
 
 /*

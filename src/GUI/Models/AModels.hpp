@@ -21,12 +21,14 @@ class AModels : public IModels {
         void setScale(float scale) override final;
         Model getModel() override final { return _model; }
         void drawModel() override;
+        void updateBoundingBox();
 
     protected:
         float _scale;
         Vector3 _position;
         Model _model;
         BoundingBox _boundbox;
+        BoundingBox _originalBoundBox;
 };
 
 #endif /* !AMODELS_HPP_ */

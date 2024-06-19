@@ -22,12 +22,18 @@ void Map::setMapSize(int sizeX, int sizeY)
     }
 }
 
-void Map::addResource(int x, int y, Ressources::RessourceType ressource, int quantity)
+void Map::addResource(int x, int y, Resource::RessourceType ressource, int quantity)
 {
-    _map[{x, y}][ressource] += quantity;
+    if ((int)ressource == 7) {
+        if (_map[{x, y}][ressource] > 0) {
+            _map[{x, y}][ressource] += quantity;
+            return;
+        }
+    }
+    _map[{x, y}][ressource] = quantity;
 }
 
-void Map::removeResource(int x, int y, Ressources::RessourceType ressource, int quantity)
+void Map::removeResource(int x, int y, Resource::RessourceType ressource, int quantity)
 {
     _map[{x, y}][ressource] -= quantity;
     if (_map[{x, y}][ressource] <= 0) {
@@ -60,5 +66,21 @@ void Map::printMap()
         for (int x = 0; x < _sizeX; x++) {
             printResources(x, y);
         }
+    }
+}
+
+std::string Map::resourceToString(Resource::RessourceType ressource)
+{
+    switch (ressource) {
+        case Resource::RessourceType::FOOD: return "FOOD";
+        case Resource::RessourceType::LINEMATE: return "LINEMATE";
+        case Resource::RessourceType::DERAUMERE: return "DERAUMERE";
+        case Resource::RessourceType::SIBUR: return "SIBUR";
+        case Resource::RessourceType::MENDIANE: return "MENDIANE";
+        case Resource::RessourceType::PHIRAS: return "PHIRAS";
+        case Resource::RessourceType::THYSTAME: return "THYSTAME";
+        case Resource::RessourceType::EGG: return "EGG";
+        // Ajoutez d'autres cas pour chaque ressource
+        default: return "Unknown";
     }
 }

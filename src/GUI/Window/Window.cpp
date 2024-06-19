@@ -7,33 +7,13 @@
 
 #include "Window.hpp"
 
-Window::Window(int mapSizeX, int mapSizeY)
-{
-    _islands.push_back("assets/island_farm.glb");
-    _islands.push_back("assets/island_tree.glb");
-    _islands.push_back("assets/low_poly_island.glb");
-}
-
-Window::Window()
-{
-    _islands.push_back("assets/island_farm.glb");
-    _islands.push_back("assets/island_tree.glb");
-    _islands.push_back("assets/low_poly_island.glb");
-}
+Window::Window() {}
 
 Window::~Window()
-{
-    for (const auto& model : _loadedModels) {
-        UnloadModel(model);
-    }
-}
+{}
 
 void Window::loadModels()
 {
-    for (const auto& island : _islands) {
-        _loadedModels.push_back(LoadModel(island.c_str()));
-    }
-
     _resourceModels.push_back(LoadModel("assets/potato.glb"));
     _resourceModels.push_back(LoadModel("assets/mine1.glb"));
     _resourceModels.push_back(LoadModel("assets/mine2.glb"));
@@ -72,37 +52,6 @@ void Window::initWindow(int height, int width, const std::string &WindowName, in
     _fps = fps;
     InitWindow(_screenH, _screenW, WindowName.c_str()); 
     SetTargetFPS(_fps);
-}
-
-void Window::DrawMap(int mapSizeX, int mapSizeY)
-{
-    for (float i = 0; i < mapSizeX; i++) {
-        for (float j = 0; j < mapSizeY; j++) {
-            int randomIndex = rand() % _loadedModels.size();
-            Vector3 modelPosition = { (float)(i) * 10, 0.0f, (float)(j) * 10 };
-            float modelScale = 0.2f;
-
-            // BoundingBox box = GetModelBoundingBox(_loadedModels[0]);
-            // box.min.x *= modelScale;
-            // box.min.y *= modelScale;
-            // box.min.z *= modelScale;
-
-            // box.max.x *= modelScale;
-            // box.max.y *= modelScale;
-            // box.max.z *= modelScale;
-
-            // box.min.x += modelPosition.x;
-            // box.min.y += modelPosition.y;
-            // box.min.z += modelPosition.z;
-
-            // box.max.x += modelPosition.x;
-            // box.max.y += modelPosition.y;
-            // box.max.z += modelPosition.z;
-
-            DrawModel(_loadedModels[randomIndex], modelPosition, modelScale, WHITE);
-            // DrawBoundingBox(box, RED);
-        }
-    }
 }
 
 void Window::updateMap(std::shared_ptr<Map> map)
