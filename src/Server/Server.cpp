@@ -53,15 +53,21 @@ std::string Server::receive_data()
         
         return response;
     } catch (const boost::system::system_error& e) {
-        std::cerr << "Receive failed: " << e.what() << std::endl;
-        return "";
+        if (e.code() == boost::asio::error::eof) {
+            std::cerr << "Connection closed by peer" << std::endl;
+            exit(84);
+            return "";
+        } else {
+            std::cerr << "Receive failed: " << e.what() << std::endl;
+            exit(84);
+            return "";
+        }
     }
 }
 
 void Server::listening()
 {
     while (true) {
-        // send_data("msz\n");
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;
         if (response != "ko\n" && response != "WELCOME\n" && response != "Connected\n") {

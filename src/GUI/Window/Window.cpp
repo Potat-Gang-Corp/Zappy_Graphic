@@ -41,6 +41,7 @@ void Window::loadModels()
     _resourceModels.push_back(LoadModel("assets/mine4.glb"));
     _resourceModels.push_back(LoadModel("assets/mine5.glb"));
     _resourceModels.push_back(LoadModel("assets/mine6.glb"));
+    _resourceModels.push_back(LoadModel("assets/Egg.glb"));
 }
 
 void Window::setLogInfo(const std::string &log)
@@ -81,24 +82,24 @@ void Window::DrawMap(int mapSizeX, int mapSizeY)
             Vector3 modelPosition = { (float)(i) * 10, 0.0f, (float)(j) * 10 };
             float modelScale = 0.2f;
 
-            BoundingBox box = GetModelBoundingBox(_loadedModels[0]);
-            box.min.x *= modelScale;
-            box.min.y *= modelScale;
-            box.min.z *= modelScale;
+            // BoundingBox box = GetModelBoundingBox(_loadedModels[0]);
+            // box.min.x *= modelScale;
+            // box.min.y *= modelScale;
+            // box.min.z *= modelScale;
 
-            box.max.x *= modelScale;
-            box.max.y *= modelScale;
-            box.max.z *= modelScale;
+            // box.max.x *= modelScale;
+            // box.max.y *= modelScale;
+            // box.max.z *= modelScale;
 
-            box.min.x += modelPosition.x;
-            box.min.y += modelPosition.y;
-            box.min.z += modelPosition.z;
+            // box.min.x += modelPosition.x;
+            // box.min.y += modelPosition.y;
+            // box.min.z += modelPosition.z;
 
-            box.max.x += modelPosition.x;
-            box.max.y += modelPosition.y;
-            box.max.z += modelPosition.z;
+            // box.max.x += modelPosition.x;
+            // box.max.y += modelPosition.y;
+            // box.max.z += modelPosition.z;
 
-            DrawModel(_loadedModels[0], modelPosition, modelScale, WHITE);
+            DrawModel(_loadedModels[randomIndex], modelPosition, modelScale, WHITE);
             // DrawBoundingBox(box, RED);
         }
     }
@@ -120,7 +121,7 @@ void Window::updateMap(std::shared_ptr<Map> map)
                     float randomCoefficientZ = 0.3f + static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (1.7f - 0.3f);
 
                     resourcePosition.x += (modelIndex % 3) * /*randomCoefficientX*/ 1.0f;
-                    resourcePosition.z += (modelIndex / 3) * /*randomCoefficientZ*/ 1.0f;
+                    resourcePosition.z += (modelIndex / 3) * /*randomCoefficientZ */ 1.0f;
                     int index = static_cast<int>(resource.first);
                     DrawModel(_resourceModels[index], resourcePosition, 0.09f, WHITE);
                     modelIndex++;

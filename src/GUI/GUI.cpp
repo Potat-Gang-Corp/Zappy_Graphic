@@ -49,7 +49,6 @@ void GUI::run()
 
         camera.update();
         lightWrapper.updateShaderValues(camera.getX(), camera.getY(), camera.getZ());
-        lightWrapper.updateLightColor(WHITE);
         BeginDrawing();
         ClearBackground(lightWrapper.getCurrentBackgroundColor());
         camera.BeginMode();
