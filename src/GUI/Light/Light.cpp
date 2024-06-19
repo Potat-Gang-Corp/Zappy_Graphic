@@ -18,11 +18,11 @@ LightWrapper::LightWrapper()
 
 LightWrapper::~LightWrapper() {}
 
-void LightWrapper::SetShaderToModel(std::vector<Model> _loadedModels)
+void LightWrapper::SetShaderToModel(std::vector<std::shared_ptr<IModels>> _models)
 {
-    for (int i = 0; i < _loadedModels.size(); i++) {
-        for (int j = 0; j < _loadedModels[i].materialCount; j++) {
-            _loadedModels[i].materials[j].shader = _shader;
+    for (auto &model : _models) {
+        for (int i = 0; i < model->getModel().materialCount; i++) {
+            model->getModel().materials[i].shader = _shader;
         }
     }
 }

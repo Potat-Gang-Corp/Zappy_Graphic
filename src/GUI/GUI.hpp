@@ -19,6 +19,7 @@
     #include "Map.hpp"
     #include "Camera.hpp"
     #include "Window.hpp"
+    #include "IModels.hpp"
 
 class GUI {
     public:
@@ -35,9 +36,11 @@ class GUI {
         }
         void setFreq(int freq) { _freq = freq; }
         void run();
+        void LoadIsland();
 
     private:
         std::map<int, std::vector<Player>> _players;
+        std::vector<std::shared_ptr<IModels>> _models;
         int _freq = 10;
 };
 

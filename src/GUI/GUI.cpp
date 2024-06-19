@@ -7,6 +7,7 @@
 
 #include "GUI.hpp"
 #include "Light.hpp"
+#include "Island.hpp"
 
 GUI::GUI() {}
 
@@ -18,6 +19,19 @@ void GUI::AddPlayer(Player player)
     _players[playerId].push_back(player);
 }
 
+void GUI::LoadIsland()
+{
+    for (auto i = 0; i < Map::getInstance()->getMapSizeX(); i++) {
+        for (auto j = 0; j < Map::getInstance()->getMapSizeY(); j++) {
+            auto rdmNumber = std::rand() % 3 + 1;
+            std::shared_ptr<IModels> monModel = std::make_shared<Island>(rdmNumber);
+            monModel->setScale(0.2f);
+            monModel->setPosition((Vector3){ (float)(i) * 10, 0.0f, (float)(j) * 10 });
+            _models.push_back(monModel);
+        }
+    }
+}
+
 void GUI::run()
 {
     WindowPtr window = Window::getInstance();
@@ -27,10 +41,12 @@ void GUI::run()
     MapPtr map = Map::getInstance();
     map->setMapSize(10, 10);
     window->loadModels();
+
+    this->LoadIsland();
     LightWrapper lightWrapper;
-    lightWrapper.SetShaderToModel(window->getLoadedModels());
-    lightWrapper.SetShaderToModel(window->getResourceModels());
+    lightWrapper.SetShaderToModel(_models);
     lightWrapper.createlight((Vector3){ (float)(map->getMapSizeX() / 2 * 10), 30, (float)(map->getMapSizeY() / 2 * 10) }, Vector3Zero(), RED);
+
 
     // std::vector<Model> models = window->getLoadedModels();
     // std::vector<BoundingBox> BB;
@@ -52,9 +68,12 @@ void GUI::run()
         BeginDrawing();
         ClearBackground(lightWrapper.getCurrentBackgroundColor());
         camera.BeginMode();
+        for (auto& model : _models) {
+            model->drawModel();
+        }
 
-        window->updateMap(map);
-        window->DrawMap(map->getMapSizeX(), map->getMapSizeY());
+        // window->updateMap(map);
+        // window->DrawMap(map->getMapSizeX(), map->getMapSizeY());
 
         lightWrapper.drawSphereOnLights();
         camera.EndMode();

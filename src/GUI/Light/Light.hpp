@@ -12,6 +12,8 @@
 
     #include <iostream>
     #include <vector>
+    #include <memory>
+    #include "IModels.hpp"
     #include "raylib.h"
     #include "raymath.h"
     #include "rlights.h"
@@ -20,7 +22,7 @@ class LightWrapper {
     public:
         LightWrapper();
         ~LightWrapper();
-        void SetShaderToModel(std::vector<Model> _loadedModels);
+        void SetShaderToModel(std::vector<std::shared_ptr<IModels>> _models);
         void createlight(Vector3 position, Vector3 target, Color color);
         void updateShaderValues(float CamX, float CamY, float CamZ);
         void drawSphereOnLights();
