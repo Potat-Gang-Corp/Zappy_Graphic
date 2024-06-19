@@ -32,7 +32,8 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/Ressources/*.cpp \
 			$(SRC_DIR)/GUI/Camera/*.cpp \
 			$(SRC_DIR)/GUI/Window/*.cpp \
-			$(SRC_DIR)/GUI/Light/*.cpp)
+			$(SRC_DIR)/GUI/Light/*.cpp 	\
+			$(SRC_DIR)/GUI/Models/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
 
@@ -50,7 +51,8 @@ INCLUDES := -I./src \
 			-I./src/Ressources \
 			-I./src/GUI/Camera \
 			-I./src/GUI/Window \
-			-I./src/GUI/Light
+			-I./src/GUI/Light 	\
+			-I./src/GUI/Models 	\
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)
