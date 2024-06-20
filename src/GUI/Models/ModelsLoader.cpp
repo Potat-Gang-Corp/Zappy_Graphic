@@ -26,8 +26,9 @@ ModelsLoader::ModelsLoader()
     };
     _anims = {
         {"Player", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/player.glb", &_animsCount))},
-        {"Dying", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/dying.glb", &_animsCount))},
-        {"Dropping", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/dropping.glb", &_animsCount))}
+        {"Dying", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/dying.glb", &_animsCount))},
+        {"Dropping", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/dropping.glb", &_animsCount))},
+        {"LevelUp", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/level_up.glb", &_animsCount))}
     };
 }
 

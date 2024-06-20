@@ -60,7 +60,7 @@ int main(void)
 
     // Load animations
     int animsCount = 0;
-    ModelAnimation *anims = LoadModelAnimations("assets/dying.glb", &animsCount);
+    ModelAnimation *anims = LoadModelAnimations("assets/animation/level_up.glb", &animsCount);
     ModelAnimation *dyingAnim = LoadModelAnimations("assets/mushroom_dance.glb", &animsCount);
     int animFrameCounter = 0;
 

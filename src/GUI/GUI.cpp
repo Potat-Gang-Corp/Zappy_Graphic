@@ -18,13 +18,13 @@ void GUI::AddPlayer(Player player)
 {
     int playerId = player.getNumber();
     _players[playerId].push_back(player);
-    
+
     Model model = ModelsLoader::getInstance()->getModel("PlayerModel");
     std::shared_ptr<ModelAnimation> anim = ModelsLoader::getInstance()->getAnim("Player");
 
     _playerModels[playerId] = std::make_pair(model, anim);
 
-    _playerAnimFrameCounters[playerId] = 0;
+    _playerAnimations[playerId] = {anim, 0, std::chrono::steady_clock::now(), 0.016f};
 }
 
 void GUI::LoadIsland()
@@ -76,19 +76,39 @@ void GUI::UpdateMapContent()
 
 void GUI::UpdateAnimations()
 {
-    for (auto& playerModel : _playerModels) {
-        int playerId = playerModel.first;
-        Model model = playerModel.second.first;
-        std::shared_ptr<ModelAnimation> anim = playerModel.second.second;
-        int& animFrameCounter = _playerAnimFrameCounters[playerId];
-        UpdateModelAnimation(model, anim.get()[0], animFrameCounter);
-        if (animFrameCounter >= anim.get()[0].frameCount) {
-            animFrameCounter = 0;
-            if (anim != _defaultPlayerAnimations[playerId]) {
-                resetPlayerAnimation(playerId);
+    for (auto& playerAnim : _playerAnimations) {
+        int playerId = playerAnim.first;
+        AnimationData& animData = playerAnim.second;
+        
+        if (_playerModels.find(playerId) == _playerModels.end()) {
+            std::cerr << "Player model for ID " << playerId << " not found." << std::endl;
+            continue;
+        }
+
+        Model& model = _playerModels[playerId].first;
+        std::shared_ptr<ModelAnimation> animation = animData.animation;
+
+        if (!animation) {
+            std::cerr << "Animation for player ID " << playerId << " is null." << std::endl;
+            continue;
+        }
+
+        auto now = std::chrono::steady_clock::now();
+        std::chrono::duration<float> elapsedTime = now - animData.lastUpdateTime;
+
+        if (elapsedTime.count() >= animData.frameTime) {
+            int framesToAdvance = static_cast<int>(elapsedTime.count() / animData.frameTime);
+            animData.frameCounter += framesToAdvance;
+            animData.lastUpdateTime = now;
+
+            UpdateModelAnimation(model, animation.get()[0], animData.frameCounter);
+            if (animData.frameCounter >= animation.get()[0].frameCount) {
+                animData.frameCounter = 0;
+                if (animation != _defaultPlayerAnimations[playerId]) {
+                    resetPlayerAnimation(playerId);
+                }
             }
         }
-        animFrameCounter++;
     }
 }
 
@@ -104,16 +124,17 @@ void GUI::drawPlayers()
     }
 }
 
-void GUI::resetPlayerAnimation(int playerId) {
-    // Vérifiez si le joueur existe
+void GUI::resetPlayerAnimation(int playerId)
+{
     if (_playerModels.find(playerId) == _playerModels.end()) {
         std::cerr << "Player ID " << playerId << " not found." << std::endl;
         return;
     }
 
     _playerModels[playerId].second = _defaultPlayerAnimations[playerId];
-
-    _playerAnimFrameCounters[playerId] = 0;
+    _playerAnimations[playerId].animation = _defaultPlayerAnimations[playerId];
+    _playerAnimations[playerId].frameCounter = 0;
+    _playerAnimations[playerId].lastUpdateTime = std::chrono::steady_clock::now();
 }
 
 void GUI::changePlayerAnimation(int playerId, const std::string& animFilename)
@@ -134,8 +155,10 @@ void GUI::changePlayerAnimation(int playerId, const std::string& animFilename)
     }
 
     _playerModels[playerId].second = newAnim;
-
-    _playerAnimFrameCounters[playerId] = 0;
+    _playerAnimations[playerId].animation = newAnim;
+    _playerAnimations[playerId].frameCounter = 0;
+    _playerAnimations[playerId].lastUpdateTime = std::chrono::steady_clock::now();
+    _playerAnimations[playerId].frameTime = 0.016f;
 }
 
 void GUI::run()
@@ -147,7 +170,7 @@ void GUI::run()
     CameraWrapper camera;
 
     AddPlayer(Player(1, 0, 0, "Team1", Orientation::NORTH, { {Resource::RessourceType::FOOD, 10}, {Resource::RessourceType::LINEMATE, 0}, {Resource::RessourceType::DERAUMERE, 0}, {Resource::RessourceType::SIBUR, 0}, {Resource::RessourceType::MENDIANE, 0}, {Resource::RessourceType::PHIRAS, 0}, {Resource::RessourceType::THYSTAME, 0} }));
-    changePlayerAnimation(1, "Dying");
+    // changePlayerAnimation(1, "LevelUp");
 
     this->LoadIsland();
     this->loadResources();

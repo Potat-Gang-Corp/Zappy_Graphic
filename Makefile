@@ -13,7 +13,7 @@ RESET  := \033[0m
 
 SRC_DIR := src
 
-RAY_LIB := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+RAY_LIB := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -g3
 
 COVERAGE_FLAGS := -fprofile-arcs -ftest-coverage
 
