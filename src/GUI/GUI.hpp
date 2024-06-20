@@ -39,11 +39,18 @@ class GUI {
         void LoadIsland();
         void loadResources();
         void UpdateMapContent();
+        void UpdateAnimations();
+        void drawPlayers();
+        void changePlayerAnimation(int playerId, const std::string& animFilename);
+        void resetPlayerAnimation(int playerId); // Nouvelle méthode
 
     private:
         std::map<int, std::vector<Player>> _players;
         std::vector<std::shared_ptr<IModels>> _models;
         std::vector<std::shared_ptr<IModels>> _resource;
+        std::map<int, std::pair<Model, std::shared_ptr<ModelAnimation>>> _playerModels;
+        std::map<int, int> _playerAnimFrameCounters;
+        std::map<int, std::shared_ptr<ModelAnimation>> _defaultPlayerAnimations;
         int _freq = 10;
 };
 

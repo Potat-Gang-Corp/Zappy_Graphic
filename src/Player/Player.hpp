@@ -28,6 +28,7 @@ class Player {
         const std::string &getTeamName();
         const Orientation &getOrientation();
         const PlayerData &getPlayerData();
+        const Vector3 getPosition();
         const std::map<Resource::RessourceType, int> &getInventory();
         void addInventory(Resource::RessourceType resource, int quantity);
         void removeInventory(Resource::RessourceType resource, int quantity);

@@ -18,6 +18,13 @@ void GUI::AddPlayer(Player player)
 {
     int playerId = player.getNumber();
     _players[playerId].push_back(player);
+    
+    Model model = ModelsLoader::getInstance()->getModel("PlayerModel");
+    std::shared_ptr<ModelAnimation> anim = ModelsLoader::getInstance()->getAnim("Player");
+
+    _playerModels[playerId] = std::make_pair(model, anim);
+
+    _playerAnimFrameCounters[playerId] = 0;
 }
 
 void GUI::LoadIsland()
@@ -67,12 +74,80 @@ void GUI::UpdateMapContent()
     }
 }
 
+void GUI::UpdateAnimations()
+{
+    for (auto& playerModel : _playerModels) {
+        int playerId = playerModel.first;
+        Model model = playerModel.second.first;
+        std::shared_ptr<ModelAnimation> anim = playerModel.second.second;
+        int& animFrameCounter = _playerAnimFrameCounters[playerId];
+        UpdateModelAnimation(model, anim.get()[0], animFrameCounter);
+        if (animFrameCounter >= anim.get()[0].frameCount) {
+            animFrameCounter = 0;
+            if (anim != _defaultPlayerAnimations[playerId]) {
+                resetPlayerAnimation(playerId);
+            }
+        }
+        animFrameCounter++;
+    }
+}
+
+void GUI::drawPlayers()
+{
+    for (auto& player : _players) {
+        int playerId = player.first;
+        for (auto& playerInstance : player.second) {
+            Vector3 playerPosition = playerInstance.getPosition();
+            Model model = _playerModels[playerId].first;
+            DrawModel(model, playerPosition, 0.09f, WHITE);
+        }
+    }
+}
+
+void GUI::resetPlayerAnimation(int playerId) {
+    // Vérifiez si le joueur existe
+    if (_playerModels.find(playerId) == _playerModels.end()) {
+        std::cerr << "Player ID " << playerId << " not found." << std::endl;
+        return;
+    }
+
+    _playerModels[playerId].second = _defaultPlayerAnimations[playerId];
+
+    _playerAnimFrameCounters[playerId] = 0;
+}
+
+void GUI::changePlayerAnimation(int playerId, const std::string& animFilename)
+{
+    if (_playerModels.find(playerId) == _playerModels.end()) {
+        std::cerr << "Player ID " << playerId << " not found." << std::endl;
+        return;
+    }
+
+    std::shared_ptr<ModelAnimation> newAnim = ModelsLoader::getInstance()->getAnim(animFilename);
+    if (!newAnim) {
+        std::cerr << "Animation " << animFilename << " not found." << std::endl;
+        return;
+    }
+
+    if (_defaultPlayerAnimations.find(playerId) == _defaultPlayerAnimations.end()) {
+        _defaultPlayerAnimations[playerId] = _playerModels[playerId].second;
+    }
+
+    _playerModels[playerId].second = newAnim;
+
+    _playerAnimFrameCounters[playerId] = 0;
+}
+
 void GUI::run()
 {
+    Map::getInstance()->setMapSize(10, 10);
     WindowPtr window = Window::getInstance();
     window->setLogInfo("LOG_INFO");
-    window->initWindow(1920, 1080, "raylib [core] example - 3d camera free", 144);
+    window->initWindow(1920, 1080, "Potat Zappy", 144);
     CameraWrapper camera;
+
+    AddPlayer(Player(1, 0, 0, "Team1", Orientation::NORTH, { {Resource::RessourceType::FOOD, 10}, {Resource::RessourceType::LINEMATE, 0}, {Resource::RessourceType::DERAUMERE, 0}, {Resource::RessourceType::SIBUR, 0}, {Resource::RessourceType::MENDIANE, 0}, {Resource::RessourceType::PHIRAS, 0}, {Resource::RessourceType::THYSTAME, 0} }));
+    changePlayerAnimation(1, "Dying");
 
     this->LoadIsland();
     this->loadResources();
@@ -90,6 +165,9 @@ void GUI::run()
         lightWrapper.UpdateLightDayColor(cycleTime, dayPhaseDuration);
 
         camera.update();
+
+        this->UpdateAnimations();
+
         lightWrapper.updateShaderValues(camera.getX(), camera.getY(), camera.getZ());
         BeginDrawing();
         ClearBackground(lightWrapper.getCurrentBackgroundColor());
@@ -97,6 +175,7 @@ void GUI::run()
         for (auto& model : _models) {
             model->drawModel();
         }
+        this->drawPlayers();
         this->UpdateMapContent();
         lightWrapper.drawSphereOnLights();
         camera.EndMode();

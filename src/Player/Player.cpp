@@ -20,6 +20,11 @@ Player::Player(int number, int posX, int posY, std::string teamName, Orientation
 
 Player::~Player() {}
 
+const Vector3 Player::getPosition()
+{
+    return (Vector3){(float)_playerData._posX, 0.0f, (float)_playerData._posY};
+}
+
 const int &Player::getNumber() const
 {
     return _playerData._number;

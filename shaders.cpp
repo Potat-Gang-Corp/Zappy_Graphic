@@ -47,7 +47,7 @@ int main(void)
     SetShaderValue(shader, ambientLoc, ambient, SHADER_UNIFORM_VEC4);
 
     // Load the model
-    Model model = LoadModel("assets/player_breath.glb");
+    Model model = LoadModel("assets/player.glb");
 
     // Apply rotation to correct the model orientation
     // Matrix rotation = MatrixRotateX(DEG2RAD);
@@ -60,8 +60,8 @@ int main(void)
 
     // Load animations
     int animsCount = 0;
-    ModelAnimation *anims = LoadModelAnimations("assets/player_breath.glb", &animsCount);
-    ModelAnimation *dyingAnim = LoadModelAnimations("assets/player_breath.glb", &animsCount);
+    ModelAnimation *anims = LoadModelAnimations("assets/dying.glb", &animsCount);
+    ModelAnimation *dyingAnim = LoadModelAnimations("assets/mushroom_dance.glb", &animsCount);
     int animFrameCounter = 0;
 
     // Current animation state
@@ -125,7 +125,7 @@ int main(void)
             BeginMode3D(camera);
 
                 // Draw model
-                DrawModel(model, (Vector3){0.0f, 1.0f, 0.0f}, 0.4f, WHITE);
+                DrawModel(model, (Vector3){0.0f, 0.0f, 0.0f}, 0.4f, WHITE);
 
                 // Draw spheres to show where the lights are
                 for (int i = 0; i < MAX_LIGHTS; i++)
@@ -150,8 +150,8 @@ int main(void)
     //--------------------------------------------------------------------------------------
     UnloadShader(shader);      // Unload shader
     UnloadModel(model);        // Unload model
-    UnloadModelAnimations(anims, animsCount);  // Unload animations
-    UnloadModelAnimations(dyingAnim, animsCount);  // Unload dying animation
+    // UnloadModelAnimations(anims, animsCount);  // Unload animations
+    // UnloadModelAnimations(dyingAnim, animsCount);  // Unload dying animation
 
     CloseWindow();             // Close window and OpenGL context
     //--------------------------------------------------------------------------------------

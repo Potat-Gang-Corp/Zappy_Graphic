@@ -22,17 +22,12 @@ ModelsLoader::ModelsLoader()
         {"PHIRAS", LoadModel("assets/mine5.glb")},
         {"THYSTAME", LoadModel("assets/mine6.glb")},
         {"EGG", LoadModel("assets/Egg.glb")},
-
-        // {"Player", LoadModel("assets/Player.obj")},
-        // {"Egg", LoadModel("assets/Egg.obj")},
-        // {"Stone", LoadModel("assets/Stone.obj")},
-        // {"Food", LoadModel("assets/Food.obj")},
-        // {"Linemate", LoadModel("assets/Linemate.obj")},
-        // {"Deraumere", LoadModel("assets/Deraumere.obj")},
-        // {"Sibur", LoadModel("assets/Sibur.obj")},
-        // {"Mendiane", LoadModel("assets/Mendiane.obj")},
-        // {"Phiras", LoadModel("assets/Phiras.obj")},
-        // {"Thystame", LoadModel("assets/Thystame.obj")},
+        {"PlayerModel", LoadModel("assets/player.glb")}
+    };
+    _anims = {
+        {"Player", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/player.glb", &_animsCount))},
+        {"Dying", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/dying.glb", &_animsCount))},
+        {"Dropping", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/dropping.glb", &_animsCount))}
     };
 }
 
@@ -44,4 +39,14 @@ Model ModelsLoader::getModel(std::string filename)
     }
     printf("Model not found\n");
     return _models["Island"];
+}
+
+std::shared_ptr<ModelAnimation> ModelsLoader::getAnim(std::string filename)
+{
+    for (auto it: _anims) {
+        if (it.first == filename)
+            return it.second;
+    }
+    printf("Model not found\n");
+    return _anims["Player"];
 }
