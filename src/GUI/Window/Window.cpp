@@ -52,6 +52,7 @@ void Window::initWindow(int height, int width, const std::string &WindowName, in
     _fps = fps;
     InitWindow(_screenH, _screenW, WindowName.c_str()); 
     SetTargetFPS(_fps);
+    _init = true;
 }
 
 void Window::updateMap(std::shared_ptr<Map> map)

@@ -30,11 +30,13 @@ class Window {
         void DrawFps(int x, int y);
         void loadModels();
         void updateMap(std::shared_ptr<Map> map);
+        bool getInit() { return _init; }
         std::vector<Model> getResourceModels() { return _resourceModels; }
 
     private:
         int _screenH, _screenW, _fps;
         std::vector<Model> _resourceModels;
+        bool _init = false;
 };
 
 typedef std::shared_ptr<Window> WindowPtr;

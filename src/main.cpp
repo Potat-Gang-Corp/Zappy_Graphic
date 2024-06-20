@@ -25,12 +25,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // std::thread listeningThread(&Server::listening, &server);
+    std::thread listeningThread(&Server::listening, &server);
     std::thread gameThread(&GUI::run, &gui);
 
     gameThread.join();
     server.stop();
-    // listeningThread.join(); 
+    listeningThread.join(); 
     return 0;
 }
 

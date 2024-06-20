@@ -6,8 +6,8 @@
 */
 
 #include "Player.hpp"
-#include "GUI.hpp"
 #include "Commands.hpp"
+#include "PlayerManager.hpp"
 #include "Map.hpp"
 #include <criterion/criterion.h>
 
@@ -42,15 +42,15 @@ Test(bct_command, update_resources)
 
 Test(ppo_command, update_player_position)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     std::map<Resource::RessourceType, int> inventory;
     Player player(1, 0, 0, "TeamA", NORTH, inventory, 1);
-    gui->AddPlayer(player);
+    playerManager->AddPlayer(player);
 
     std::string data = "ppo #1 25 20 2";
     ppo_command(data);
 
-    auto& players = gui->getPlayers();
+    auto& players = playerManager->getPlayers();
     Player& updatedPlayer = players[1][0];
     cr_assert_eq(updatedPlayer.getPosX(), 25, "Expected X position to be 25, but was %d", updatedPlayer.getPosX());
     cr_assert_eq(updatedPlayer.getPosY(), 20, "Expected Y position to be 20, but was %d", updatedPlayer.getPosY());
@@ -59,21 +59,21 @@ Test(ppo_command, update_player_position)
 
 Test(plv_command, update_player_level)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     Player player(1, 0, 0, "TeamA", NORTH, {}, 7);
-    gui->getPlayers()[1].push_back(player);
+    playerManager->getPlayers()[1].push_back(player);
 
     std::string data = "plv #1 5";
     plv_command(data);
 
-    Player updatedPlayer = gui->getPlayers()[1][0];
+    Player updatedPlayer = playerManager->getPlayers()[1][0];
     cr_assert_eq(updatedPlayer.getLevel(), 5, "Expected level to be 5, but was %d", updatedPlayer.getLevel());
 }
 
 
 Test(pin_command, update_player_inventory)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     std::map<Resource::RessourceType, int> inventory = {
         {Resource::RessourceType::FOOD, 0},
         {Resource::RessourceType::LINEMATE, 0},
@@ -84,12 +84,12 @@ Test(pin_command, update_player_inventory)
         {Resource::RessourceType::THYSTAME, 0}
     };
     Player player(1, 0, 0, "TeamA", NORTH, inventory);
-    gui->getPlayers()[1].push_back(player);
+    playerManager->getPlayers()[1].push_back(player);
 
     std::string data = "pin #1 10 20 5 4 3 2 1 0 6";
     pin_command(data);
 
-    Player updatedPlayer = gui->getPlayers()[1][0];
+    Player updatedPlayer = playerManager->getPlayers()[1][0];
     const auto& updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::FOOD), 5, "Expected FOOD quantity to be 5, but was %d", updatedInventory.at(Resource::RessourceType::FOOD));
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::LINEMATE), 4, "Expected LINEMATE quantity to be 4, but was %d", updatedInventory.at(Resource::RessourceType::LINEMATE));
@@ -102,7 +102,7 @@ Test(pin_command, update_player_inventory)
 
 Test(pdr_command, remove_inventory_and_add_to_map)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     std::map<Resource::RessourceType, int> inventory = {
         {Resource::RessourceType::FOOD, 5},
         {Resource::RessourceType::LINEMATE, 3},
@@ -113,12 +113,12 @@ Test(pdr_command, remove_inventory_and_add_to_map)
         {Resource::RessourceType::THYSTAME, 6}
     };
     Player player(1, 10, 20, "TeamA", NORTH, inventory);
-    gui->getPlayers()[1].push_back(player);
+    playerManager->getPlayers()[1].push_back(player);
 
     std::string data = "pdr #1 2";
     pdr_command(data);
 
-    Player updatedPlayer = gui->getPlayers()[1][0];
+    Player updatedPlayer = playerManager->getPlayers()[1][0];
     const auto& updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::DERAUMERE), 1, "Expected DERAUMERE quantity to be 1, but was %d", updatedInventory.at(Resource::RessourceType::DERAUMERE));
 
@@ -129,7 +129,7 @@ Test(pdr_command, remove_inventory_and_add_to_map)
 
 Test(pgt_command, add_inventory_and_remove_from_map)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     std::map<Resource::RessourceType, int> inventory = {
         {Resource::RessourceType::FOOD, 5},
         {Resource::RessourceType::LINEMATE, 3},
@@ -140,7 +140,7 @@ Test(pgt_command, add_inventory_and_remove_from_map)
         {Resource::RessourceType::THYSTAME, 6}
     };
     Player player(1, 10, 20, "TeamA", NORTH, inventory);
-    gui->getPlayers()[1].push_back(player);
+    playerManager->getPlayers()[1].push_back(player);
 
     MapPtr map = Map::getInstance();
     map->addResource(10, 20, Resource::RessourceType::DERAUMERE, 1);
@@ -148,7 +148,7 @@ Test(pgt_command, add_inventory_and_remove_from_map)
     std::string data = "pgt #1 2";
     pgt_command(data);
 
-    Player updatedPlayer = gui->getPlayers()[1][0];
+    Player updatedPlayer = playerManager->getPlayers()[1][0];
     const auto& updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::DERAUMERE), 3, "Expected DERAUMERE quantity to be 3, but was %d", updatedInventory.at(Resource::RessourceType::DERAUMERE));
 
@@ -158,10 +158,9 @@ Test(pgt_command, add_inventory_and_remove_from_map)
 
 Test(enw_command, add_egg_and_resource_to_map)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
     Player player(1, 0, 0, "TeamA", NORTH, {});
-    gui->getPlayers()[1].push_back(player);
-
+    playerManager->getPlayers()[1].push_back(player);
     MapPtr map = Map::getInstance();
 
     std::string data = "enw #123 #1 10 20";
@@ -210,12 +209,12 @@ Test(edi_command, remove_egg_and_resource_from_map)
 
 Test(pnw_command, add_new_player_to_gui)
 {
-    GuiPtr gui = GUI::getInstance();
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
 
     std::string data = "pnw #1 10 20 2 3 TeamA";
     pnw_command(data);
 
-    auto& player = gui->getPlayers()[1][0];
+    auto& player = playerManager->getPlayers()[1][0];
     cr_assert_eq(player.getNumber(), 1, "Expected player ID to be 1, but was %d", player.getNumber());
     cr_assert_eq(player.getPosX(), 10, "Expected player X position to be 10, but was %d", player.getPosX());
     cr_assert_eq(player.getPosY(), 20, "Expected player Y position to be 20, but was %d", player.getPosY());

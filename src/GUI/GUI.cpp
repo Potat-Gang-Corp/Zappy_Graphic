@@ -10,22 +10,9 @@
 #include "Island.hpp"
 #include "Resource.hpp"
 
-GUI::GUI() {}
+GUI::GUI() : _playerManager(std::make_shared<PlayerManager>()) {}
 
 GUI::~GUI() {}
-
-void GUI::AddPlayer(Player player)
-{
-    int playerId = player.getNumber();
-    _players[playerId].push_back(player);
-
-    Model model = ModelsLoader::getInstance()->getModel("PlayerModel");
-    std::shared_ptr<ModelAnimation> anim = ModelsLoader::getInstance()->getAnim("Player");
-
-    _playerModels[playerId] = std::make_pair(model, anim);
-
-    _playerAnimations[playerId] = {anim, 0, std::chrono::steady_clock::now(), 0.016f};
-}
 
 void GUI::LoadIsland()
 {
@@ -74,93 +61,6 @@ void GUI::UpdateMapContent()
     }
 }
 
-void GUI::UpdateAnimations()
-{
-    for (auto& playerAnim : _playerAnimations) {
-        int playerId = playerAnim.first;
-        AnimationData& animData = playerAnim.second;
-        
-        if (_playerModels.find(playerId) == _playerModels.end()) {
-            std::cerr << "Player model for ID " << playerId << " not found." << std::endl;
-            continue;
-        }
-
-        Model& model = _playerModels[playerId].first;
-        std::shared_ptr<ModelAnimation> animation = animData.animation;
-
-        if (!animation) {
-            std::cerr << "Animation for player ID " << playerId << " is null." << std::endl;
-            continue;
-        }
-
-        auto now = std::chrono::steady_clock::now();
-        std::chrono::duration<float> elapsedTime = now - animData.lastUpdateTime;
-
-        if (elapsedTime.count() >= animData.frameTime) {
-            int framesToAdvance = static_cast<int>(elapsedTime.count() / animData.frameTime);
-            animData.frameCounter += framesToAdvance;
-            animData.lastUpdateTime = now;
-
-            UpdateModelAnimation(model, animation.get()[0], animData.frameCounter);
-            if (animData.frameCounter >= animation.get()[0].frameCount) {
-                animData.frameCounter = 0;
-                if (animation != _defaultPlayerAnimations[playerId]) {
-                    resetPlayerAnimation(playerId);
-                }
-            }
-        }
-    }
-}
-
-void GUI::drawPlayers()
-{
-    for (auto& player : _players) {
-        int playerId = player.first;
-        for (auto& playerInstance : player.second) {
-            Vector3 playerPosition = playerInstance.getPosition();
-            Model model = _playerModels[playerId].first;
-            DrawModel(model, playerPosition, 0.09f, WHITE);
-        }
-    }
-}
-
-void GUI::resetPlayerAnimation(int playerId)
-{
-    if (_playerModels.find(playerId) == _playerModels.end()) {
-        std::cerr << "Player ID " << playerId << " not found." << std::endl;
-        return;
-    }
-
-    _playerModels[playerId].second = _defaultPlayerAnimations[playerId];
-    _playerAnimations[playerId].animation = _defaultPlayerAnimations[playerId];
-    _playerAnimations[playerId].frameCounter = 0;
-    _playerAnimations[playerId].lastUpdateTime = std::chrono::steady_clock::now();
-}
-
-void GUI::changePlayerAnimation(int playerId, const std::string& animFilename)
-{
-    if (_playerModels.find(playerId) == _playerModels.end()) {
-        std::cerr << "Player ID " << playerId << " not found." << std::endl;
-        return;
-    }
-
-    std::shared_ptr<ModelAnimation> newAnim = ModelsLoader::getInstance()->getAnim(animFilename);
-    if (!newAnim) {
-        std::cerr << "Animation " << animFilename << " not found." << std::endl;
-        return;
-    }
-
-    if (_defaultPlayerAnimations.find(playerId) == _defaultPlayerAnimations.end()) {
-        _defaultPlayerAnimations[playerId] = _playerModels[playerId].second;
-    }
-
-    _playerModels[playerId].second = newAnim;
-    _playerAnimations[playerId].animation = newAnim;
-    _playerAnimations[playerId].frameCounter = 0;
-    _playerAnimations[playerId].lastUpdateTime = std::chrono::steady_clock::now();
-    _playerAnimations[playerId].frameTime = 0.016f;
-}
-
 void GUI::run()
 {
     Map::getInstance()->setMapSize(10, 10);
@@ -169,8 +69,7 @@ void GUI::run()
     window->initWindow(1920, 1080, "Potat Zappy", 144);
     CameraWrapper camera;
 
-    AddPlayer(Player(1, 0, 0, "Team1", Orientation::NORTH, { {Resource::RessourceType::FOOD, 10}, {Resource::RessourceType::LINEMATE, 0}, {Resource::RessourceType::DERAUMERE, 0}, {Resource::RessourceType::SIBUR, 0}, {Resource::RessourceType::MENDIANE, 0}, {Resource::RessourceType::PHIRAS, 0}, {Resource::RessourceType::THYSTAME, 0} }));
-    // changePlayerAnimation(1, "LevelUp");
+    _playerManager->AddPlayer(Player(1, 0, 0, "Team1", Orientation::NORTH, { {Resource::RessourceType::FOOD, 10}, {Resource::RessourceType::LINEMATE, 0}, {Resource::RessourceType::DERAUMERE, 0}, {Resource::RessourceType::SIBUR, 0}, {Resource::RessourceType::MENDIANE, 0}, {Resource::RessourceType::PHIRAS, 0}, {Resource::RessourceType::THYSTAME, 0} }));
 
     this->LoadIsland();
     this->loadResources();
@@ -181,15 +80,15 @@ void GUI::run()
     float cycleDuration = 90.0f;
     float dayPhaseDuration = cycleDuration / 4.0f;
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()) {
         float currentTime = GetTime();
         float cycleTime = fmod(currentTime, cycleDuration);
         lightWrapper.UpdateLightDayColor(cycleTime, dayPhaseDuration);
 
         camera.update();
 
-        this->UpdateAnimations();
+        float deltaTime = GetFrameTime();
+        _playerManager->UpdateAnimations(deltaTime);
 
         lightWrapper.updateShaderValues(camera.getX(), camera.getY(), camera.getZ());
         BeginDrawing();
@@ -198,13 +97,13 @@ void GUI::run()
         for (auto& model : _models) {
             model->drawModel();
         }
-        this->drawPlayers();
+        _playerManager->DrawPlayers();
         this->UpdateMapContent();
         lightWrapper.drawSphereOnLights();
         camera.EndMode();
         window->DrawFps(10, 10);
         EndDrawing();
     }
-    CloseWindow(); 
+    CloseWindow();
     exit(0);
 }

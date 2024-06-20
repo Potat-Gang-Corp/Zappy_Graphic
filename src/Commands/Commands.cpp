@@ -16,6 +16,7 @@
 #include "Map.hpp"
 #include "Player.hpp"
 #include "GUI.hpp"
+#include "PlayerManager.hpp"
 
 /**
  * @brief Handle the msz command (map size)
@@ -102,8 +103,9 @@ void pdr_command(const std::string& data)
     iss >> command >> player_id >> ressource_number;
     player_id = player_id.substr(1);
 
-    GuiPtr gui = GUI::getInstance();
-    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
+    auto& player = playerManager->getPlayers()[std::stoi(player_id)][0];
     player.removeInventory(static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
     Map::getInstance()->addResource(player.getPosX(), player.getPosY(), static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
 }
@@ -160,8 +162,8 @@ void pgt_command(const std::string& data)
     iss >> command >> player_id >> ressource_number;
     player_id = player_id.substr(1);
 
-    GuiPtr gui = GUI::getInstance();
-    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
+    auto& player = playerManager->getPlayers()[std::stoi(player_id)][0];
     player.addInventory(static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
     Map::getInstance()->removeResource(player.getPosX(), player.getPosY(), static_cast<Resource::RessourceType>(std::stoi(ressource_number)), 1);
 }
@@ -250,8 +252,8 @@ void pin_command(const std::string& data)
     iss >> command >> player_id >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
     player_id = player_id.substr(1);
 
-    GuiPtr gui = GUI::getInstance();
-    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
+    PlayerManagerPtr playerManager = PlayerManager::getInstance();
+    auto& player = playerManager->getPlayers()[std::stoi(player_id)][0];
     player.setPosition(std::stoi(x), std::stoi(y), player.getOrientation());
     player.addInventory(Resource::RessourceType::FOOD, std::stoi(food));
     player.addInventory(Resource::RessourceType::LINEMATE, std::stoi(linemate));
@@ -277,7 +279,7 @@ void plv_command(const std::string& data)
     iss >> command >> player_id >> level;
     player_id = player_id.substr(1);
 
-    GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setLevel(std::stoi(level));
+    PlayerManager::getInstance()->getPlayers()[std::stoi(player_id)][0].setLevel(std::stoi(level));
 }
 
 /**
@@ -292,6 +294,9 @@ void plv_command(const std::string& data)
  */
 void pnw_command(const std::string& data)
 {
+    // WindowPtr window = Window::getInstance();
+    // window->initWindow(1920, 1080, "Potat Zappy", 144);
+
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
@@ -303,7 +308,7 @@ void pnw_command(const std::string& data)
     iss >> command >> player_id >> x >> y >> orientation >> level >> team_name;
     player_id = player_id.substr(1);
     Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
-    GUI::getInstance()->AddPlayer(player);
+    PlayerManager::getInstance()->AddPlayer(player);
 }
 
 /**
@@ -325,7 +330,7 @@ void ppo_command(const std::string& data)
     iss >> command >> player_id >> x >> y >> orientation;
     player_id = player_id.substr(1);
 
-    GUI::getInstance()->getPlayers()[std::stoi(player_id)][0].setPosition(std::stoi(x), std::stoi(y), static_cast<Orientation>(std::stoi(orientation)));
+    PlayerManager::getInstance()->getPlayers()[std::stoi(player_id)][0].setPosition(std::stoi(x), std::stoi(y), static_cast<Orientation>(std::stoi(orientation)));
 }
 
 /**
@@ -381,8 +386,6 @@ void enw_command(const std::string &data)
     iss >> command >> egg_id >> player_id >> x >> y;
     player_id = player_id.substr(1);
     egg_id = egg_id.substr(1);
-    GuiPtr gui = GUI::getInstance();
-    auto& player = gui->getPlayers()[std::stoi(player_id)][0];
     MapPtr map = Map::getInstance();
     map->addResource(std::stoi(x), std::stoi(y), Resource::RessourceType::EGG, 1);
     map->addEgg(std::stoi(x), std::stoi(y), std::stoi(egg_id));
