@@ -13,7 +13,7 @@ ModelsLoader::ModelsLoader()
 {
     try {
         _models = {
-            {"Island_farm", (LoadModel("assets/island_farm.glb"))},
+            {"Island_farm", LoadModel("assets/island_farm.glb")},
             {"Island_tree", LoadModel("assets/island_tree.glb")},
             {"Island", LoadModel("assets/island.glb")},
             {"FOOD", LoadModel("assets/potato.glb")},

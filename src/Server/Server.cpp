@@ -67,15 +67,9 @@ std::string Server::receive_data()
 
 void Server::listening()
 {
-    std::string test = "pnw #2 10 20 2 3 TeamA";
-    bool sent = false;
     while (true) {
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;
-        if (sent == false) {
-            response = test;
-            sent = true;
-        }
         if (response != "ko\n" && response != "WELCOME\n" && response != "Connected\n") {
             CommandFactory::getInstance()->execCommand(response);
         }
