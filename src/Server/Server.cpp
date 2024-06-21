@@ -11,7 +11,7 @@
 
 Server::Server() : resolver(io_service), socket(io_service) {}
 
-int Server::connect_server(const std::string& port, const std::string& host)
+int Server::connect_server(const std::string &port, const std::string &host)
 {
     try {
         tcp::resolver::query query(host, port);
@@ -19,7 +19,7 @@ int Server::connect_server(const std::string& port, const std::string& host)
         boost::asio::connect(socket, endpoint_iterator);
         std::cout << "Connecté au serveur!" << std::endl;
         send_data("GRAPHIC\n");
-    } catch (const boost::system::system_error& e) {
+    } catch (const boost::system::system_error &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
@@ -31,11 +31,11 @@ void Server::stop()
     io_service.stop();
 }
 
-void Server::send_data(const std::string& data)
+void Server::send_data(const std::string &data)
 {
     try {
         boost::asio::write(socket, boost::asio::buffer(data));
-    } catch (const boost::system::system_error& e) {
+    } catch (const boost::system::system_error &e) {
         std::cerr << "Send failed: " << e.what() << std::endl;
     }
 }
@@ -53,7 +53,7 @@ std::string Server::receive_data()
         buffer.consume(bytes_transferred);
         
         return response;
-    } catch (const boost::system::system_error& e) {
+    } catch (const boost::system::system_error &e) {
         if (e.code() == boost::asio::error::eof) {
             std::cerr << "Connection closed by peer" << std::endl;
             exit(84);

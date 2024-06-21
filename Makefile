@@ -5,8 +5,6 @@
 ## Makefile
 ##
 
-MAKEFLAGS += -j4
-
 GREEN  := \033[1;32m
 YELLOW := \033[1;33m
 BLUE   := \033[1;34m
@@ -36,7 +34,7 @@ SRCS := $(wildcard \
 			$(SRC_DIR)/GUI/Light/*.cpp 	\
 			$(SRC_DIR)/GUI/Models/*.cpp)
 
-SRCS_NO_MAIN = $(filter-out src/main.cpp, $(SRCS))
+SRCS_NO_MAIN = $(filter-out src/Main.cpp, $(SRCS))
 
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:.c=.o)
 

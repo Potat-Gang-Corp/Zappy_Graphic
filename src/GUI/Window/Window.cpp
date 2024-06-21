@@ -59,11 +59,11 @@ void Window::updateMap(std::shared_ptr<Map> map)
 {
     for (int x = 0; x < map->getMapSizeX(); x++) {
         for (int y = 0; y < map->getMapSizeY(); y++) {
-            ResourceMap& resources = map->getResources(x, y);
+            ResourceMap &resources = map->getResources(x, y);
             Vector3 basePosition = {(float)(x * 10 - 2), 0.0f, (float)(y * 10 - 2.2)};
             
             int modelIndex = 0;
-            for (const auto& resource : resources) {
+            for (const auto &resource : resources) {
                 if (resource.second > 0) {
                     Vector3 resourcePosition = basePosition;
                     resourcePosition.y = 0.1f;

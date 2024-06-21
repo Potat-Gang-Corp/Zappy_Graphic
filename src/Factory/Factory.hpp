@@ -44,30 +44,30 @@ class CommandFactory {
         CommandFactory()
         {
             std::map<std::string, std::function<void(const std::string&)>> mymap = {
-                {"msz", msz_command},
-                {"bct", bct_command},
-                {"tna", tna_command},
-                {"pnw", pnw_command},
-                {"ppo", ppo_command},
-                {"plv", plv_command},
-                {"pin", pin_command},
-                {"pex", pex_command},
-                {"pbc", pbc_command},
-                {"pic", pic_command},
-                {"pie", pie_command},
-                {"pfk", pfk_command},
-                {"pdr", pdr_command},
-                {"pgt", pgt_command},
-                {"pdi", pdi_command},
-                {"enw", enw_command},
-                {"ebo", ebo_command},
-                {"edi", edi_command},
-                {"sgt", sgt_command},
-                {"sst", sst_command},
-                {"seg", seg_command},
-                {"smg", smg_command},
-                {"suc", suc_command},
-                {"sbp", sbp_command},
+                {"msz", Commands::msz},
+                {"bct", Commands::bct},
+                {"tna", Commands::tna},
+                {"pnw", Commands::pnw},
+                {"ppo", Commands::ppo},
+                {"plv", Commands::plv},
+                {"pin", Commands::pin},
+                {"pex", Commands::pex},
+                {"pbc", Commands::pbc},
+                {"pic", Commands::pic},
+                {"pie", Commands::pie},
+                {"pfk", Commands::pfk},
+                {"pdr", Commands::pdr},
+                {"pgt", Commands::pgt},
+                {"pdi", Commands::pdi},
+                {"enw", Commands::enw},
+                {"ebo", Commands::ebo},
+                {"edi", Commands::edi},
+                {"sgt", Commands::sgt},
+                {"sst", Commands::sst},
+                {"seg", Commands::seg},
+                {"smg", Commands::smg},
+                {"suc", Commands::suc},
+                {"sbp", Commands::sbp},
             };
             commands = mymap;
         }
@@ -90,7 +90,7 @@ class CommandFactory {
          * 
          * @param commandType The full command string that includes the command type and its arguments.
         */
-        void execCommand(const std::string& commandType)
+        void execCommand(const std::string &commandType)
         {
             std::string prefix = commandType.substr(0, 3);
             if (prefix.empty()) {

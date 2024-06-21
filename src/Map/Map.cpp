@@ -55,7 +55,7 @@ void Map::printResources(int x, int y)
 {
     ResourceMap resources = getResources(x, y);
     std::cout << "Resources at (" << x << ", " << y << "):" << std::endl;
-    for (const auto& [resource, quantity] : resources) {
+    for (const auto &[resource, quantity] : resources) {
         std::cout << "  Resource " << resourceToString(resource) << ": " << quantity << std::endl;
     }
 }

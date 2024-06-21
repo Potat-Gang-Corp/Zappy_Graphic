@@ -33,7 +33,7 @@ ModelsLoader::ModelsLoader()
             {"Dropping", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/dropping.glb", &_animsCount))},
             {"LevelUp", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/level_up.glb", &_animsCount))}
         };
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "Error in ModelsLoader: " << e.what() << std::endl;
         throw;
     }

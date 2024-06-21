@@ -8,7 +8,7 @@
 #include "PlayerModel.hpp"
 #include "ModelsLoader.hpp"
 
-PlayerModel::PlayerModel(const std::string& modelFilename, const std::string& animationFilename)
+PlayerModel::PlayerModel(const std::string &modelFilename, const std::string &animationFilename)
     : frameCounter(0), frameTime(0.016f), lastUpdateTime(std::chrono::steady_clock::now())
 {
     _model = ModelsLoader::getInstance()->getModel(modelFilename);
@@ -40,7 +40,7 @@ void PlayerModel::updateAnimation(float deltaTime)
     }
 }
 
-void PlayerModel::setAnimation(const std::shared_ptr<ModelAnimation>& anim)
+void PlayerModel::setAnimation(const std::shared_ptr<ModelAnimation> &anim)
 {
     animation = anim;
     frameCounter = 0;

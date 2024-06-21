@@ -42,7 +42,7 @@ class Server {
          * @param host The host to connect to
          * @return int 0 if the connection is successful, 1 otherwise
         */
-        int connect_server(const std::string& port, const std::string& host);
+        int connect_server(const std::string &port, const std::string &host);
         /**
          * @brief Stop the server
         */
@@ -51,7 +51,7 @@ class Server {
          * @brief Send data to the server
          * @param data The data to send
         */
-        void send_data(const std::string& data);
+        void send_data(const std::string &data);
         /**
          * @brief Receives data from the socket until a newline character is found.
          * 

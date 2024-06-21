@@ -16,11 +16,11 @@
 
 class PlayerModel : public AModels {
     public:
-        PlayerModel(const std::string& modelFilename, const std::string& animationFilename);
+        PlayerModel(const std::string &modelFilename, const std::string &animationFilename);
         ~PlayerModel();
 
         void updateAnimation(float deltaTime);
-        void setAnimation(const std::shared_ptr<ModelAnimation>& anim);
+        void setAnimation(const std::shared_ptr<ModelAnimation> &anim);
         void setRotation(float rotationAngle);
 
     private:
