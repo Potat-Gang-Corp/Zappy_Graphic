@@ -25,12 +25,15 @@ class PlayerManager {
             return instance;
         }
         void AddPlayer(const Player& player);
+        void addSavePlayer(const Player& player) { printf("je passe par la \n"); _savePlayers.push_back(player); std::cout << _savePlayers.size() << std::endl;}
+        std::vector<Player>& getPlayersSave() { return _savePlayers; }
         void UpdateAnimations(float deltaTime);
         void DrawPlayers();
         void ChangePlayerAnimation(int playerId, const std::string& animFilename);
         std::unordered_map<int, std::vector<Player>>& getPlayers() { return _players; }
 
     private:
+        std::vector<Player> _savePlayers;
         std::unordered_map<int, std::vector<Player>> _players;
         std::unordered_map<int, std::shared_ptr<PlayerModel>> _playerModels;
 };

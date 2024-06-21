@@ -34,6 +34,7 @@ class GUI {
         void run();
         void LoadIsland();
         void loadResources();
+        void loadPlayers();
         void UpdateMapContent();
         void setFreq(int freq) { _freq = freq; }
         std::shared_ptr<PlayerManager> getPlayerManager() { return _playerManager; }

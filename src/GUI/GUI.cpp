@@ -10,7 +10,10 @@
 #include "Island.hpp"
 #include "Resource.hpp"
 
-GUI::GUI() : _playerManager(std::make_shared<PlayerManager>()) {}
+GUI::GUI()
+{
+    _playerManager = PlayerManager::getInstance();
+}
 
 GUI::~GUI() {}
 
@@ -61,18 +64,24 @@ void GUI::UpdateMapContent()
     }
 }
 
+void GUI::loadPlayers()
+{
+    auto players = PlayerManager::getInstance()->getPlayersSave();
+    for (auto& player : players) {
+        _playerManager->AddPlayer(player);
+        // PlayerManager::getInstance()->AddPlayer(player);
+    }
+}
+
 void GUI::run()
 {
     Map::getInstance()->setMapSize(10, 10);
     WindowPtr window = Window::getInstance();
     window->setLogInfo("LOG_INFO");
-    if (window->getInit() == false) {
-        window->initWindow(1920, 1080, "Potat Zappy", 144);
-    }
+    window->initWindow(1920, 1080, "Potat Zappy", 144);
     CameraWrapper camera;
 
-    _playerManager->AddPlayer(Player(1, 0, 0, "Team1", Orientation::NORTH, { {Resource::RessourceType::FOOD, 10}, {Resource::RessourceType::LINEMATE, 0}, {Resource::RessourceType::DERAUMERE, 0}, {Resource::RessourceType::SIBUR, 0}, {Resource::RessourceType::MENDIANE, 0}, {Resource::RessourceType::PHIRAS, 0}, {Resource::RessourceType::THYSTAME, 0} }));
-
+    this->loadPlayers();
     this->LoadIsland();
     this->loadResources();
     LightWrapper lightWrapper;

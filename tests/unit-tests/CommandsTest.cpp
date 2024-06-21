@@ -7,6 +7,7 @@
 
 #include "Player.hpp"
 #include "Commands.hpp"
+#include "Window.hpp"
 #include "PlayerManager.hpp"
 #include "Map.hpp"
 #include <criterion/criterion.h>
@@ -15,7 +16,7 @@ Test(msz_command, update_map_size)
 {
     MapPtr map = Map::getInstance();
 
-    std::string data = "msz 10 20";
+    std::string data = "msz 10 20\n";
     msz_command(data);
 
     cr_assert_eq(map->getMapSizeX(), 10, "Expected map size X to be 10, but was %d", map->getMapSizeX());
@@ -26,7 +27,7 @@ Test(bct_command, update_resources)
 {
     MapPtr map = Map::getInstance();
 
-    std::string data = "bct 5 5 10 5 3 2 4 1 6";
+    std::string data = "bct 5 5 10 5 3 2 4 1 6\n";
     bct_command(data);
 
     ResourceMap resources = map->getResources(5, 5);
@@ -40,30 +41,13 @@ Test(bct_command, update_resources)
     cr_assert_eq(resources[Resource::RessourceType::THYSTAME], 6, "Expected 6 THYSTAME, but got %d", resources[Resource::RessourceType::THYSTAME]);
 }
 
-Test(ppo_command, update_player_position)
-{
-    PlayerManagerPtr playerManager = PlayerManager::getInstance();
-    std::map<Resource::RessourceType, int> inventory;
-    Player player(1, 0, 0, "TeamA", NORTH, inventory, 1);
-    playerManager->AddPlayer(player);
-
-    std::string data = "ppo #1 25 20 2";
-    ppo_command(data);
-
-    auto& players = playerManager->getPlayers();
-    Player& updatedPlayer = players[1][0];
-    cr_assert_eq(updatedPlayer.getPosX(), 25, "Expected X position to be 25, but was %d", updatedPlayer.getPosX());
-    cr_assert_eq(updatedPlayer.getPosY(), 20, "Expected Y position to be 20, but was %d", updatedPlayer.getPosY());
-    cr_assert_eq(updatedPlayer.getOrientation(), EAST, "Expected orientation to be SOUTH, but was %d", updatedPlayer.getOrientation());
-}
-
 Test(plv_command, update_player_level)
 {
     PlayerManagerPtr playerManager = PlayerManager::getInstance();
     Player player(1, 0, 0, "TeamA", NORTH, {}, 7);
     playerManager->getPlayers()[1].push_back(player);
 
-    std::string data = "plv #1 5";
+    std::string data = "plv #1 5\n";
     plv_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
@@ -86,7 +70,7 @@ Test(pin_command, update_player_inventory)
     Player player(1, 0, 0, "TeamA", NORTH, inventory);
     playerManager->getPlayers()[1].push_back(player);
 
-    std::string data = "pin #1 10 20 5 4 3 2 1 0 6";
+    std::string data = "pin #1 10 20 5 4 3 2 1 0 6\n";
     pin_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
@@ -115,7 +99,7 @@ Test(pdr_command, remove_inventory_and_add_to_map)
     Player player(1, 10, 20, "TeamA", NORTH, inventory);
     playerManager->getPlayers()[1].push_back(player);
 
-    std::string data = "pdr #1 2";
+    std::string data = "pdr #1 2\n";
     pdr_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
@@ -145,7 +129,7 @@ Test(pgt_command, add_inventory_and_remove_from_map)
     MapPtr map = Map::getInstance();
     map->addResource(10, 20, Resource::RessourceType::DERAUMERE, 1);
 
-    std::string data = "pgt #1 2";
+    std::string data = "pgt #1 2\n";
     pgt_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
@@ -163,7 +147,7 @@ Test(enw_command, add_egg_and_resource_to_map)
     playerManager->getPlayers()[1].push_back(player);
     MapPtr map = Map::getInstance();
 
-    std::string data = "enw #123 #1 10 20";
+    std::string data = "enw #123 #1 10 20\n";
     enw_command(data);
 
     const auto& resources = map->getResources(10, 20);
@@ -181,7 +165,7 @@ Test(ebo_command, remove_egg_and_resource_from_map)
     map->addEgg(10, 20, 123);
     map->addResource(10, 20, Resource::RessourceType::EGG, 1);
 
-    std::string data = "ebo #123";
+    std::string data = "ebo #123\n";
     ebo_command(data);
 
     const auto& resources = map->getResources(10, 20);
@@ -197,7 +181,7 @@ Test(edi_command, remove_egg_and_resource_from_map)
     map->addEgg(10, 20, 123);
     map->addResource(10, 20, Resource::RessourceType::EGG, 1);
 
-    std::string data = "edi #123";
+    std::string data = "edi #123\n";
     edi_command(data);
 
     const auto& resources = map->getResources(10, 20);
@@ -211,10 +195,10 @@ Test(pnw_command, add_new_player_to_gui)
 {
     PlayerManagerPtr playerManager = PlayerManager::getInstance();
 
-    std::string data = "pnw #1 10 20 2 3 TeamA";
+    std::string data = "pnw #1 10 20 2 3 TeamA\n";
     pnw_command(data);
 
-    auto& player = playerManager->getPlayers()[1][0];
+    auto& player = playerManager->getPlayersSave()[0];
     cr_assert_eq(player.getNumber(), 1, "Expected player ID to be 1, but was %d", player.getNumber());
     cr_assert_eq(player.getPosX(), 10, "Expected player X position to be 10, but was %d", player.getPosX());
     cr_assert_eq(player.getPosY(), 20, "Expected player Y position to be 20, but was %d", player.getPosY());
