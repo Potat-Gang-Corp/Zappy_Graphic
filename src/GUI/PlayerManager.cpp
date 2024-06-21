@@ -21,6 +21,24 @@ void PlayerManager::AddPlayer(Player& player)
     _players[playerId].push_back(player);
 
     std::shared_ptr<PlayerModel> playerModel = std::make_shared<PlayerModel>("PlayerModel", "Player");
+    if (playerModel) {
+        switch (player.getOrientation()) {
+            case Orientation::NORTH:
+                playerModel->setRotation(180.0f);
+                break;
+            case Orientation::EAST:
+                playerModel->setRotation(90.0f);
+                break;
+            case Orientation::SOUTH:
+                playerModel->setRotation(0.0f);
+                break;
+            case Orientation::WEST:
+                playerModel->setRotation(-90.0f);
+                break;
+        }
+    } else {
+        std::cout << "Failed to create player model\n";
+    }
 
     _playerModels[playerId] = playerModel;
 }

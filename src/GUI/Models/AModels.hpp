@@ -19,13 +19,14 @@ class AModels : public IModels {
         ~AModels() = default;
         void setPosition(Vector3 position) override final;
         void setScale(float scale) override final;
+        void setRotation(Vector3 rotation) override final;
         Model getModel() override final { return _model; }
         void drawModel() override;
         void updateBoundingBox();
 
     protected:
         float _scale;
-        Vector3 _position;
+        Vector3 _position, _rotation;
         Model _model;
         BoundingBox _boundbox;
         BoundingBox _originalBoundBox;

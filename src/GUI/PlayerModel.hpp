@@ -21,6 +21,7 @@ class PlayerModel : public AModels {
 
         void updateAnimation(float deltaTime);
         void setAnimation(const std::shared_ptr<ModelAnimation>& anim);
+        void setRotation(float rotationAngle);
 
     private:
         std::shared_ptr<ModelAnimation> animation;

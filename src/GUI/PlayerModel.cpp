@@ -47,3 +47,8 @@ void PlayerModel::setAnimation(const std::shared_ptr<ModelAnimation>& anim)
     lastUpdateTime = std::chrono::steady_clock::now();
 }
 
+void PlayerModel::setRotation(float rotationAngle)
+{
+    _model.transform = MatrixRotateXYZ((Vector3){ 0.0f, DEG2RAD * rotationAngle, 0.0f });
+}
+

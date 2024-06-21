@@ -9,12 +9,8 @@
 
 void AModels::drawModel()
 {
-    Vector3 startpos = _position;
-    // _position.x *= 10;
-    // _position.z *= 10;
     DrawModel(_model, _position, _scale, WHITE);
     DrawBoundingBox(_boundbox, BLACK);
-    _position = startpos;
 }
 
 void AModels::setPosition(Vector3 position)
@@ -39,4 +35,10 @@ void AModels::updateBoundingBox()
     _boundbox.max.x = originalBoundBox.max.x * _scale + _position.x;
     _boundbox.max.y = originalBoundBox.max.y * _scale + _position.y;
     _boundbox.max.z = originalBoundBox.max.z * _scale + _position.z;
+}
+
+void AModels::setRotation(Vector3 rotation)
+{
+    _rotation = rotation;
+    _model.transform = MatrixRotateXYZ(_rotation);
 }

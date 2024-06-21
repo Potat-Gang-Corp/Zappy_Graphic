@@ -84,10 +84,8 @@ void GUI::run()
     this->loadPlayers();
     this->LoadIsland();
     this->loadResources();
-    Player play(1, 0, 0, "TeamA", NORTH, {}, 1);
+    Player play(1, 0, 0, "TeamA", SOUTH, {}, 1);
     _playerManager->AddPlayer(play);
-
-    
 
     LightWrapper lightWrapper;
     lightWrapper.SetShaderToModel(_models);
