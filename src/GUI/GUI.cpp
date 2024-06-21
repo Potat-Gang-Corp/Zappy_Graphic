@@ -40,7 +40,7 @@ void GUI::loadResources()
     auto ressourceTypes = Resource::getInstance()->allRessourceTypes();
     for (const auto& resource : ressourceTypes) {
         std::shared_ptr<IModels> resourceModel = std::make_shared<Resource>(resource);
-        resourceModel->setScale(0.08f);
+        resourceModel->setScale(0.1f);
         _resource.push_back(resourceModel);
     }
 }
@@ -91,6 +91,7 @@ void GUI::load()
 
     _lightWrapper = std::make_unique<LightWrapper>();
     _lightWrapper->SetShaderToModel(_models);
+    _lightWrapper->SetShaderToModel(_resource);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), RED);
 }
 
