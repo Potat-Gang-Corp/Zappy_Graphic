@@ -21,6 +21,7 @@
     #include "Window.hpp"
     #include "IModels.hpp"
     #include <chrono>
+    #include "Light.hpp"
     #include "PlayerManager.hpp"
 
 class GUI {
@@ -31,6 +32,7 @@ class GUI {
             static std::shared_ptr<GUI> instance(new GUI());
             return instance;
         }
+        void load();
         void run();
         void LoadIsland();
         void loadResources();
@@ -40,6 +42,9 @@ class GUI {
         std::shared_ptr<PlayerManager> getPlayerManager() { return _playerManager; }
 
     private:
+        WindowPtr _window;
+        std::unique_ptr<CameraWrapper> _camera;
+        std::unique_ptr<LightWrapper> _lightWrapper;
         std::shared_ptr<PlayerManager> _playerManager;
         std::vector<std::shared_ptr<IModels>> _models;
         std::vector<std::shared_ptr<IModels>> _resource;

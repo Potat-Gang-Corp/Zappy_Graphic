@@ -74,7 +74,7 @@ Test(pin_command, update_player_inventory)
     pin_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
-    const auto& updatedInventory = updatedPlayer.getInventory();
+    const auto &updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::FOOD), 5, "Expected FOOD quantity to be 5, but was %d", updatedInventory.at(Resource::RessourceType::FOOD));
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::LINEMATE), 4, "Expected LINEMATE quantity to be 4, but was %d", updatedInventory.at(Resource::RessourceType::LINEMATE));
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::DERAUMERE), 3, "Expected DERAUMERE quantity to be 3, but was %d", updatedInventory.at(Resource::RessourceType::DERAUMERE));
@@ -103,11 +103,11 @@ Test(pdr_command, remove_inventory_and_add_to_map)
     pdr_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
-    const auto& updatedInventory = updatedPlayer.getInventory();
+    const auto &updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::DERAUMERE), 1, "Expected DERAUMERE quantity to be 1, but was %d", updatedInventory.at(Resource::RessourceType::DERAUMERE));
 
     MapPtr map = Map::getInstance();
-    const auto& resourcesAtPos = map->getResources(10, 20);
+    const auto &resourcesAtPos = map->getResources(10, 20);
     cr_assert_eq(resourcesAtPos.at(Resource::RessourceType::DERAUMERE), 1, "Expected DERAUMERE quantity on the map to be 1, but was %d", resourcesAtPos.at(Resource::RessourceType::DERAUMERE));
 }
 
@@ -133,10 +133,10 @@ Test(pgt_command, add_inventory_and_remove_from_map)
     pgt_command(data);
 
     Player updatedPlayer = playerManager->getPlayers()[1][0];
-    const auto& updatedInventory = updatedPlayer.getInventory();
+    const auto &updatedInventory = updatedPlayer.getInventory();
     cr_assert_eq(updatedInventory.at(Resource::RessourceType::DERAUMERE), 3, "Expected DERAUMERE quantity to be 3, but was %d", updatedInventory.at(Resource::RessourceType::DERAUMERE));
 
-    const auto& resourcesAtPos = map->getResources(10, 20);
+    const auto &resourcesAtPos = map->getResources(10, 20);
     cr_assert_eq(resourcesAtPos.find(Resource::RessourceType::DERAUMERE), resourcesAtPos.end(), "Expected no DERAUMERE on the map, but found some.");
 }
 
@@ -150,7 +150,7 @@ Test(enw_command, add_egg_and_resource_to_map)
     std::string data = "enw #123 #1 10 20\n";
     enw_command(data);
 
-    const auto& resources = map->getResources(10, 20);
+    const auto &resources = map->getResources(10, 20);
     auto it = resources.find(Resource::RessourceType::EGG);
     cr_assert(it != resources.end(), "Expected to find EGG at (10, 20)");
     cr_assert_eq(it->second, 1, "Expected quantity of EGG to be 1, but was %d", it->second);
@@ -168,7 +168,7 @@ Test(ebo_command, remove_egg_and_resource_from_map)
     std::string data = "ebo #123\n";
     ebo_command(data);
 
-    const auto& resources = map->getResources(10, 20);
+    const auto &resources = map->getResources(10, 20);
     auto it = resources.find(Resource::RessourceType::EGG);
     cr_assert(it == resources.end(), "Expected to not find EGG at (10, 20)");
     
@@ -184,7 +184,7 @@ Test(edi_command, remove_egg_and_resource_from_map)
     std::string data = "edi #123\n";
     edi_command(data);
 
-    const auto& resources = map->getResources(10, 20);
+    const auto &resources = map->getResources(10, 20);
     auto it = resources.find(Resource::RessourceType::EGG);
     cr_assert(it == resources.end(), "Expected to not find EGG at (10, 20)");
 
@@ -198,10 +198,10 @@ Test(pnw_command, add_new_player_to_gui)
     std::string data = "pnw #1 10 20 2 3 TeamA\n";
     pnw_command(data);
 
-    auto& player = playerManager->getPlayersSave()[0];
+    auto &player = playerManager->getPlayersSave()[0];
     cr_assert_eq(player.getNumber(), 1, "Expected player ID to be 1, but was %d", player.getNumber());
-    cr_assert_eq(player.getPosX(), 10 * 10, "Expected player X position to be 10, but was %d", player.getPosX());
-    cr_assert_eq(player.getPosY(), 20 * 10, "Expected player Y position to be 20, but was %d", player.getPosY());
+    cr_assert_eq(player.getPosX(), 10, "Expected player X position to be 10, but was %d", player.getPosX());
+    cr_assert_eq(player.getPosY(), 20, "Expected player Y position to be 20, but was %d", player.getPosY());
     cr_assert_eq(player.getOrientation(), static_cast<Orientation>(2), "Expected player orientation to be 2, but was %d", static_cast<int>(player.getOrientation()));
     cr_assert_eq(player.getLevel(), 3, "Expected player level to be 3, but was %d", player.getLevel());
     cr_assert_str_eq(player.getTeamName().c_str(), "TeamA", "Expected player team name to be TeamA, but was %s", player.getTeamName().c_str());

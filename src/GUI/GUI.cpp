@@ -6,13 +6,18 @@
 */
 
 #include "GUI.hpp"
-#include "Light.hpp"
 #include "Island.hpp"
 #include "Resource.hpp"
 
 GUI::GUI()
 {
     _playerManager = PlayerManager::getInstance();
+    _window = Window::getInstance();
+    _window->setLogInfo("LOG_INFO");
+
+    Map::getInstance()->setMapSize(10, 10);
+
+    _camera = std::make_unique<CameraWrapper>();
 }
 
 GUI::~GUI() {}
@@ -73,49 +78,51 @@ void GUI::loadPlayers()
     }
 }
 
-void GUI::run()
+void GUI::load()
 {
-    Map::getInstance()->setMapSize(10, 10);
-    WindowPtr window = Window::getInstance();
-    window->setLogInfo("LOG_INFO");
-    window->initWindow(1920, 1080, "Potat Zappy", 144);
-    CameraWrapper camera;
-
+    _window->initWindow(1920, 1080, "Potat Zappy", 144);
     this->loadPlayers();
     this->LoadIsland();
     this->loadResources();
-    Player play(1, 0, 0, "TeamA", SOUTH, {}, 1);
-    _playerManager->AddPlayer(play);
 
-    LightWrapper lightWrapper;
-    lightWrapper.SetShaderToModel(_models);
-    lightWrapper.createlight((Vector3){ (float)(Map::getInstance()->getMapSizeX() / 2 * 10), 30, (float)(Map::getInstance()->getMapSizeY() / 2 * 10) }, Vector3Zero(), RED);
+    const float lightX = (float)(Map::getInstance()->getMapSizeX() / 2 * 10);
+    const float lightZ = (float)(Map::getInstance()->getMapSizeY() / 2 * 10);
+    const Vector3 lightPosition = { lightX, 30, lightZ };
 
-    float cycleDuration = 90.0f;
-    float dayPhaseDuration = cycleDuration / 4.0f;
+    _lightWrapper = std::make_unique<LightWrapper>();
+    _lightWrapper->SetShaderToModel(_models);
+    _lightWrapper->createlight(lightPosition, Vector3Zero(), RED);
+}
+
+void GUI::run()
+{
+    this->load();
+
+    const float cycleDuration = 90.0f;
+    const float dayPhaseDuration = cycleDuration / 4.0f;
 
     while (!WindowShouldClose()) {
         float currentTime = GetTime();
         float cycleTime = fmod(currentTime, cycleDuration);
-        lightWrapper.UpdateLightDayColor(cycleTime, dayPhaseDuration);
+        _lightWrapper->UpdateLightDayColor(cycleTime, dayPhaseDuration);
 
-        camera.update();
+        _camera->update();
 
         float deltaTime = GetFrameTime();
         _playerManager->UpdateAnimations(deltaTime);
 
-        lightWrapper.updateShaderValues(camera.getX(), camera.getY(), camera.getZ());
+        _lightWrapper->updateShaderValues(_camera->getX(), _camera->getY(), _camera->getZ());
         BeginDrawing();
-        ClearBackground(lightWrapper.getCurrentBackgroundColor());
-        camera.BeginMode();
+        ClearBackground(_lightWrapper->getCurrentBackgroundColor());
+        _camera->BeginMode();
         for (auto& model : _models) {
             model->drawModel();
         }
         _playerManager->DrawPlayers();
         this->UpdateMapContent();
-        lightWrapper.drawSphereOnLights();
-        camera.EndMode();
-        window->DrawFps(10, 10);
+        _lightWrapper->drawSphereOnLights();
+        _camera->EndMode();
+        _window->DrawFps(10, 10);
         EndDrawing();
     }
     CloseWindow();
