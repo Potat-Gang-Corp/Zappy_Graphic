@@ -306,6 +306,7 @@ void pnw_command(const std::string& data)
     std::string level;
     std::string team_name;
     iss >> command >> player_id >> x >> y >> orientation >> level >> team_name;
+
     player_id = player_id.substr(1);
     Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
     if (Window::getInstance()->getInit() == false) {

@@ -84,6 +84,11 @@ void GUI::run()
     this->loadPlayers();
     this->LoadIsland();
     this->loadResources();
+    Player play(1, 0, 0, "TeamA", NORTH, {}, 1);
+    _playerManager->AddPlayer(play);
+
+    
+
     LightWrapper lightWrapper;
     lightWrapper.SetShaderToModel(_models);
     lightWrapper.createlight((Vector3){ (float)(Map::getInstance()->getMapSizeX() / 2 * 10), 30, (float)(Map::getInstance()->getMapSizeY() / 2 * 10) }, Vector3Zero(), RED);

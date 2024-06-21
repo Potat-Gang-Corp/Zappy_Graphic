@@ -7,6 +7,7 @@
 
 #include "Server.hpp"
 #include "Factory.hpp"
+#include "PlayerManager.hpp"
 
 Server::Server() : resolver(io_service), socket(io_service) {}
 

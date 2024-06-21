@@ -14,14 +14,21 @@ PlayerManager::PlayerManager() {}
 
 PlayerManager::~PlayerManager() {}
 
-void PlayerManager::AddPlayer(const Player& player)
+void PlayerManager::AddPlayer(Player& player)
 {
+    player.setPosition(player.getPosX(), player.getPosY(), player.getOrientation());
     int playerId = player.getNumber();
     _players[playerId].push_back(player);
 
     std::shared_ptr<PlayerModel> playerModel = std::make_shared<PlayerModel>("PlayerModel", "Player");
 
     _playerModels[playerId] = playerModel;
+}
+
+void PlayerManager::addSavePlayer(Player& player)
+{ 
+    player.setPosition(player.getPosX(), player.getPosY(), player.getOrientation());
+    _savePlayers.push_back(player);
 }
 
 void PlayerManager::UpdateAnimations(float deltaTime)
@@ -37,8 +44,12 @@ void PlayerManager::DrawPlayers()
         int playerId = player.first;
         for (auto& playerInstance : player.second) {
             Vector3 playerPosition = playerInstance.getPosition();
+            Vector3 savePos = playerPosition;
+            playerPosition.x *= 10;
+            playerPosition.z *= 10;
             _playerModels[playerId]->setPosition(playerPosition);
             _playerModels[playerId]->drawModel();
+            playerPosition = savePos;
         }
     }
 }

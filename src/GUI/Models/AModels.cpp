@@ -9,8 +9,12 @@
 
 void AModels::drawModel()
 {
+    Vector3 startpos = _position;
+    // _position.x *= 10;
+    // _position.z *= 10;
     DrawModel(_model, _position, _scale, WHITE);
     DrawBoundingBox(_boundbox, BLACK);
+    _position = startpos;
 }
 
 void AModels::setPosition(Vector3 position)

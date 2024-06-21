@@ -24,8 +24,8 @@ class PlayerManager {
             static std::shared_ptr<PlayerManager> instance(new PlayerManager());
             return instance;
         }
-        void AddPlayer(const Player& player);
-        void addSavePlayer(const Player& player) { printf("je passe par la \n"); _savePlayers.push_back(player); std::cout << _savePlayers.size() << std::endl;}
+        void AddPlayer(Player& player);
+        void addSavePlayer(Player& player);
         std::vector<Player>& getPlayersSave() { return _savePlayers; }
         void UpdateAnimations(float deltaTime);
         void DrawPlayers();

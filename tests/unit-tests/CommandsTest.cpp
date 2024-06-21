@@ -200,8 +200,8 @@ Test(pnw_command, add_new_player_to_gui)
 
     auto& player = playerManager->getPlayersSave()[0];
     cr_assert_eq(player.getNumber(), 1, "Expected player ID to be 1, but was %d", player.getNumber());
-    cr_assert_eq(player.getPosX(), 10, "Expected player X position to be 10, but was %d", player.getPosX());
-    cr_assert_eq(player.getPosY(), 20, "Expected player Y position to be 20, but was %d", player.getPosY());
+    cr_assert_eq(player.getPosX(), 10 * 10, "Expected player X position to be 10, but was %d", player.getPosX());
+    cr_assert_eq(player.getPosY(), 20 * 10, "Expected player Y position to be 20, but was %d", player.getPosY());
     cr_assert_eq(player.getOrientation(), static_cast<Orientation>(2), "Expected player orientation to be 2, but was %d", static_cast<int>(player.getOrientation()));
     cr_assert_eq(player.getLevel(), 3, "Expected player level to be 3, but was %d", player.getLevel());
     cr_assert_str_eq(player.getTeamName().c_str(), "TeamA", "Expected player team name to be TeamA, but was %s", player.getTeamName().c_str());
