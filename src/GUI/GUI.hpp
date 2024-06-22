@@ -41,12 +41,11 @@ class GUI {
         void setFreq(int freq) { _freq = freq; }
         std::shared_ptr<PlayerManager> getPlayerManager() { return _playerManager; }
         void handleMouseInteraction();
-        bool CheckCollisionRayBox(Ray ray, BoundingBox box);
 
     private:
         WindowPtr _window;
         std::unique_ptr<CameraWrapper> _camera;
-        std::unique_ptr<LightWrapper> _lightWrapper;
+        std::shared_ptr<LightWrapper> _lightWrapper;
         std::shared_ptr<PlayerManager> _playerManager;
         std::vector<std::shared_ptr<IModels>> _models;
         std::vector<std::shared_ptr<IModels>> _resource;

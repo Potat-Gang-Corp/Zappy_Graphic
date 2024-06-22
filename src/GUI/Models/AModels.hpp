@@ -27,8 +27,10 @@ class AModels : public IModels {
         void onHover() override;
         void onClick() override;
         Vector3 getPosition() const override { return _position; }
+        void setHover(bool hover) override final { _Hover = hover; }
 
     protected:
+        bool _Hover = false;
         float _scale;
         Vector3 _position, _rotation;
         Model _model;

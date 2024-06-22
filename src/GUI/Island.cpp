@@ -7,6 +7,7 @@
 
 #include "Island.hpp"
 #include "ModelsLoader.hpp"
+#include "Light.hpp"
 
 Island::Island(int random)
 {
@@ -29,3 +30,7 @@ Island::Island(int random)
     }
 }
 
+void Island::onHover()
+{
+    DrawModelWires(_model, _position, 0.2f, BLACK);
+}

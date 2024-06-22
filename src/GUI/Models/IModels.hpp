@@ -24,6 +24,7 @@ class IModels {
         virtual void onHover() = 0;
         virtual void onClick() = 0;
         virtual Vector3 getPosition() const = 0;
+        virtual void setHover(bool hover) = 0;
 };
 
 #endif /* !IMODELS_HPP_ */

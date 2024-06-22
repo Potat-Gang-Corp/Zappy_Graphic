@@ -69,48 +69,6 @@ void GUI::UpdateMapContent()
     }
 }
 
-bool GUI::CheckCollisionRayBox(Ray ray, BoundingBox box)
-{
-    float tmin = (box.min.x - ray.position.x) / ray.direction.x;
-    float tmax = (box.max.x - ray.position.x) / ray.direction.x;
-    
-    if (tmin > tmax) {
-        float temp = tmin;
-        tmin = tmax;
-        tmax = temp;
-    }
-
-    float tymin = (box.min.y - ray.position.y) / ray.direction.y;
-    float tymax = (box.max.y - ray.position.y) / ray.direction.y;
-
-    if (tymin > tymax) {
-        float temp = tymin;
-        tymin = tymax;
-        tymax = temp;
-    }
-
-    if ((tmin > tymax) || (tymin > tmax)) return false;
-
-    if (tymin > tmin) tmin = tymin;
-    if (tymax < tmax) tmax = tymax;
-
-    float tzmin = (box.min.z - ray.position.z) / ray.direction.z;
-    float tzmax = (box.max.z - ray.position.z) / ray.direction.z;
-
-    if (tzmin > tzmax) {
-        float temp = tzmin;
-        tzmin = tzmax;
-        tzmax = temp;
-    }
-
-    if ((tmin > tzmax) || (tzmin > tmax)) return false;
-
-    if (tzmin > tmin) tmin = tzmin;
-    if (tzmax < tmax) tmax = tzmax;
-
-    return true;
-}
-
 void GUI::loadPlayers()
 {
     auto players = PlayerManager::getInstance()->getPlayersSave();
@@ -127,36 +85,32 @@ void GUI::handleMouseInteraction()
     std::shared_ptr<IModels> closestModel = nullptr;
 
     for (auto& model : _models) {
-        if (CheckCollisionRayBox(ray, model->getBoundingBox())) {
+        if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
             float distance = Vector3Distance(ray.position, model->getPosition());
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestModel = model;
+                model->setHover(true);
             }
+        } else {
+            model->setHover(false);
         }
     }
-
-    // for (auto& resource : _resource) {
-    //     if (CheckCollisionRayBox(ray, resource->getBoundingBox())) {
-    //         float distance = Vector3Distance(ray.position, resource->getPosition());
-    //         if (distance < closestDistance) {
-    //             closestDistance = distance;
-    //             closestModel = resource;
-    //         }
-    //     }
-    // }
 
     auto players = _playerManager->getPlayers();
     for (auto& player : players) {
         int playerId = player.first;
         for (auto& playerInstance : player.second) {
             auto model = _playerManager->getPlayerModels()[playerId];
-            if (CheckCollisionRayBox(ray, model->getBoundingBox())) {
+            if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
                 float distance = Vector3Distance(ray.position, model->getPosition());
                 if (distance < closestDistance) {
                     closestDistance = distance;
                     closestModel = model;
+                    model->setHover(true);
                 }
+            } else {
+                model->setHover(false);
             }
         }
     }
@@ -180,7 +134,7 @@ void GUI::load()
     const float lightZ = (float)(Map::getInstance()->getMapSizeY() / 2 * 10);
     const Vector3 lightPosition = { lightX, 30, lightZ };
 
-    _lightWrapper = std::make_unique<LightWrapper>();
+    _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_models);
     _lightWrapper->SetShaderToModel(_resource);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), RED);

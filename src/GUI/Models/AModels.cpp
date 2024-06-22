@@ -10,7 +10,7 @@
 void AModels::drawModel()
 {
     DrawModel(_model, _position, _scale, WHITE);
-    DrawBoundingBox(_boundbox, BLACK);
+    // DrawBoundingBox(_boundbox, BLACK);
 }
 
 void AModels::setPosition(Vector3 position)

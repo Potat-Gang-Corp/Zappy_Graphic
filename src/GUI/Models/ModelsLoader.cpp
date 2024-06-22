@@ -31,7 +31,8 @@ ModelsLoader::ModelsLoader()
             {"Player", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/player.glb", &_animsCount))},
             {"Dying", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/dying.glb", &_animsCount))},
             {"Dropping", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/dropping.glb", &_animsCount))},
-            {"LevelUp", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/level_up.glb", &_animsCount))}
+            {"LevelUp", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/level_up.glb", &_animsCount))},
+            {"Hands", std::shared_ptr<ModelAnimation>(LoadModelAnimations("assets/animation/hands.glb", &_animsCount))}
         };
     } catch (const std::exception &e) {
         std::cerr << "Error in ModelsLoader: " << e.what() << std::endl;

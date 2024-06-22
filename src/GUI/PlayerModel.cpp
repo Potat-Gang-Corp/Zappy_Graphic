@@ -36,6 +36,7 @@ void PlayerModel::updateAnimation(float deltaTime)
         UpdateModelAnimation(_model, animation.get()[0], frameCounter);
         if (frameCounter >= animation.get()[0].frameCount) {
             frameCounter = 0;
+            setAnimation(ModelsLoader::getInstance()->getAnim("Player"));
         }
     }
 }
@@ -52,3 +53,8 @@ void PlayerModel::setRotation(float rotationAngle)
     _model.transform = MatrixRotateXYZ((Vector3){ 0.0f, DEG2RAD * rotationAngle, 0.0f });
 }
 
+void PlayerModel::onHover()
+{
+    setAnimation(ModelsLoader::getInstance()->getAnim("Hands"));
+    std::cout << "PlayerModel Hover\n";
+}

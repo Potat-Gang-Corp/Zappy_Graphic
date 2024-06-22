@@ -13,6 +13,7 @@
 class Island : public AModels {
     public:
         Island(int random);
+        void onHover() override final;
 
     private:
 };

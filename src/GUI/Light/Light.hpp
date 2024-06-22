@@ -22,6 +22,10 @@ class LightWrapper {
     public:
         LightWrapper();
         ~LightWrapper();
+        static std::shared_ptr<LightWrapper> getInstance() {
+            static std::shared_ptr<LightWrapper> instance(new LightWrapper());
+            return instance;
+        }
         void SetShaderToModel(std::vector<std::shared_ptr<IModels>> _models);
         void createlight(Vector3 position, Vector3 target, Color color);
         void updateShaderValues(float CamX, float CamY, float CamZ);
@@ -29,6 +33,7 @@ class LightWrapper {
         void updateLightColor(Color color);
         void UpdateLightDayColor(float cycleTime, float dayPhaseDuration);
         Color getCurrentBackgroundColor() { return _currentBackgroundColor; }
+        Shader getShader() { return _shader; }
 
     private:
         Light _lights[MAX_LIGHTS] = { 0 };
