@@ -25,6 +25,8 @@ class IModels {
         virtual void onClick() = 0;
         virtual Vector3 getPosition() const = 0;
         virtual void setHover(bool hover) = 0;
+        virtual int GetIslandX() = 0;
+        virtual int GetIslandY() = 0;
 };
 
 #endif /* !IMODELS_HPP_ */

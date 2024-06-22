@@ -27,7 +27,7 @@ void GUI::LoadIsland()
     for (auto i = 0; i < Map::getInstance()->getMapSizeX(); i++) {
         for (auto j = 0; j < Map::getInstance()->getMapSizeY(); j++) {
             auto rdmNumber = std::rand() % 3 + 1;
-            std::shared_ptr<IModels> monModel = std::make_shared<Island>(rdmNumber);
+            std::shared_ptr<IModels> monModel = std::make_shared<Island>(rdmNumber, i ,j);
             monModel->setScale(0.2f);
             monModel->setPosition((Vector3){ (float)(i) * 10, 0.0f, (float)(j) * 10 });
             _models.push_back(monModel);
@@ -76,37 +76,41 @@ void GUI::loadPlayers()
         _playerManager->AddPlayer(player);
     }
     _playerManager->AddPlayer(Player(1, 0, 0, "team", NORTH, {}, 1));
+    _playerManager->AddPlayer(Player(2, 0, 0, "team", NORTH, {}, 1));
 }
 
 void GUI::handleMouseInteraction()
 {
     Ray ray = GetMouseRay(GetMousePosition(), _camera->getCamera());
     float closestDistance = std::numeric_limits<float>::max();
-    std::shared_ptr<IModels> closestModel = nullptr;
+    auto players = _playerManager->getPlayers();
 
     for (auto& model : _models) {
         if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
             float distance = Vector3Distance(ray.position, model->getPosition());
             if (distance < closestDistance) {
-                closestDistance = distance;
-                closestModel = model;
-                model->setHover(true);
-            }
-        } else {
-            model->setHover(false);
-        }
-    }
-
-    auto players = _playerManager->getPlayers();
-    for (auto& player : players) {
-        int playerId = player.first;
-        for (auto& playerInstance : player.second) {
-            auto model = _playerManager->getPlayerModels()[playerId];
-            if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
-                float distance = Vector3Distance(ray.position, model->getPosition());
-                if (distance < closestDistance) {
+                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                    model->onClick();
+                    _selectedModel = model;
+                    _displayInfo = true;
+                    _cachedInfo.clear();
+                    for (auto ressource : Map::getInstance()->getResources(_selectedModel->GetIslandX(), _selectedModel->GetIslandY())) {
+                        std::string test = Map::getInstance()->resourceToString(ressource.first);
+                        _TextDisplay += test + ": " + std::to_string(ressource.second) + "\n\n";
+                    }
+                    std::vector<int> ids;
+                    auto model_player = _playerManager->getPlayerModels();
+                    for (auto& playerModel : model_player) {
+                        if (playerModel.second->getPosition().x == _selectedModel->GetIslandX() && playerModel.second->getPosition().z == _selectedModel->GetIslandY()) {
+                            ids.push_back(playerModel.first);
+                        }
+                    }
+                    _TextDisplay += "Player: "; 
+                    for (auto &id : ids) {
+                        _TextDisplay += "#" + std::to_string(id) + " ";
+                    }
+                    _cachedInfo.push_back(_TextDisplay);
                     closestDistance = distance;
-                    closestModel = model;
                     model->setHover(true);
                 }
             } else {
@@ -115,12 +119,39 @@ void GUI::handleMouseInteraction()
         }
     }
 
-    if (closestModel != nullptr) {
-        closestModel->onHover();
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            closestModel->onClick();
-        }
-    }
+
+    // auto players = _playerManager->getPlayers();
+    // for (auto& player : players) {
+    //     int playerId = player.first;
+    //     for (auto& playerInstance : player.second) {
+    //         auto model = _playerManager->getPlayerModels()[playerId];
+    //         if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
+    //             float distance = Vector3Distance(ray.position, model->getPosition());
+    //             if (distance < closestDistance) {
+    //                 closestDistance = distance;
+    //                 closestModel = model;
+    //                 model->setHover(true);
+    //             }
+    //         } else {
+    //             model->setHover(false);
+    //         }
+    //     }
+    // }
+
+    // if (closestModel != nullptr) {
+    //     closestModel->onHover();
+    //     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    //         closestModel->onClick();
+    //         _selectedModel = closestModel;
+    //         _displayInfo = true;
+    //         _cachedInfo.clear();
+    //         for (auto ressource : Map::getInstance()->getResources(_selectedModel->GetIslandX(), _selectedModel->GetIslandY())) {
+    //             std::string test = Map::getInstance()->resourceToString(ressource.first);
+    //             std::string text = test + ": " + std::to_string(ressource.second);
+    //             _cachedInfo.push_back(text);
+    //         }
+    //     }
+    // }
 }
 
 void GUI::load()
@@ -147,6 +178,7 @@ void GUI::run()
     const float cycleDuration = 180.0f;
     const float dayPhaseDuration = cycleDuration / 4.0f;
 
+
     while (!WindowShouldClose()) {
         float currentTime = GetTime();
         float cycleTime = fmod(currentTime, cycleDuration);
@@ -169,6 +201,16 @@ void GUI::run()
         this->UpdateMapContent();
         _lightWrapper->drawSphereOnLights();
         _camera->EndMode();
+        int yPosition = 20;
+        if (_displayInfo && _selectedModel != nullptr) {
+            DrawRectangle(1920 - 510, 10, 500, 350, Fade(WHITE, 0.5f));
+            DrawRectangleLines(1920 - 510, 10, 500, 350, WHITE);
+            
+            for (const auto& text : _cachedInfo) {
+                DrawText(text.c_str(), 1920 - 500, yPosition, 20, BLACK);
+                yPosition += 30;
+            }
+        }
         _window->DrawFps(10, 10);
         EndDrawing();
     }

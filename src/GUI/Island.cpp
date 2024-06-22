@@ -9,8 +9,10 @@
 #include "ModelsLoader.hpp"
 #include "Light.hpp"
 
-Island::Island(int random)
+Island::Island(int random, int x, int y)
 {
+    _islandX = x;
+    _islandY = y;
     ModelsLoaderPtr modelsLoader = ModelsLoader::getInstance();
     if (random == 1) {
         _model = modelsLoader->getModel("Island_farm");

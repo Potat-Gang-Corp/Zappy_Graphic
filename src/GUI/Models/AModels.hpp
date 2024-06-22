@@ -28,8 +28,11 @@ class AModels : public IModels {
         void onClick() override;
         Vector3 getPosition() const override { return _position; }
         void setHover(bool hover) override final { _Hover = hover; }
+        int GetIslandX() override final { return _islandX; }
+        int GetIslandY() override final { return _islandY; }
 
     protected:
+        int _islandX, _islandY;
         bool _Hover = false;
         float _scale;
         Vector3 _position, _rotation;

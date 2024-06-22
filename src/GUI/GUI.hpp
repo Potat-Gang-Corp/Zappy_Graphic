@@ -44,6 +44,10 @@ class GUI {
 
     private:
         WindowPtr _window;
+        std::string _TextDisplay;
+        std::shared_ptr<IModels> _selectedModel = nullptr;
+        bool _displayInfo = false;
+        std::vector<std::string> _cachedInfo;
         std::unique_ptr<CameraWrapper> _camera;
         std::shared_ptr<LightWrapper> _lightWrapper;
         std::shared_ptr<PlayerManager> _playerManager;
