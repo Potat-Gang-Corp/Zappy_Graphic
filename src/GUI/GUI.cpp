@@ -144,7 +144,7 @@ void GUI::run()
 {
     this->load();
 
-    const float cycleDuration = 90.0f;
+    const float cycleDuration = 180.0f;
     const float dayPhaseDuration = cycleDuration / 4.0f;
 
     while (!WindowShouldClose()) {
