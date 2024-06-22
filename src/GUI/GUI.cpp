@@ -77,26 +77,32 @@ void GUI::loadPlayers()
     }
     _playerManager->AddPlayer(Player(1, 0, 0, "team", NORTH, {}, 1));
     _playerManager->AddPlayer(Player(2, 0, 0, "team", NORTH, {}, 1));
+    Map::getInstance()->addResource(0, 0, Resource::RessourceType::EGG, 10);
 }
 
 void GUI::handleMouseInteraction()
 {
     Ray ray = GetMouseRay(GetMousePosition(), _camera->getCamera());
     float closestDistance = std::numeric_limits<float>::max();
+    std::shared_ptr<IModels> closestModel = nullptr;
     auto players = _playerManager->getPlayers();
 
     for (auto& model : _models) {
         if (GetRayCollisionBox(ray, model->getBoundingBox()).hit) {
             float distance = Vector3Distance(ray.position, model->getPosition());
             if (distance < closestDistance) {
+                closestDistance = distance;
+                closestModel = model;
                 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
                     model->onClick();
+                    _TextDisplay = "";
                     _selectedModel = model;
                     _displayInfo = true;
                     _cachedInfo.clear();
                     for (auto ressource : Map::getInstance()->getResources(_selectedModel->GetIslandX(), _selectedModel->GetIslandY())) {
                         std::string test = Map::getInstance()->resourceToString(ressource.first);
-                        _TextDisplay += test + ": " + std::to_string(ressource.second) + "\n\n";
+                        _TextDisplay = test + ": " + std::to_string(ressource.second) + "";
+                        _cachedInfo.push_back(_TextDisplay);
                     }
                     std::vector<int> ids;
                     auto model_player = _playerManager->getPlayerModels();
@@ -105,16 +111,15 @@ void GUI::handleMouseInteraction()
                             ids.push_back(playerModel.first);
                         }
                     }
-                    _TextDisplay += "Player: "; 
-                    for (auto &id : ids) {
-                        _TextDisplay += "#" + std::to_string(id) + " ";
+                    if (ids.size() > 0) {
+                        _TextDisplay = "Player: ";
+                        for (auto &id : ids) {
+                            _TextDisplay += "#" + std::to_string(id) + " ";
+                        }
+                        _cachedInfo.push_back(_TextDisplay);
                     }
-                    _cachedInfo.push_back(_TextDisplay);
                     closestDistance = distance;
-                    model->setHover(true);
                 }
-            } else {
-                model->setHover(false);
             }
         }
     }
@@ -152,6 +157,9 @@ void GUI::handleMouseInteraction()
     //         }
     //     }
     // }
+    if (closestModel != nullptr) {
+        closestModel->onHover();
+    }
 }
 
 void GUI::load()
@@ -203,13 +211,17 @@ void GUI::run()
         _camera->EndMode();
         int yPosition = 20;
         if (_displayInfo && _selectedModel != nullptr) {
-            DrawRectangle(1920 - 510, 10, 500, 350, Fade(WHITE, 0.5f));
-            DrawRectangleLines(1920 - 510, 10, 500, 350, WHITE);
+            DrawRectangle(1920 - 410, 10, 400, _cachedInfo.size() * 40, Fade(WHITE, 0.5f));
+            DrawRectangleLines(1920 - 410, 10, 400, _cachedInfo.size() * 40, WHITE);
             
             for (const auto& text : _cachedInfo) {
-                DrawText(text.c_str(), 1920 - 500, yPosition, 20, BLACK);
-                yPosition += 30;
+                DrawText(text.c_str(), 1920 - 400, yPosition, 20, BLACK);
+                yPosition += 40;
             }
+        }
+        if (IsKeyPressed(KEY_O)) {
+            _displayInfo = false;
+            _selectedModel = nullptr;
         }
         _window->DrawFps(10, 10);
         EndDrawing();
