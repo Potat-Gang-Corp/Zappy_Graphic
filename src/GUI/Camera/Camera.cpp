@@ -6,6 +6,7 @@
 */
 
 #include "Camera.hpp"
+#include <cstdlib>
 
 CameraWrapper::CameraWrapper()
 {
@@ -15,15 +16,6 @@ CameraWrapper::CameraWrapper()
     _camera.up = { 0.0f, 1.0f, 0.0f };
     _camera.fovy = 45.0f;
     _camera.projection = CAMERA_PERSPECTIVE;
-}
-
-CameraWrapper::CameraWrapper(Vector3 position, Vector3 target, Vector3 up, float fovy, int projection)
-{
-    _camera.position = position;
-    _camera.target = target;
-    _camera.up = up;
-    _camera.fovy = fovy;
-    _camera.projection = projection;
 }
 
 void CameraWrapper::SetPosition(Vector3 position)

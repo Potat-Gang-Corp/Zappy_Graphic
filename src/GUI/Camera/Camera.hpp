@@ -11,11 +11,11 @@
     #define CAMERA_HPP_
 
     #include <raylib.h>
+    #include <cstdio>
 
 class CameraWrapper {
     public:
         CameraWrapper();
-        CameraWrapper(Vector3 position, Vector3 target, Vector3 up, float fovy, int projection);
         void SetPosition(Vector3 position);
         void SetTarget(Vector3 target);
         void SetUp(Vector3 up);
@@ -23,6 +23,7 @@ class CameraWrapper {
         void SetProjection(int projection);
         void BeginMode();
         void EndMode();
+        Camera3D getCamera() { return _camera; }
         void update() {
             UpdateCamera(&_camera, CAMERA_ORTHOGRAPHIC);
         }
@@ -32,6 +33,7 @@ class CameraWrapper {
 
     private:
         Camera3D _camera;
+        float _zoom = 0;
 };
 
 #endif /* !CAMERA_HPP_ */

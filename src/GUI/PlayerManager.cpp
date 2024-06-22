@@ -14,7 +14,7 @@ PlayerManager::PlayerManager() {}
 
 PlayerManager::~PlayerManager() {}
 
-void PlayerManager::AddPlayer(Player &player)
+void PlayerManager::AddPlayer(Player player)
 {
     player.setPosition(player.getPosX(), player.getPosY(), player.getOrientation());
     int playerId = player.getNumber();

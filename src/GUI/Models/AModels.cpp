@@ -42,3 +42,16 @@ void AModels::setRotation(Vector3 rotation)
     _rotation = rotation;
     _model.transform = MatrixRotateXYZ(_rotation);
 }
+
+void AModels::onHover()
+{
+    printf("Hovering\n");
+    DrawBoundingBox(_boundbox, RED);
+}
+
+void AModels::onClick()
+{
+    printf("Model clicked!\n");
+    std::cout << "Model clicked!" << std::endl;
+}
+

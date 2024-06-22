@@ -40,6 +40,8 @@ class GUI {
         void UpdateMapContent();
         void setFreq(int freq) { _freq = freq; }
         std::shared_ptr<PlayerManager> getPlayerManager() { return _playerManager; }
+        void handleMouseInteraction();
+        bool CheckCollisionRayBox(Ray ray, BoundingBox box);
 
     private:
         WindowPtr _window;

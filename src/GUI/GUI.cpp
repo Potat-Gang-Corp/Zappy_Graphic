@@ -69,12 +69,103 @@ void GUI::UpdateMapContent()
     }
 }
 
+bool GUI::CheckCollisionRayBox(Ray ray, BoundingBox box)
+{
+    float tmin = (box.min.x - ray.position.x) / ray.direction.x;
+    float tmax = (box.max.x - ray.position.x) / ray.direction.x;
+    
+    if (tmin > tmax) {
+        float temp = tmin;
+        tmin = tmax;
+        tmax = temp;
+    }
+
+    float tymin = (box.min.y - ray.position.y) / ray.direction.y;
+    float tymax = (box.max.y - ray.position.y) / ray.direction.y;
+
+    if (tymin > tymax) {
+        float temp = tymin;
+        tymin = tymax;
+        tymax = temp;
+    }
+
+    if ((tmin > tymax) || (tymin > tmax)) return false;
+
+    if (tymin > tmin) tmin = tymin;
+    if (tymax < tmax) tmax = tymax;
+
+    float tzmin = (box.min.z - ray.position.z) / ray.direction.z;
+    float tzmax = (box.max.z - ray.position.z) / ray.direction.z;
+
+    if (tzmin > tzmax) {
+        float temp = tzmin;
+        tzmin = tzmax;
+        tzmax = temp;
+    }
+
+    if ((tmin > tzmax) || (tzmin > tmax)) return false;
+
+    if (tzmin > tmin) tmin = tzmin;
+    if (tzmax < tmax) tmax = tzmax;
+
+    return true;
+}
+
 void GUI::loadPlayers()
 {
     auto players = PlayerManager::getInstance()->getPlayersSave();
     for (auto& player : players) {
         _playerManager->AddPlayer(player);
-        // PlayerManager::getInstance()->AddPlayer(player);
+    }
+    _playerManager->AddPlayer(Player(1, 0, 0, "team", NORTH, {}, 1));
+}
+
+void GUI::handleMouseInteraction()
+{
+    Ray ray = GetMouseRay(GetMousePosition(), _camera->getCamera());
+    float closestDistance = std::numeric_limits<float>::max();
+    std::shared_ptr<IModels> closestModel = nullptr;
+
+    for (auto& model : _models) {
+        if (CheckCollisionRayBox(ray, model->getBoundingBox())) {
+            float distance = Vector3Distance(ray.position, model->getPosition());
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestModel = model;
+            }
+        }
+    }
+
+    // for (auto& resource : _resource) {
+    //     if (CheckCollisionRayBox(ray, resource->getBoundingBox())) {
+    //         float distance = Vector3Distance(ray.position, resource->getPosition());
+    //         if (distance < closestDistance) {
+    //             closestDistance = distance;
+    //             closestModel = resource;
+    //         }
+    //     }
+    // }
+
+    auto players = _playerManager->getPlayers();
+    for (auto& player : players) {
+        int playerId = player.first;
+        for (auto& playerInstance : player.second) {
+            auto model = _playerManager->getPlayerModels()[playerId];
+            if (CheckCollisionRayBox(ray, model->getBoundingBox())) {
+                float distance = Vector3Distance(ray.position, model->getPosition());
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestModel = model;
+                }
+            }
+        }
+    }
+
+    if (closestModel != nullptr) {
+        closestModel->onHover();
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            closestModel->onClick();
+        }
     }
 }
 
@@ -116,6 +207,7 @@ void GUI::run()
         BeginDrawing();
         ClearBackground(_lightWrapper->getCurrentBackgroundColor());
         _camera->BeginMode();
+        handleMouseInteraction();
         for (auto& model : _models) {
             model->drawModel();
         }

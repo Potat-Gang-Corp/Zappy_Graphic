@@ -23,6 +23,10 @@ class AModels : public IModels {
         Model getModel() override final { return _model; }
         void drawModel() override;
         void updateBoundingBox();
+        BoundingBox getBoundingBox() override { return _boundbox; }
+        void onHover() override;
+        void onClick() override;
+        Vector3 getPosition() const override { return _position; }
 
     protected:
         float _scale;

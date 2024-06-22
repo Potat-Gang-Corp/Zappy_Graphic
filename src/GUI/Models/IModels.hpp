@@ -20,6 +20,10 @@ class IModels {
         virtual void setScale(float scale) = 0;
         virtual Model getModel() = 0;
         virtual void drawModel() = 0;
+        virtual BoundingBox getBoundingBox() = 0;
+        virtual void onHover() = 0;
+        virtual void onClick() = 0;
+        virtual Vector3 getPosition() const = 0;
 };
 
 #endif /* !IMODELS_HPP_ */

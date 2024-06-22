@@ -24,13 +24,14 @@ class PlayerManager {
             static std::shared_ptr<PlayerManager> instance(new PlayerManager());
             return instance;
         }
-        void AddPlayer(Player &player);
+        void AddPlayer(Player player);
         void addSavePlayer(Player &player);
         std::vector<Player> &getPlayersSave() { return _savePlayers; }
         void UpdateAnimations(float deltaTime);
         void DrawPlayers();
         void ChangePlayerAnimation(int playerId, const std::string &animFilename);
         std::unordered_map<int, std::vector<Player>> &getPlayers() { return _players; }
+        std::unordered_map<int, std::shared_ptr<PlayerModel>> &getPlayerModels() { return _playerModels; }
 
     private:
         std::vector<Player> _savePlayers;
