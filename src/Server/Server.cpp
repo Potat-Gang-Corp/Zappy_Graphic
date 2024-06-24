@@ -80,6 +80,7 @@ void Server::listening()
             }
         }
     } while (_connected == false);
+    printf("Connected\n");
     while (true) {
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;

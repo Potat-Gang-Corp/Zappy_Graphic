@@ -9,8 +9,10 @@
 
 void AModels::drawModel()
 {
+    printf("Drawing model\n");
+    printf("Position: %f %f %f\n", _position.x, _position.y, _position.z);
+    printf("Scale: %f\n", _scale);
     DrawModel(_model, _position, _scale, WHITE);
-    // DrawBoundingBox(_boundbox, BLACK);
 }
 
 void AModels::setPosition(Vector3 position)

@@ -13,7 +13,7 @@
 
 class ConnectionUI {
     public:
-        ConnectionUI(int screenWidth, int screenHeight);
+        ConnectionUI(int screenWidth, int screenHeight, std::string port, std::string host);
         std::string getPort() { return _portText; }
         std::string getHost() { return _hostText; }
         bool getStatus() { return _status; }

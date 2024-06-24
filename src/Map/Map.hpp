@@ -43,7 +43,7 @@ class Map {
         int &getEggY(int number) { return _eggs[number].second; }
 
     private:
-        int _sizeX, _sizeY;
+        int _sizeX = 0, _sizeY = 0;
         std::map<Coordinates, ResourceMap> _map;
         std::map<int, Coordinates> _eggs;
 };

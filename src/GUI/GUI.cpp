@@ -16,9 +16,9 @@ GUI::GUI()
 {
     _playerManager = PlayerManager::getInstance();
     _window = Window::getInstance();
-    _window->setLogInfo("LOG_INFO");
+    _window->setLogInfo("LOG_ALL");
 
-    Map::getInstance()->setMapSize(10, 10);
+    // Map::getInstance()->setMapSize(10, 10);
 
     _camera = CameraWrapper::getInstance();
 }
@@ -34,9 +34,17 @@ void GUI::LoadIsland()
             std::shared_ptr<IModels> monModel = std::make_shared<Island>(rdmNumber, i ,j);
             monModel->setScale(0.2f);
             monModel->setPosition((Vector3){ (float)(i) * 10, 0.0f, (float)(j) * 10 });
+            printf("Position of model: %f %f %f\n", monModel->getPosition().x, monModel->getPosition().y, monModel->getPosition().z);
             _models.push_back(monModel);
         }
     }
+    if (_models.size() != 100) {
+        printf("C'est pas bien\n");
+        exit(84);
+    }
+    printf("Island size %d\n", _models.size());
+    // printf("Island size %d\n", _models.size());
+    // exit(0);
 }
 
 void GUI::loadResources()
@@ -75,13 +83,18 @@ void GUI::UpdateMapContent()
 
 void GUI::loadPlayers()
 {
-    auto players = PlayerManager::getInstance()->getPlayersSave();
-    for (auto& player : players) {
-        _playerManager->AddPlayer(player);
+    // auto players = PlayerManager::getInstance()->getPlayersSave();
+    auto playerst = PlayerManager::getInstance()->getPlayers();
+
+    // for (auto& player : players) {
+    //     _playerManager->AddPlayer(player);
+    // }
+    for (auto& player : playerst) {
+        for (auto& playerInstance : player.second) {
+            _playerManager->addSavePlayer(playerInstance);
+        }
     }
-    _playerManager->AddPlayer(Player(1, 0, 0, "team", NORTH, {}, 1));
-    // _playerManager->AddPlayer(Player(2, 0, 0, "team", NORTH, {}, 1));
-    Map::getInstance()->addResource(0, 0, Resource::RessourceType::EGG, 10);
+    // _playerManager->AddPlayer(Player(1, 0, 0, "Team1", NORTH, {}, 1));
 }
 
 void GUI::handleMouseInteraction()
@@ -112,8 +125,13 @@ void GUI::handleMouseInteraction()
                     }
                     std::vector<int> ids;
                     auto model_player = _playerManager->getPlayerModels();
+                    auto test = _playerManager->getPlayers();
+                    printf("Player: %d\n", test.size());
+                    printf("Player: %d\n", model_player.size());
                     for (auto& playerModel : model_player) {
-                        if (playerModel.second->getPosition().x == _selectedModel->GetIslandX() && playerModel.second->getPosition().z == _selectedModel->GetIslandY()) {
+                        printf("Player: %f\n", playerModel.second->getPosition().x);
+                        printf("Island: %d\n", _selectedModel->GetIslandX());
+                        if (playerModel.second->getPosition().x == _selectedModel->GetIslandX() * 10 && playerModel.second->getPosition().z == _selectedModel->GetIslandY() * 10) {
                             ids.push_back(playerModel.first);
                         }
                     }
@@ -139,10 +157,28 @@ void GUI::handleMouseInteraction()
                 if (distance < closestDistance) {
                     closestDistance = distance;
                     closestModel = model;
-                    model->setHover(true);
+                    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                        model->onClick();
+                        _TextDisplay = "";
+                        _selectedModel = model;
+                        _displayInfo = true;
+                        _cachedInfo.clear();
+                        _TextDisplay = "Player #" + std::to_string(playerId);
+                        _cachedInfo.push_back(_TextDisplay);
+                        _TextDisplay = "Level: " + std::to_string(playerInstance.getLevel());
+                        _cachedInfo.push_back(_TextDisplay);
+                        _TextDisplay = "Position: X: " + std::to_string(playerInstance.getPosition().x) + " Y: " + std::to_string(playerInstance.getPosition().z);
+                        _cachedInfo.push_back(_TextDisplay);
+                        _TextDisplay = "Team: " + playerInstance.getTeamName();
+                        _cachedInfo.push_back(_TextDisplay);
+                        _TextDisplay = "Inventory: ";
+                        _cachedInfo.push_back(_TextDisplay);
+                        for (const auto& inventory : playerInstance.getInventory()) {
+                            _TextDisplay = Map::getInstance()->resourceToString(inventory.first) + ": " + std::to_string(inventory.second);
+                            _cachedInfo.push_back(_TextDisplay);
+                        }
+                    }
                 }
-            } else {
-                model->setHover(false);
             }
         }
     }
@@ -172,17 +208,40 @@ void GUI::load()
     _height = 1080;
     _width = 1920;
     Window::getInstance()->initWindow(_width, _height, "Potat Zappy", 144);
-    this->loadPlayers();
+    ConnectionUI connectionUI(_width, _height, _port, _host);
+    while (!WindowShouldClose()) {
+        if (Server::getInstance()->getConnectionStatus() == false) {
+            connectionUI.draw();
+            _host = connectionUI.getHost();
+            _port = connectionUI.getPort();
+            _status = connectionUI.getStatus();
+            continue;
+        }
+        printf("connecter\n");
+        break;
+    }
+    while (true) {
+        int x = Map::getInstance()->getMapSizeX();
+        if (x != 0) {
+            printf("la map est pleine\n");
+            break;
+        }
+    }
+
+    printf("Je vais load les isles\n");
     this->LoadIsland();
-    this->loadResources();
+    printf("J'ai load les iles\n");
+
+    // this->loadPlayers();
+    // this->loadResources();
 
     const float lightX = (float)(Map::getInstance()->getMapSizeX() / 2 * 10);
     const float lightZ = (float)(Map::getInstance()->getMapSizeY() / 2 * 10);
-    const Vector3 lightPosition = { lightX, 30, lightZ };
+    const Vector3 lightPosition = { lightX, 60, lightZ };
 
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_models);
-    _lightWrapper->SetShaderToModel(_resource);
+    // _lightWrapper->SetShaderToModel(_resource);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), RED);
 }
 
@@ -194,17 +253,7 @@ void GUI::run()
     const float dayPhaseDuration = cycleDuration / 4.0f;
     _camera->SetTarget((Vector3){ (float)Map::getInstance()->getMapSizeX() / 2 * 10, 0.0f, (float)Map::getInstance()->getMapSizeY() / 2 * 10});
 
-    ConnectionUI connectionUI(_width, _height);
-
     while (!WindowShouldClose()) {
-        if (Server::getInstance()->getConnectionStatus() == false) {
-            connectionUI.draw();
-            _host = connectionUI.getHost();
-            _port = connectionUI.getPort();
-            _status = connectionUI.getStatus();
-            continue;
-        }
-
         float currentTime = GetTime();
         float cycleTime = fmod(currentTime, cycleDuration);
         _lightWrapper->UpdateLightDayColor(cycleTime, dayPhaseDuration);
@@ -212,47 +261,48 @@ void GUI::run()
         _camera->update();
 
         float deltaTime = GetFrameTime();
-        _playerManager->UpdateAnimations(deltaTime);
+        // _playerManager->UpdateAnimations(deltaTime);
         _lightWrapper->updateShaderValues(_camera->getX(), _camera->getY(), _camera->getZ());
         BeginDrawing();
         ClearBackground(_lightWrapper->getCurrentBackgroundColor());
         _camera->BeginMode();
         handleMouseInteraction();
         for (auto& model : _models) {
+            printf("JE DRAW LES ILES\n");
             model->drawModel();
-            auto island = dynamic_cast<Island*>(model.get());
-            if (island->getIsHovered()) {
-                island->updateRotation(deltaTime);
-            }
+            // auto island = dynamic_cast<Island*>(model.get());
+            // if (island->getIsHovered()) {
+            //     island->updateRotation(deltaTime);
+            // }
         }
-        _playerManager->DrawPlayers();
-        this->UpdateMapContent();
+        // _playerManager->DrawPlayers();
+        // this->UpdateMapContent();
         _lightWrapper->drawSphereOnLights();
         _camera->EndMode();
-        int yPosition = 20;
-        if (_displayInfo && _selectedModel != nullptr) {
-            RectangleElement rectClose({ 35, 35, 200, 30 }, Fade(WHITE, 0.5f));
-            rectClose.draw();
-            rectClose.drawOutline(WHITE);
+        // int yPosition = 20;
+        // if (_displayInfo && _selectedModel != nullptr) {
+        //     RectangleElement rectClose({ 35, 35, 200, 30 }, Fade(WHITE, 0.5f));
+        //     rectClose.draw();
+        //     rectClose.drawOutline(WHITE);
 
-            TextElement textClose("Press T to close.", { 40, 40 }, 20, BLACK);
-            textClose.draw();
+        //     TextElement textClose("Press T to close.", { 40, 40 }, 20, BLACK);
+        //     textClose.draw();
 
-            RectangleElement rectInfo({ 1920 - 410, 10, 400, (float)(_cachedInfo.size() * 40) }, Fade(WHITE, 0.5f));
-            rectInfo.draw();
-            rectInfo.drawOutline(WHITE);
+        //     RectangleElement rectInfo({ 1920 - 410, 10, 400, (float)(_cachedInfo.size() * 40) }, Fade(WHITE, 0.5f));
+        //     rectInfo.draw();
+        //     rectInfo.drawOutline(WHITE);
 
-            int yPosition = 20;
-            for (const auto& text : _cachedInfo) {
-                TextElement cachedText(text, { 1920 - 400, (float)yPosition }, 20, BLACK);
-                cachedText.draw();
-                yPosition += 40;
-            }
-        }
-        if (IsKeyPressed(KEY_T)) {
-            _displayInfo = false;
-            _selectedModel = nullptr;
-        }
+        //     int yPosition = 20;
+        //     for (const auto& text : _cachedInfo) {
+        //         TextElement cachedText(text, { 1920 - 400, (float)yPosition }, 20, BLACK);
+        //         cachedText.draw();
+        //         yPosition += 40;
+        //     }
+        // }
+        // if (IsKeyPressed(KEY_T)) {
+        //     _displayInfo = false;
+        //     _selectedModel = nullptr;
+        // }
         _window->DrawFps(10, 10);
         EndDrawing();
     }

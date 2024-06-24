@@ -8,10 +8,10 @@
 #include "ConnectionUI.hpp"
 #include "Camera.hpp"
 
-ConnectionUI::ConnectionUI(int screenWidth, int screenHeight)
+ConnectionUI::ConnectionUI(int screenWidth, int screenHeight, std::string port, std::string host)
 : _form({ (float)screenWidth / 2 - 250, (float)screenHeight / 2 - 250, 500, 300 }), _port({ _form.x + 10, _form.y + 100, _form.width - 20, 40 }),
         _host({ _form.x + 10, _form.y + 180, _form.width - 20, 40 }), _footerText("Press Enter to connect !", { 0, 0 }, 20, DARKGRAY),
-        _mainTitle("Connect to the Server !", { 0, 0 }, 30, DARKGRAY), _status(false), _portActive(false), _hostActive(false)
+        _mainTitle("Connect to the Server !", { 0, 0 }, 30, DARKGRAY), _status(false), _portActive(false), _hostActive(false), _portText(port), _hostText(host)
 {
     _footerText.setPosition({ _form.x + _form.width / 2 - _footerText.getTextWidth() / 2, _form.y + _form.height - 60 });
     _mainTitle.setPosition({ _form.x + _form.width / 2 - _mainTitle.getTextWidth() / 2, _form.y + 20 });
@@ -23,9 +23,9 @@ void ConnectionUI::draw()
     ClearBackground(SKYBLUE);
     CameraWrapperPtr _camera = CameraWrapper::getInstance();
     _camera->BeginMode();
-    for (auto& model : GUI::getInstance()->getModel()) {
-        model->drawModel();
-    }
+    // for (auto& model : GUI::getInstance()->getModel()) {
+    //     model->drawModel();
+    // }
     _camera->EndMode();
     DrawRectangleRec(_form, WHITE);
     DrawRectangleLines((int)_form.x, (int)_form.y, (int)_form.width, (int)_form.height, DARKGRAY);

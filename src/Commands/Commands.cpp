@@ -21,12 +21,15 @@
 
 void Commands::msz(const std::string &data)
 {
+    printf("Je capte msz %s\n", data.c_str());
     std::istringstream iss(data);
     std::string command;
     std::string x;
     std::string y;
     iss >> command >> x >> y;
     Map::getInstance()->setMapSize(std::stoi(x), std::stoi(y));
+    // Map::getInstance()->printMap();
+    // exit(0);
 }
 
 void Commands::bct(const std::string &data)
@@ -210,6 +213,7 @@ void Commands::pnw(const std::string &data)
     player_id = player_id.substr(1);
     Player player(std::stoi(player_id), std::stoi(x), std::stoi(y), team_name, static_cast<Orientation>(std::stoi(orientation)), {}, std::stoi(level));
     if (Window::getInstance()->getInit() == false) {
+        // exit(0);
         PlayerManager::getInstance()->addSavePlayer(player);
     } else {
         PlayerManager::getInstance()->AddPlayer(player);
