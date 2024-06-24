@@ -46,6 +46,7 @@ class GUI {
         bool getStatus() { return _status; }
         std::string getHost() { return _host; }
         std::string getPort() { return _port; }
+        std::vector<std::shared_ptr<IModels>> getModel() { return _models; }
 
     private:
         bool _status = false;
@@ -55,7 +56,7 @@ class GUI {
         std::shared_ptr<IModels> _selectedModel = nullptr;
         bool _displayInfo = false;
         std::vector<std::string> _cachedInfo;
-        std::unique_ptr<CameraWrapper> _camera;
+        CameraWrapperPtr _camera;
         std::shared_ptr<LightWrapper> _lightWrapper;
         std::shared_ptr<PlayerManager> _playerManager;
         std::vector<std::shared_ptr<IModels>> _models;

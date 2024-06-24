@@ -12,9 +12,14 @@
 
     #include <raylib.h>
     #include <cstdio>
+    #include <memory>
 
 class CameraWrapper {
     public:
+        static std::shared_ptr<CameraWrapper> getInstance() {
+            static std::shared_ptr<CameraWrapper> instance(new CameraWrapper());
+            return instance;
+        }
         CameraWrapper();
         void SetPosition(Vector3 position);
         void SetTarget(Vector3 target);
@@ -35,5 +40,7 @@ class CameraWrapper {
         Camera3D _camera;
         float _zoom = 0;
 };
+
+typedef std::shared_ptr<CameraWrapper> CameraWrapperPtr;
 
 #endif /* !CAMERA_HPP_ */

@@ -9,6 +9,8 @@
 #include "Island.hpp"
 #include "Server.hpp"
 #include "Resource.hpp"
+#include "ConnectionUI.hpp"
+#include "RectangleElement.hpp"
 
 GUI::GUI()
 {
@@ -18,7 +20,7 @@ GUI::GUI()
 
     Map::getInstance()->setMapSize(10, 10);
 
-    _camera = std::make_unique<CameraWrapper>();
+    _camera = CameraWrapper::getInstance();
 }
 
 GUI::~GUI() {}
@@ -170,8 +172,6 @@ void GUI::load()
     _height = 1080;
     _width = 1920;
     Window::getInstance()->initWindow(_width, _height, "Potat Zappy", 144);
-    _port = "4243";
-    _host = "127.0.0.1";
     this->loadPlayers();
     this->LoadIsland();
     this->loadResources();
@@ -192,87 +192,16 @@ void GUI::run()
 
     const float cycleDuration = 180.0f;
     const float dayPhaseDuration = cycleDuration / 4.0f;
-    const Rectangle form = { (float)_width / 2 - 250, (float)_height / 2 - 250, 500, 300 };
-    const Rectangle port = { form.x + 10, form.y + 100, form.width - 20, 40 };
-    const Rectangle host = { form.x + 10, form.y + 180, form.width - 20, 40 };
-    const std::string footerText = "Press Enter to connect !";
-    const std::string mainTitle = "Connect to the Server !";
     _camera->SetTarget((Vector3){ (float)Map::getInstance()->getMapSizeX() / 2 * 10, 0.0f, (float)Map::getInstance()->getMapSizeY() / 2 * 10});
-    bool portActive = false;
-    bool hostActive = false;
+
+    ConnectionUI connectionUI(_width, _height);
 
     while (!WindowShouldClose()) {
         if (Server::getInstance()->getConnectionStatus() == false) {
-            BeginDrawing();
-            ClearBackground(SKYBLUE);
-            _camera->BeginMode();
-            for (auto& model : _models) {
-                model->drawModel();
-            }
-            _camera->EndMode();
-            DrawRectangleRec(form, WHITE);
-            DrawRectangleLines((int)form.x, (int)form.y, (int)form.width, (int)form.height, DARKGRAY);
-            int titleWidth = MeasureText(mainTitle.c_str(), 30);
-            DrawText(mainTitle.c_str(), form.x + form.width / 2 - titleWidth / 2, form.y + 20, 30, DARKGRAY);
-            DrawText("Port :", (int)port.x, (int)port.y - 25, 20, DARKGRAY);
-            DrawRectangleRec(port, Fade(LIGHTGRAY, 0.5f));
-            if (CheckCollisionPointRec(GetMousePosition(), port)) {
-                DrawRectangleLines((int)port.x, (int)port.y, (int)port.width, (int)port.height, RED);
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                    portActive = true;
-                    hostActive = false;
-                }
-            } else {
-                DrawRectangleLines((int)port.x, (int)port.y, (int)port.width, (int)port.height, DARKGRAY);
-            }
-            DrawText(_port.c_str(), (int)port.x + 5, (int)port.y + port.height / 2 - 10, 20, BLACK);
-            if (portActive) {
-                DrawText("_", (int)port.x + 10 + MeasureText(_port.c_str(), 20), (int)port.y + port.height / 2 - 10, 20, BLACK);
-            }
-            
-            DrawText("Host :", (int)host.x, (int)host.y - 25, 20, DARKGRAY);
-            DrawRectangleRec(host, Fade(LIGHTGRAY, 0.5f));
-            if (CheckCollisionPointRec(GetMousePosition(), host)) {
-                DrawRectangleLines((int)host.x, (int)host.y, (int)host.width, (int)host.height, RED);
-                if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                    hostActive = true;
-                    portActive = false;
-                }
-            } else {
-                DrawRectangleLines((int)host.x, (int)host.y, (int)host.width, (int)host.height, DARKGRAY);
-            }
-            DrawText(_host.c_str(), (int)host.x + 5, (int)host.y + host.height / 2 - 10, 20, BLACK);
-            if (hostActive) {
-                DrawText("_", (int)host.x + 10 + MeasureText(_host.c_str(), 20), (int)host.y + host.height / 2 - 10, 20, BLACK);
-            }
-            
-            int footerWidth = MeasureText(footerText.c_str(), 20);
-            DrawText(footerText.c_str(), form.x + form.width / 2 - footerWidth / 2, form.y + form.height - 60, 20, DARKGRAY);
-            
-            Color statusColor = _status ? GREEN : RED;
-            const std::string statusText = _status ? "Connected" : "Disconnected";
-            DrawCircle(form.x + 20, form.y + form.height - 20, 10, statusColor);
-            DrawText(statusText.c_str(), form.x + 40, form.y + form.height - 28, 20, statusColor);
-            
-            int key = GetCharPressed();
-            while (key > 0) {
-                if (portActive && (key >= 32) && (key <= 125) && (_port.length() < 5)) {
-                    _port += (char)key;
-                }
-                if (hostActive && (key >= 32) && (key <= 125) && (_host.length() < 15)) {
-                    _host += (char)key;
-                }
-                key = GetCharPressed();
-            }
-            if (IsKeyPressed(KEY_BACKSPACE)) {
-                if (portActive && !_port.empty()) _port.pop_back();
-                if (hostActive && !_host.empty()) _host.pop_back();
-            }
-            EndDrawing();
-            if (IsKeyPressed(KEY_ENTER))
-                _status = true;
-            else
-                _status = false;
+            connectionUI.draw();
+            _host = connectionUI.getHost();
+            _port = connectionUI.getPort();
+            _status = connectionUI.getStatus();
             continue;
         }
 
@@ -302,14 +231,21 @@ void GUI::run()
         _camera->EndMode();
         int yPosition = 20;
         if (_displayInfo && _selectedModel != nullptr) {
-            DrawRectangle(35, 35, 200, 30, Fade(WHITE, 0.5f));
-            DrawRectangleLines(35, 35, 200, 30, WHITE);
-            DrawText("Press T to close.", 40, 40, 20, BLACK);
-            DrawRectangle(1920 - 410, 10, 400, _cachedInfo.size() * 40, Fade(WHITE, 0.5f));
-            DrawRectangleLines(1920 - 410, 10, 400, _cachedInfo.size() * 40, WHITE);
-            
+            RectangleElement rectClose({ 35, 35, 200, 30 }, Fade(WHITE, 0.5f));
+            rectClose.draw();
+            rectClose.drawOutline(WHITE);
+
+            TextElement textClose("Press T to close.", { 40, 40 }, 20, BLACK);
+            textClose.draw();
+
+            RectangleElement rectInfo({ 1920 - 410, 10, 400, (float)(_cachedInfo.size() * 40) }, Fade(WHITE, 0.5f));
+            rectInfo.draw();
+            rectInfo.drawOutline(WHITE);
+
+            int yPosition = 20;
             for (const auto& text : _cachedInfo) {
-                DrawText(text.c_str(), 1920 - 400, yPosition, 20, BLACK);
+                TextElement cachedText(text, { 1920 - 400, (float)yPosition }, 20, BLACK);
+                cachedText.draw();
                 yPosition += 40;
             }
         }
