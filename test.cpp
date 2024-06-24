@@ -1,112 +1,83 @@
 #include "raylib.h"
 
-// Fonction pour vérifier la collision entre un rayon et une boîte englobante
-bool CheckCollisionRayBox(Ray ray, BoundingBox box) {
-    float tmin = (box.min.x - ray.position.x) / ray.direction.x;
-    float tmax = (box.max.x - ray.position.x) / ray.direction.x;
-    
-    if (tmin > tmax) {
-        float temp = tmin;
-        tmin = tmax;
-        tmax = temp;
-    }
+int main() {
+    // Initialisation de la fenêtre
+    InitWindow(800, 600, "Champ de saisie de texte avec Raylib");
 
-    float tymin = (box.min.y - ray.position.y) / ray.direction.y;
-    float tymax = (box.max.y - ray.position.y) / ray.direction.y;
+    // Variables pour gérer le champ de saisie
+    char text[128] = ""; // Buffer pour le texte
+    int letterCount = 0; // Nombre de lettres saisies
+    bool mouseOnText = false; // Indicateur de survol de la souris
+    Rectangle textBox = { 200, 200, 400, 50 }; // Rectangle du champ de saisie
+    bool editMode = false; // Mode d'édition
 
-    if (tymin > tymax) {
-        float temp = tymin;
-        tymin = tymax;
-        tymax = temp;
-    }
+    SetTargetFPS(60); // Régler la fréquence d'images
 
-    if ((tmin > tymax) || (tymin > tmax)) return false;
+    while (!WindowShouldClose()) { // Boucle principale
 
-    if (tymin > tmin) tmin = tymin;
-    if (tymax < tmax) tmax = tymax;
+        // Vérifier si la souris est sur le champ de texte
+        if (CheckCollisionPointRec(GetMousePosition(), textBox)) {
+            mouseOnText = true;
+            if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                editMode = true;
+            }
+        } else {
+            mouseOnText = false;
+        }
 
-    float tzmin = (box.min.z - ray.position.z) / ray.direction.z;
-    float tzmax = (box.max.z - ray.position.z) / ray.direction.z;
-
-    if (tzmin > tzmax) {
-        float temp = tzmin;
-        tzmin = tzmax;
-        tzmax = temp;
-    }
-
-    if ((tmin > tzmax) || (tzmin > tmax)) return false;
-
-    if (tzmin > tmin) tmin = tzmin;
-    if (tzmax < tmax) tmax = tzmax;
-
-    return true;
-}
-
-int main(void) {
-    // Initialisation
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    InitWindow(screenWidth, screenHeight, "Raylib 3D Hover Example");
-
-    Camera camera = { 0 };
-    camera.position = (Vector3){ 0.0f, 10.0f, 10.0f };
-    camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };
-    camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };
-    camera.fovy = 45.0f;
-    camera.projection = CAMERA_PERSPECTIVE;
-
-    // Charger le modèle
-    Model model = LoadModel("assets/island_farm.glb");
-    Vector3 modelPosition = { 0.0f, 0.0f, 0.0f };
-
-    // Calculer la boîte englobante du modèle
-    // BoundingBox modelBoundingBox = GetModelBoundingBox(model);
-    BoundingBox modelBoundingBox = GetMeshBoundingBox(model.meshes[0]);
-    
-    modelBoundingBox.min.x *= 0.06f;
-    modelBoundingBox.min.y *= 0.06f;
-    modelBoundingBox.min.z *= 0.06f;
-    modelBoundingBox.max.x *= 0.06f;
-    modelBoundingBox.max.y *= 0.06f;
-    modelBoundingBox.max.z *= 0.06f;
-
-    SetTargetFPS(60);
-
-    while (!WindowShouldClose()) {
-        // Mise à jour
-
-        // Désactiver les mouvements de la caméra par la souris
-        Vector2 mousePosition = GetMousePosition();
-        Ray ray = GetMouseRay(mousePosition, camera);
-
-        // Vérifier la collision avec le modèle
-        bool hover = CheckCollisionRayBox(ray, modelBoundingBox);
-
-        BeginDrawing();
-            ClearBackground(RAYWHITE);
-
-            BeginMode3D(camera);
-
-                // Dessiner le modèle
-                DrawModel(model, modelPosition, 0.06f, WHITE);
-                // DrawBoundingBox(modelBoundingBox, BLACK);
-
-                if (hover) {
-                    DrawModelWires(model, modelPosition, 0.06f, BLACK);
+        // Saisie de texte
+        if (editMode) {
+            int key = GetKeyPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125) && (letterCount < 127)) {
+                    text[letterCount] = (char)key;
+                    text[letterCount+1] = '\0';
+                    letterCount++;
                 }
 
-            EndMode3D();
+                key = GetKeyPressed();
+            }
 
-            DrawText("Passez la souris sur le modèle pour un effet de hover", 10, 10, 20, DARKGRAY);
+            if (IsKeyPressed(KEY_BACKSPACE)) {
+                letterCount--;
+                if (letterCount < 0) letterCount = 0;
+                text[letterCount] = '\0';
+            }
+
+            if (IsKeyPressed(KEY_ENTER)) {
+                editMode = false;
+            }
+        }
+
+        // Dessiner
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawText("Cliquez sur le rectangle et commencez à taper...", 200, 150, 20, DARKGRAY);
+
+        DrawRectangleRec(textBox, LIGHTGRAY);
+        if (mouseOnText) {
+            DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, RED);
+        } else {
+            DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, DARKGRAY);
+        }
+
+        DrawText(text, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
+
+        if (editMode) {
+            if (letterCount < 30) {
+                if ((letterCount/2) % 2 == 0) {
+                    DrawText("_", (int)textBox.x + 8 + MeasureText(text, 40), (int)textBox.y + 12, 40, MAROON);
+                }
+            } else {
+                DrawText("LIMIT REACHED", 230, 300, 20, RED);
+            }
+        }
 
         EndDrawing();
     }
 
-    // Décharger le modèle
-    UnloadModel(model);
-
-    // Dé-initialisation
+    // Déinitialisation
     CloseWindow();
 
     return 0;

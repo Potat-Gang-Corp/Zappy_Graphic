@@ -30,6 +30,7 @@ class AModels : public IModels {
         void setHover(bool hover) override final { _Hover = hover; }
         int GetIslandX() override final { return _islandX; }
         int GetIslandY() override final { return _islandY; }
+        void onHoverEnd() override;
 
     protected:
         int _islandX, _islandY;

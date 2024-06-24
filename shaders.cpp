@@ -47,7 +47,7 @@ int main(void)
     SetShaderValue(shader, ambientLoc, ambient, SHADER_UNIFORM_VEC4);
 
     // Load the model
-    Model model = LoadModel("assets/player.glb");
+    Model model = LoadModel("assets/cool_potato.glb");
 
     // Apply rotation to correct the model orientation
     // Matrix rotation = MatrixRotateX(DEG2RAD);
@@ -60,8 +60,8 @@ int main(void)
 
     // Load animations
     int animsCount = 0;
-    ModelAnimation *anims = LoadModelAnimations("assets/animation/level_up.glb", &animsCount);
-    ModelAnimation *dyingAnim = LoadModelAnimations("assets/mushroom_dance.glb", &animsCount);
+    ModelAnimation *anims = LoadModelAnimations("assets/cool_potato.glb", &animsCount);
+    ModelAnimation *dyingAnim = LoadModelAnimations("assets/cool_potato.glb", &animsCount);
     int animFrameCounter = 0;
 
     // Current animation state

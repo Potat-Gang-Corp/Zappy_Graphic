@@ -8,8 +8,10 @@
 #include "Island.hpp"
 #include "ModelsLoader.hpp"
 #include "Light.hpp"
+#include "Map.hpp"
 
-Island::Island(int random, int x, int y)
+Island::Island(int random, int x, int y) : _rotationAxis({0, 1, 0}), _rotationAngle(0.0f),
+ _hoverRotationSpeed(30.0f), _returnRotationSpeed(60.0f) // 30 degrees per second for hover, 60 degrees per second for return
 {
     _islandX = x;
     _islandY = y;
@@ -34,5 +36,27 @@ Island::Island(int random, int x, int y)
 
 void Island::onHover()
 {
-    DrawModelWires(_model, _position, 0.2f, BLACK);
+    if (!_isHovered) {
+        _isHovered = true;
+    }
+}
+
+void Island::onHoverEnd()
+{
+    if (_isHovered) {
+        _isHovered = false;
+        _rotationAngle = 0.0f;
+    }
+}
+
+void Island::updateRotation(float deltaTime)
+{
+    if (_isHovered) {
+        _rotationAngle += _hoverRotationSpeed * deltaTime;
+        if (_rotationAngle >= 360.0f) {
+            _rotationAngle -= 360.0f;
+        }
+    }
+    Matrix rotation = MatrixRotate(_rotationAxis, _rotationAngle * DEG2RAD);
+    _model.transform = rotation;
 }

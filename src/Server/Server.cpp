@@ -6,6 +6,7 @@
 */
 
 #include "Server.hpp"
+#include "GUI.hpp"
 #include "Factory.hpp"
 #include "PlayerManager.hpp"
 
@@ -19,6 +20,7 @@ int Server::connect_server(const std::string &port, const std::string &host)
         boost::asio::connect(socket, endpoint_iterator);
         std::cout << "Connecté au serveur!" << std::endl;
         send_data("GRAPHIC\n");
+        _connected = true;
     } catch (const boost::system::system_error &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
@@ -68,6 +70,16 @@ std::string Server::receive_data()
 
 void Server::listening()
 {
+    GuiPtr gui = GUI::getInstance();
+    do {
+        if (gui->getStatus() == true) {
+            try {
+                connect_server(gui->getPort().c_str(), gui->getHost().c_str());
+            } catch (const std::exception &e) {
+                std::cerr << "Error: " << e.what() << std::endl;
+            }
+        }
+    } while (_connected == false);
     while (true) {
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;

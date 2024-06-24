@@ -45,13 +45,16 @@ void AModels::setRotation(Vector3 rotation)
 
 void AModels::onHover()
 {
-    printf("Hovering\n");
     DrawBoundingBox(_boundbox, RED);
 }
 
 void AModels::onClick()
 {
-    printf("Model clicked!\n");
-    std::cout << "Model clicked!" << std::endl;
+    // DrawBoundingBox(_boundbox, GREEN);
+}
+
+void AModels::onHoverEnd()
+{
+    // DrawBoundingBox(_boundbox, BLACK);
 }
 

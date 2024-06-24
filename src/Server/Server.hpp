@@ -30,6 +30,10 @@ using boost::asio::ip::tcp;
 
 class Server {
     public:
+        static std::shared_ptr<Server> getInstance() {
+            static std::shared_ptr<Server> instance(new Server());
+            return instance;
+        }
         /**
          * @brief Construct a new Server object
          * 
@@ -78,11 +82,16 @@ class Server {
         */
         std::function<void(const std::string&)> on_receive;
 
+        bool getConnectionStatus() { return _connected; }
+
     private:
         boost::asio::io_service io_service;
         tcp::resolver resolver;
         tcp::socket socket;
         boost::asio::streambuf buffer;
+        bool _connected = false;
 };
+
+typedef std::shared_ptr<Server> ServerPtr;
 
 #endif // SERVER_HPP

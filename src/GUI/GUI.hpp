@@ -23,6 +23,7 @@
     #include <chrono>
     #include "Light.hpp"
     #include "PlayerManager.hpp"
+    #include "Island.hpp"
 
 class GUI {
     public:
@@ -41,8 +42,14 @@ class GUI {
         void setFreq(int freq) { _freq = freq; }
         std::shared_ptr<PlayerManager> getPlayerManager() { return _playerManager; }
         void handleMouseInteraction();
+        void setHostPort(std::string host, std::string port) { _host = host; _port = port; }
+        bool getStatus() { return _status; }
+        std::string getHost() { return _host; }
+        std::string getPort() { return _port; }
 
     private:
+        bool _status = false;
+        std::string _host, _port;
         WindowPtr _window;
         std::string _TextDisplay;
         std::shared_ptr<IModels> _selectedModel = nullptr;
@@ -53,7 +60,7 @@ class GUI {
         std::shared_ptr<PlayerManager> _playerManager;
         std::vector<std::shared_ptr<IModels>> _models;
         std::vector<std::shared_ptr<IModels>> _resource;
-        int _freq = 10;
+        int _freq = 10, _height, _width;
 };
 
 typedef std::shared_ptr<GUI> GuiPtr;
