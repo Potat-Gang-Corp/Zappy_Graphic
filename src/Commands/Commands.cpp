@@ -186,8 +186,12 @@ void Commands::pnw(const std::string &data)
 
     player_id = player_id.substr(1);
     Player player(std::stoi(player_id), (Vector3){std::stof(x) * 10.0f, 0.0f, std::stof(y) * 10.0f}, std::stoi(orientation), team_name, std::stoi(level));
-    GameEnginePtr playerManager = GameEngine::getInstance();
-    playerManager->addFullPlayer(player);
+    GameEngine::getInstance()->addFullPlayer(player);
+
+    // postTask([player]{
+    //     GameEnginePtr playerManager = GameEngine::getInstance();
+    //     playerManager->addFullPlayer(player);
+    // });
 }
 
 void Commands::ppo(const std::string &data)

@@ -14,6 +14,7 @@
     #include <memory>
     #include "IRenderable.hpp"
     #include "IUpdatable.hpp"
+    #include "ModelsLoader.hpp"
     #include "IClickable.hpp"
     #include "CameraWrapper.hpp"
     #include "raylib.h"
@@ -23,8 +24,6 @@
     #include <iostream>
     #include "Light.hpp"
     #include <ostream>
-    #include <mutex>
-    #include <condition_variable>
 
 class GameEngine {
     public:
@@ -61,6 +60,7 @@ class GameEngine {
         std::shared_ptr<CameraWrapper> _camera;
         std::vector<std::shared_ptr<Tile>> _tiles;
         std::vector<std::shared_ptr<Player>> _players;
+        std::shared_ptr<ModelsLoader> _modelsGetter;
         std::vector<Model> _resourceModels;
         std::shared_ptr<LightWrapper> _lightWrapper;
         std::shared_ptr<HUD> _hud;

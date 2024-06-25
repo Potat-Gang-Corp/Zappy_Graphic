@@ -9,14 +9,16 @@
 #include <iostream>
 #include "raymath.h"
 #include "Utils.hpp"
+#include "ModelsLoader.hpp"
 #include <map>
 
 Player::Player(int id, Vector3 position, int orientation, const std::string& teamName, int level) : _id(id), _position(position), _scale(0.09f),
-_orientation(orientation), _teamName(teamName), _hover(false), _clicked(false), _level(level), _frameCounter(0), _currentAnimation(0) {
-    _model = LoadModel("assets/player.glb");
+_orientation(orientation), _teamName(teamName), _hover(false), _clicked(false), _level(level), _frameCounter(0), _currentAnimation(0)
+{
+    _model = ModelsLoader::getInstance()->getModel("PlayerModel");
 
     _hud = HUD::getInstance();
-    _animations = LoadModelAnimations("assets/player.glb", &_animationCount);
+    _animations = ModelsLoader::getInstance()->getAnim("Player");
     loadDefaultAnimation();
     _inventory.resize(7, 0);
     _boundingBox = GetModelBoundingBox(_model);
@@ -30,10 +32,6 @@ Player::~Player() {}
 
 void Player::Render()
 {
-    // if (_hover)
-    //     _scale = 0.2f;
-    // else
-    //     _scale = 0.07f;
     float angle = 0.0f;
     switch (_orientation) {
         case 1: angle = 0.0f; break;
@@ -43,18 +41,15 @@ void Player::Render()
     }
 
     _frameCounter++;
-    UpdateModelAnimation(_model, _animations[_currentAnimation], _frameCounter);
-    if (_frameCounter >= _animations[_currentAnimation].frameCount) {
+    UpdateModelAnimation(_model, _animations.get()[_currentAnimation], _frameCounter);
+    if (_frameCounter >= _animations.get()[_currentAnimation].frameCount) {
         _frameCounter = 0;
         if (_currentAnimation != 0) {
             _currentAnimation = 0;
             loadDefaultAnimation();
         }
     }
-    printf("Model mesh count: %d\n", _model.meshCount);
-    printf("Model animation count: %d\n", _animationCount);
-    printf("Scale: %f\n", _scale);
-    printf("Player position: %f, %f, %f\n", _position.x, _position.y, _position.z);
+
     DrawModelEx(_model, _position, (Vector3){0, 1, 0}, angle, (Vector3){_scale, _scale, _scale}, WHITE);
     DrawBoundingBox(_boundingBox, GREEN);
 }
@@ -106,12 +101,12 @@ void Player::setOrientation(int orientation)
 
 void Player::playAnimation(const std::string& animationPath)
 {
-    ModelAnimation* newAnimations = LoadModelAnimations(animationPath.c_str(), &_animationCount);
+    std::shared_ptr<ModelAnimation> newAnimations = ModelsLoader::getInstance()->getAnim(animationPath.c_str());
     if (newAnimations) {
         for (int i = 0; i < _animationCount; i++) {
-            UnloadModelAnimation(_animations[i]);
+            UnloadModelAnimation(_animations.get()[i]);
         }
-        RL_FREE(_animations);
+        RL_FREE(_animations.get());
 
         _animations = newAnimations;
         _currentAnimation = 0;

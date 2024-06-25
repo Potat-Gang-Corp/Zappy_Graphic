@@ -26,12 +26,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    std::thread listeningThread(&Server::listening, &server);
     std::thread gameThread(&GameEngine::Run, gameEngine);
+    std::thread listeningThread(&Server::listening, &server);
 
-    gameThread.join();
-    gameEngine->Shutdown();
     listeningThread.join(); 
+    gameEngine->Shutdown();
+    gameThread.join();
 
     return 0;
 }

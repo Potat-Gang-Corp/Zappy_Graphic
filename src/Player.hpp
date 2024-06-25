@@ -62,7 +62,7 @@ class Player : public IRenderable, public IClickable {
         std::vector<int> _inventory;
         Model _model;
         BoundingBox _boundingBox;
-        ModelAnimation *_animations;
+        std::shared_ptr<ModelAnimation> _animations;
         int _animationCount;
         int _currentAnimation;
         int _frameCounter;

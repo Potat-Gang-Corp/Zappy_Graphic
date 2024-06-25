@@ -37,20 +37,20 @@ void GameEngine::loadTiles()
 
 void GameEngine::loadModels()
 {
-    _tileModel = LoadModel("assets/island_farm.glb");
+    _tileModel = _modelsGetter->getModel("Island_farm");
     if (!_tileModel.meshCount) {
         std::cerr << "Failed to load model: assets/island_farm.glb" << std::endl;
         throw std::runtime_error("Failed to load model");
     }
 
-    _resourceModels.push_back(LoadModel("assets/potato.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine1.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine2.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine3.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine4.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine5.glb"));
-    _resourceModels.push_back(LoadModel("assets/mine6.glb"));
-    _resourceModels.push_back(LoadModel("assets/Egg.glb"));
+    _resourceModels.push_back(_modelsGetter->getModel("FOOD"));
+    _resourceModels.push_back(_modelsGetter->getModel("LINEMATE"));
+    _resourceModels.push_back(_modelsGetter->getModel("DERAUMERE"));
+    _resourceModels.push_back(_modelsGetter->getModel("SIBUR"));
+    _resourceModels.push_back(_modelsGetter->getModel("MENDIANE"));
+    _resourceModels.push_back(_modelsGetter->getModel("PHIRAS"));
+    _resourceModels.push_back(_modelsGetter->getModel("THYSTAME"));
+    _resourceModels.push_back(_modelsGetter->getModel("EGG"));
 }
 
 GameEngine::~GameEngine() {}
@@ -58,20 +58,16 @@ GameEngine::~GameEngine() {}
 void GameEngine::Initialize()
 {
     InitWindow(1920, 1080, "3D Game with Raylib");
-    SetTargetFPS(90);
+    SetTargetFPS(144);
 
     _isRunning = true;
-
+    _modelsGetter = ModelsLoader::getInstance();
     this->loadModels();
     this->loadTiles();
 
-    const float lightX = (float)(10 / 2 * 10);
-    const float lightZ = (float)(10 / 2 * 10);
+    const float lightX = (float)(_sizeX / 2 * 10);
+    const float lightZ = (float)(_sizeY / 2 * 10);
     const Vector3 lightPosition = { lightX, 60, lightZ };
-
-    Player player(2, (Vector3){0, 0, 0}, 1, "Team1", 1);
-    addFullPlayer(player);
-    // AddPlayer(1, 1, 0, 0, "Team1", 1);
 
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_renderables);
@@ -83,7 +79,6 @@ void GameEngine::Run()
 {
     Initialize();
     while (_isRunning && !WindowShouldClose()) {
-
         float deltaTime = GetFrameTime();
 
         Update(deltaTime);
@@ -183,8 +178,6 @@ void GameEngine::AddPlayer(int id, int x, int y, int orientation, const std::str
 
 void GameEngine::addFullPlayer(Player player)
 {
-    // Output the memory address of the GameEngine instance
-    std::cout << "GameEngine instance address: " << this << std::endl;
     auto newPlayer = std::make_shared<Player>(player);
     _players.push_back(newPlayer);
     _renderables.push_back(newPlayer);
