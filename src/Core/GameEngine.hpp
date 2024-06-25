@@ -20,6 +20,7 @@
     #include "Tile.hpp"
     #include "Player.hpp"
     #include <iostream>
+    #include "Light.hpp"
     #include <ostream>
 
 class GameEngine {
@@ -46,6 +47,7 @@ class GameEngine {
         std::vector<std::shared_ptr<Tile>> _tiles;
         std::vector<std::shared_ptr<Player>> _players;
         std::vector<Model> _resourceModels;
+        std::shared_ptr<LightWrapper> _lightWrapper;
         Model _tileModel;
         bool _isRunning;
 };

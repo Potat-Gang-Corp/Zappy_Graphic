@@ -15,6 +15,7 @@
 class IRenderable {
     public:
         virtual void Render() = 0;
+        virtual Model getModel() = 0;
         virtual ~IRenderable() = default;
 };
 

@@ -39,6 +39,9 @@ class Player : public IRenderable, public IClickable {
         BoundingBox getBoundingBox() const override {
             return _boundingBox;
         }
+        Model getModel() override final {
+            return _model;
+        }
 
     private:
         float _scale;

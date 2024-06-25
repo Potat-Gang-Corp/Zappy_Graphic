@@ -28,6 +28,7 @@ class Tile : public IRenderable, public IClickable {
         std::vector<int> getResources() const;
         void addResource(int resourceIndex, int amount);
         void removeResource(int resourceIndex, int amount);
+        Model getModel() override final { return _model; }
 
     private:
         Vector3 _position;

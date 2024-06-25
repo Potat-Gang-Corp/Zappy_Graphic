@@ -53,12 +53,22 @@ GameEngine::~GameEngine() {
 }
 
 void GameEngine::Initialize() {
-    InitWindow(800, 600, "3D Game with Raylib");
+    InitWindow(1920, 1080, "3D Game with Raylib");
     SetTargetFPS(60);
     _isRunning = true;
 
     this->loadModels();
     this->loadTiles();
+
+    const float lightX = (float)(10 / 2 * 10);
+    const float lightZ = (float)(10 / 2 * 10);
+    const Vector3 lightPosition = { lightX, 60, lightZ };
+
+    _lightWrapper = LightWrapper::getInstance();
+    _lightWrapper->SetShaderToModel(_renderables);
+    // _lightWrapper->SetShaderToModel(_resource);
+    _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
+    
     AddPlayer(1, 0, 0, 1, "Team 1");
 }
 
@@ -115,14 +125,13 @@ void GameEngine::Update(float deltaTime)
 void GameEngine::Render()
 {
     BeginDrawing();
-        ClearBackground(RAYWHITE);
-        BeginMode3D(_camera->getCamera());
+    ClearBackground(SKYBLUE);
+    BeginMode3D(_camera->getCamera());
 
-            for (auto& renderable : _renderables) {
-                renderable->Render();
-            }
+    for (auto &renderable : _renderables)
+        renderable->Render();
 
-        EndMode3D();
+    EndMode3D();
     EndDrawing();
 }
 
