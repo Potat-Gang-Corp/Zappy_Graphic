@@ -23,13 +23,9 @@ int main(int argc, char **argv)
         std::cerr << "Failed to connect to server" << std::endl;
         return 1;
     }
-    // gameEngine.Initialize();
 
     std::thread listeningThread(&Server::listening, &server);
     std::thread gameThread(&GameEngine::Run, &gameEngine);
-    
-    // gameEngine.Run();
-    // gameEngine.Shutdown();
 
     gameThread.join();
     gameEngine.Shutdown();

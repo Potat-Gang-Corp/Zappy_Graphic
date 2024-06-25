@@ -8,8 +8,10 @@
 #include "GameEngine.hpp"
 #include <limits>
 #include <algorithm>
+#include <unistd.h>
 
-GameEngine::GameEngine() : _isRunning(false) {
+GameEngine::GameEngine() : _isRunning(false)
+{
     _camera = CameraWrapper::getInstance();
     _hud = HUD::getInstance();
 }
@@ -22,12 +24,10 @@ void GameEngine::setMapSize(float sizeX, float sizeY)
 
 void GameEngine::loadTiles()
 {
-    float x;
-    float y;
-    _sizeX = x;
-    _sizeY = y;
-    for (x = 0; x < _sizeX; ++x) {
-        for (y = 0; y < _sizeY; ++y) {
+    _sizeX = 10;
+    _sizeY = 10;
+    for (float x = 0; x < _sizeX; ++x) {
+        for (float y = 0; y < _sizeY; ++y) {
             Vector3 position = {x * 10, 0.0f, y * 10};
             _tiles.push_back(std::make_shared<Tile>(position, _tileModel, _resourceModels));
             _renderables.push_back(_tiles.back());
@@ -56,9 +56,11 @@ void GameEngine::loadModels()
 
 GameEngine::~GameEngine() {}
 
-void GameEngine::Initialize() {
+void GameEngine::Initialize()
+{
     InitWindow(1920, 1080, "3D Game with Raylib");
-    SetTargetFPS(60);
+    SetTargetFPS(90);
+    
     _isRunning = true;
 
     this->loadModels();
@@ -72,11 +74,12 @@ void GameEngine::Initialize() {
     _lightWrapper->SetShaderToModel(_renderables);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
     
-    AddPlayer(1, 2, 3, 1, "Team 1", 1);
+    // AddPlayer(1, 2, 3, 1, "Team 1", 1);
 }
 
 void GameEngine::Run()
 {
+    Initialize();
     while (_isRunning && !WindowShouldClose()) {
 
         float deltaTime = GetFrameTime();
@@ -90,6 +93,7 @@ void GameEngine::Run()
     }
 
     CloseWindow();
+    exit(0);
 }
 
 void GameEngine::Shutdown() {
