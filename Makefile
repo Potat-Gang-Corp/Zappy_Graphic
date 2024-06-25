@@ -19,9 +19,11 @@ COVERAGE_FLAGS := -fprofile-arcs -ftest-coverage
 
 TSRCS = $(wildcard tests/unit-tests/*.cpp)
 
-SRCS := $(wildcard \
-			$(SRC_DIR)/*.cpp \
-			$(SRC_DIR)/Core/*.cpp)
+SRCS := $(wildcard \$(SRC_DIR)/Commands/*.cpp 	\
+			$(SRC_DIR)/*.cpp 	\
+			$(SRC_DIR)/Core/*.cpp 	\
+			$(SRC_DIR)/Server/*.cpp 	\
+			$(SRC_DIR)/Factory/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/Main.cpp, $(SRCS))
 
@@ -30,6 +32,9 @@ OBJS_NO_MAIN = $(SRCS_NO_MAIN:.c=.o)
 INCLUDES := -I./src \
 			-I./src/Interface \
 			-I./src/Core \
+			-I./src/Server \
+			-I./src/Commands \
+			-I./src/Factory \
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)

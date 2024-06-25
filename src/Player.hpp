@@ -19,7 +19,7 @@
 
 class Player : public IRenderable, public IClickable {
     public:
-        Player(int id, Vector3 position, int orientation, const std::string& teamName);
+        Player(int id, Vector3 position, int orientation, const std::string& teamName, int level);
         ~Player();
 
         void Render() override;
@@ -30,7 +30,10 @@ class Player : public IRenderable, public IClickable {
 
         void setPosition(Vector3 position);
         void setOrientation(int orientation);
+        void setPlayerLevel(int level);
         void playAnimation(const std::string& animationPath);
+        void addInventory(int resourceIndex, int amount);
+        void removeInventory(int resourceIndex, int amount);
 
         int getId() const;
         Vector3 getPosition() const;
@@ -62,5 +65,5 @@ class Player : public IRenderable, public IClickable {
         void loadDefaultAnimation();
 };
 
-#endif // PLAYER_HPP
 
+#endif // PLAYER_HPP

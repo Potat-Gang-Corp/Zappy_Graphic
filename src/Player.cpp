@@ -9,8 +9,8 @@
 #include <iostream>
 #include "raymath.h"
 
-Player::Player(int id, Vector3 position, int orientation, const std::string& teamName) : _id(id), _position(position), _scale(0.09f),
-_orientation(orientation), _teamName(teamName), _hover(false), _clicked(false), _level(1), _frameCounter(0), _currentAnimation(0) {
+Player::Player(int id, Vector3 position, int orientation, const std::string& teamName, int level) : _id(id), _position(position), _scale(0.09f),
+_orientation(orientation), _teamName(teamName), _hover(false), _clicked(false), _level(level), _frameCounter(0), _currentAnimation(0) {
     _model = LoadModel("assets/player.glb");
 
     _animations = LoadModelAnimations("assets/player.glb", &_animationCount);
@@ -109,4 +109,23 @@ int Player::getOrientation() const {
 
 std::string Player::getTeamName() const {
     return _teamName;
+}
+
+void Player::addInventory(int resourceIndex, int amount)
+{
+    if (resourceIndex >= 0 && resourceIndex < _inventory.size()) {
+        _inventory[resourceIndex] += amount;
+    }
+}
+
+void Player::removeInventory(int resourceIndex, int amount)
+{
+    if (resourceIndex >= 0 && resourceIndex < _inventory.size() && _inventory[resourceIndex] >= amount) {
+        _inventory[resourceIndex] -= amount;
+    }
+}
+
+void Player::setPlayerLevel(int level)
+{
+    _level = level;
 }

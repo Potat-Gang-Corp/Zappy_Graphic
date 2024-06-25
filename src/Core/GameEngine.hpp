@@ -25,6 +25,10 @@
 
 class GameEngine {
     public:
+        static std::shared_ptr<GameEngine> getInstance() {
+            static std::shared_ptr<GameEngine> instance(new GameEngine());
+            return instance;
+        }
         GameEngine();
         ~GameEngine();
         void Initialize();
@@ -33,8 +37,15 @@ class GameEngine {
         void loadTiles();
         void loadModels();
         void UpdateTileResources(int x, int y, const std::vector<int>& resources);
-        void AddPlayer(int id, int x, int y, int orientation, const std::string& teamName);
+        void AddPlayer(int id, int x, int y, int orientation, const std::string& teamName, int level);
         void UpdatePlayerPosition(int id, int x, int y, int orientation);
+        float getSizeX () { return _sizeX; }
+        float getSizeY () { return _sizeY; }
+        void setMapSize(float sizeX, float sizeY);
+        std::vector<std::shared_ptr<Player>> getPlayers() { return _players; }
+        std::vector<std::shared_ptr<Tile>> getTiles() { return _tiles; }
+        void removeResourceTail(int x, int y, int resourceIndex, int amount);
+        void addResourceTail(int x, int y, int resourceIndex, int amount);
 
     private:
         void Update(float deltaTime);
@@ -50,6 +61,10 @@ class GameEngine {
         std::shared_ptr<LightWrapper> _lightWrapper;
         Model _tileModel;
         bool _isRunning;
+        float _sizeX = 0;
+        float _sizeY = 0;
 };
+
+typedef std::shared_ptr<GameEngine> GameEnginePtr;
 
 #endif // GAME_ENGINE_HPP

@@ -13,18 +13,22 @@ GameEngine::GameEngine() : _isRunning(false) {
     _camera = CameraWrapper::getInstance();
 }
 
+void GameEngine::setMapSize(float sizeX, float sizeY)
+{
+    _sizeX = sizeX;
+    _sizeY = sizeY;
+}
+
 void GameEngine::loadTiles()
 {
-    int mapSize = 10;
-
-    for (float x = 0; x < mapSize; ++x) {
-        for (float y = 0; y < mapSize; ++y) {
+    float x;
+    float y;
+    _sizeX = x;
+    _sizeY = y;
+    for (x = 0; x < _sizeX; ++x) {
+        for (y = 0; y < _sizeY; ++y) {
             Vector3 position = {x * 10, 0.0f, y * 10};
             _tiles.push_back(std::make_shared<Tile>(position, _tileModel, _resourceModels));
-            int l = 2;
-            int p = 3;
-            std::vector<int> resources = {1, 2, 1, 1, 3, 1, 1, 1};
-            UpdateTileResources(l, p, resources);
             _renderables.push_back(_tiles.back());
             _clickables.push_back(_tiles.back());
         }
@@ -143,10 +147,10 @@ void GameEngine::UpdateTileResources(int x, int y, const std::vector<int>& resou
     }
 }
 
-void GameEngine::AddPlayer(int id, int x, int y, int orientation, const std::string& teamName)
+void GameEngine::AddPlayer(int id, int x, int y, int orientation, const std::string& teamName, int level)
 {
     Vector3 position = {(float)x * 10.0f, 0.0f, (float)y * 10.0f};
-    auto player = std::make_shared<Player>(id, position, orientation, teamName);
+    auto player = std::make_shared<Player>(id, position, orientation, teamName, level);
     _players.push_back(player);
     _renderables.push_back(player);
     _clickables.push_back(player);
@@ -161,5 +165,21 @@ void GameEngine::UpdatePlayerPosition(int id, int x, int y, int orientation)
             player->setOrientation(orientation);
             break;
         }
+    }
+}
+
+void GameEngine::removeResourceTail(int x, int y, int resourceIndex, int amount)
+{
+    int index = x * 10 + y;
+    if (index >= 0 && index < _tiles.size()) {
+        _tiles[index]->removeResource(resourceIndex, amount);
+    }
+}
+
+void GameEngine::addResourceTail(int x, int y, int resourceIndex, int amount)
+{
+    int index = x * 10 + y;
+    if (index >= 0 && index < _tiles.size()) {
+        _tiles[index]->addResource(resourceIndex, amount);
     }
 }
