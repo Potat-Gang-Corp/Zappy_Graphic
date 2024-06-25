@@ -6,11 +6,12 @@
 */
 
 #include "GameEngine.hpp"
+#include "Server.hpp"
 #include <limits>
 #include <algorithm>
 #include <unistd.h>
 
-GameEngine::GameEngine() : _isRunning(false)
+GameEngine::GameEngine() : _isRunning(false), _sizeX(0), _sizeY(0)
 {
     _camera = CameraWrapper::getInstance();
     _hud = HUD::getInstance();
@@ -24,8 +25,6 @@ void GameEngine::setMapSize(float sizeX, float sizeY)
 
 void GameEngine::loadTiles()
 {
-    _sizeX = 10;
-    _sizeY = 10;
     for (float x = 0; x < _sizeX; ++x) {
         for (float y = 0; y < _sizeY; ++y) {
             Vector3 position = {x * 10, 0.0f, y * 10};
@@ -60,7 +59,7 @@ void GameEngine::Initialize()
 {
     InitWindow(1920, 1080, "3D Game with Raylib");
     SetTargetFPS(90);
-    
+
     _isRunning = true;
 
     this->loadModels();
@@ -73,9 +72,8 @@ void GameEngine::Initialize()
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_renderables);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
-    
-    // AddPlayer(1, 2, 3, 1, "Team 1", 1);
 }
+
 
 void GameEngine::Run()
 {

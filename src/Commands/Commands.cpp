@@ -19,7 +19,6 @@
 
 void Commands::msz(const std::string &data)
 {
-    printf("Je capte msz %s\n", data.c_str());
     std::istringstream iss(data);
     std::string command;
     std::string x;

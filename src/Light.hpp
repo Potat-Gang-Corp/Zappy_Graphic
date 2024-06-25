@@ -23,7 +23,7 @@ class LightWrapper {
         LightWrapper();
         ~LightWrapper();
         static std::shared_ptr<LightWrapper> getInstance() {
-            static std::shared_ptr<LightWrapper> instance(new LightWrapper());
+            static std::shared_ptr<LightWrapper> instance = std::make_shared<LightWrapper>();
             return instance;
         }
         void SetShaderToModel(std::vector<std::shared_ptr<IRenderable>> _models);

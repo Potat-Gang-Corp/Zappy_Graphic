@@ -38,6 +38,8 @@ void CameraWrapper::update() {
     UpdateCamera(&_camera, CAMERA_PERSPECTIVE);
 }
 
+#include <iostream>
+
 void CameraWrapper::handleInput(float deltaTime)
 {
     float moveSpeed = 10.0f * deltaTime;

@@ -6,7 +6,8 @@
 */
 
 #include "Server.hpp"
-#include "Factory.hpp"
+#include "../Factory/Factory.hpp"
+#include "GameEngine.hpp"
 
 Server::Server() : resolver(io_service), socket(io_service) {}
 
@@ -66,19 +67,8 @@ std::string Server::receive_data()
     }
 }
 
-void Server::listening()
+void Server::listening() 
 {
-    // GuiPtr gui = GUI::getInstance();
-    // do {
-    //     if (gui->getStatus() == true) {
-    //         try {
-    //             connect_server(gui->getPort().c_str(), gui->getHost().c_str());
-    //         } catch (const std::exception &e) {
-    //             std::cerr << "Error: " << e.what() << std::endl;
-    //         }
-    //     }
-    // } while (_connected == false);
-    printf("Connected\n");
     while (true) {
         std::string response = receive_data();
         std::cout << "Data received from server: " << response << std::endl;

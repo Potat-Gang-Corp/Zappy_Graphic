@@ -23,11 +23,13 @@
     #include <iostream>
     #include "Light.hpp"
     #include <ostream>
+    #include <mutex>
+    #include <condition_variable>
 
 class GameEngine {
     public:
         static std::shared_ptr<GameEngine> getInstance() {
-            static std::shared_ptr<GameEngine> instance(new GameEngine());
+            static std::shared_ptr<GameEngine> instance = std::make_shared<GameEngine>();
             return instance;
         }
         GameEngine();

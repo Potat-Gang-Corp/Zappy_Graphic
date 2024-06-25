@@ -20,6 +20,8 @@
     #include <iostream>
     #include <string>
     #include <boost/asio.hpp>
+    #include <mutex>
+    #include <condition_variable>
 
 using boost::asio::ip::tcp;
 
@@ -31,7 +33,7 @@ using boost::asio::ip::tcp;
 class Server {
     public:
         static std::shared_ptr<Server> getInstance() {
-            static std::shared_ptr<Server> instance(new Server());
+            static std::shared_ptr<Server> instance = std::make_shared<Server>();
             return instance;
         }
         /**
@@ -83,6 +85,9 @@ class Server {
         std::function<void(const std::string&)> on_receive;
 
         bool getConnectionStatus() { return _connected; }
+        std::mutex _mutex;
+        std::condition_variable _cv;
+        bool _mapSizeSet;
 
     private:
         boost::asio::io_service io_service;
