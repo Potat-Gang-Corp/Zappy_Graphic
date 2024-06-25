@@ -7,13 +7,17 @@
 
 #include "Tile.hpp"
 #include <iostream>
-#include <ostream>
+#include <iomanip>
+#include <sstream>
+#include <string>
 #include <stdexcept>
 #include "raymath.h"
+#include "Utils.hpp"
 
-Tile::Tile(Vector3 position, const Model& islandModel, const std::vector<Model>& resourceModels)
-    : _position(position), _scale(0.2f), _model(islandModel), _resourceModels(resourceModels)
+Tile::Tile(Vector3 position, Model tileModel, const std::vector<Model>& resourceModels)
+    : _position(position), _scale(0.2f), _model(tileModel), _isHovered(false), _isClicked(false), _rotationAngle(0.0f), _resources(8, 0)
 {
+    _hud = HUD::getInstance();
     if (!_model.meshCount) {
         std::cerr << "Failed to load model: assets/island_farm.glb" << std::endl;
         throw std::runtime_error("Failed to load model");
@@ -24,6 +28,10 @@ Tile::Tile(Vector3 position, const Model& islandModel, const std::vector<Model>&
     _boundingBox.max = Vector3Scale(_boundingBox.max, _scale);
     _boundingBox.min = Vector3Add(_boundingBox.min, position);
     _boundingBox.max = Vector3Add(_boundingBox.max, position);
+    for (const auto& resourceModel : resourceModels) {
+        auto resource = std::make_shared<Resource>(resourceModel, position);
+        _resourceObjects.push_back(resource);
+    }
 }
 
 Tile::~Tile() {}
@@ -36,7 +44,7 @@ void Tile::Render()
     }
 
     for (int i = 0; i < 10; i++) {
-        Color glowColor = Fade(RED, 1.0f - (i * 0.1f));
+        Color glowColor = Fade(BLUE, 1.0f - (i * 0.1f));
         if (_isHovered)
             DrawModelEx(_model, _position, (Vector3){0, 1, 0}, _rotationAngle, (Vector3){_scale, _scale, _scale}, glowColor);
         else {
@@ -57,7 +65,8 @@ void Tile::Render()
                 _position.y,
                 _position.z + radius * sin(angle)
             };
-            DrawModel(_resourceModels[i], resourcePosition, 0.09f, WHITE);
+            _resourceObjects[i]->setPosition(resourcePosition);
+            _resourceObjects[i]->Render();
             resourceCount++;
         }
     }
@@ -70,7 +79,18 @@ BoundingBox Tile::getBoundingBox() const
 
 void Tile::OnClick()
 {
-    std::cout << "Tile clicked" << std::endl;
+    _hud->ClearMessages();
+    std::ostringstream streamX, streamZ;
+    streamX << std::fixed << std::setprecision(1) << _position.x / 10.0f;
+    streamZ << std::fixed << std::setprecision(1) << _position.z / 10.0f;
+    std::string message = "Tile at (" + streamX.str() + ", " + streamZ.str() + "): ";
+    _hud->AddMessage(message);
+    for (size_t i = 0; i < _resources.size(); ++i) {
+        message = Utils::getInstance()->indexToString(i);
+        message += std::to_string(_resources[i]);
+        _hud->AddMessage(message);
+    }
+    _isClicked = !_isClicked;
 }
 
 void Tile::setResources(const std::vector<int>& resources)
