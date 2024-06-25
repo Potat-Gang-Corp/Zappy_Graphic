@@ -1,30 +1,20 @@
 /*
 ** EPITECH PROJECT, 2024
-** Zappy_Graphic
+** Zappy_Mathis
 ** File description:
-** main
+** Main
 */
 
-#include "GUI.hpp"
-#include "Server.hpp"
+#include "GameEngine.hpp"
 
-int main(int argc, char **argv) 
+int main()
 {
-    GuiPtr gui = GUI::getInstance();
-    ServerPtr server = Server::getInstance();
-    std::string port, host;
-    if (argc == 5) {
-        port = argv[2];
-        host = argv[4];
-        gui->setHostPort(host, port);
-    }
+    GameEngine gameEngine;
 
-    std::thread listeningThread(&Server::listening, server);
-    std::thread gameThread(&GUI::run, gui);
+    gameEngine.Initialize();
+    gameEngine.Run();
+    gameEngine.Shutdown();
 
-    gameThread.join();
-    server->stop();
-    listeningThread.join(); 
     return 0;
 }
 

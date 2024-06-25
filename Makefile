@@ -21,36 +21,15 @@ TSRCS = $(wildcard tests/unit-tests/*.cpp)
 
 SRCS := $(wildcard \
 			$(SRC_DIR)/*.cpp \
-			$(SRC_DIR)/Player/*.cpp \
-			$(SRC_DIR)/Team/*.cpp \
-			$(SRC_DIR)/Server/*.cpp \
-			$(SRC_DIR)/ICommand/*.cpp \
-			$(SRC_DIR)/Commands/*.cpp \
-			$(SRC_DIR)/Factory/*.cpp \
-			$(SRC_DIR)/GUI/*.cpp \
-			$(SRC_DIR)/Map/*.cpp \
-			$(SRC_DIR)/GUI/Camera/*.cpp \
-			$(SRC_DIR)/GUI/Window/*.cpp \
-			$(SRC_DIR)/GUI/Light/*.cpp 	\
-			$(SRC_DIR)/GUI/Models/*.cpp)
+			$(SRC_DIR)/Core/*.cpp)
 
 SRCS_NO_MAIN = $(filter-out src/Main.cpp, $(SRCS))
 
 OBJS_NO_MAIN = $(SRCS_NO_MAIN:.c=.o)
 
 INCLUDES := -I./src \
-			-I./src/Player \
-			-I./src/Team \
-			-I./src/Server \
-			-I./src/Commands \
-			-I./src/ICommand \
-			-I./src/Factory \
-			-I./src/GUI \
-			-I./src/Map \
-			-I./src/GUI/Camera \
-			-I./src/GUI/Window \
-			-I./src/GUI/Light 	\
-			-I./src/GUI/Models 	\
+			-I./src/Interface \
+			-I./src/Core \
 
 OBJS := $(SRCS:.cpp=.o)
 TOBJS = $(TSRCS:.cpp=.o)
