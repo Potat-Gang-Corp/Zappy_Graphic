@@ -18,6 +18,7 @@
     #include "CameraWrapper.hpp"
     #include "raylib.h"
     #include "Tile.hpp"
+    #include "HUD.hpp"
     #include "Player.hpp"
     #include <iostream>
     #include "Light.hpp"
@@ -59,6 +60,7 @@ class GameEngine {
         std::vector<std::shared_ptr<Player>> _players;
         std::vector<Model> _resourceModels;
         std::shared_ptr<LightWrapper> _lightWrapper;
+        std::shared_ptr<HUD> _hud;
         Model _tileModel;
         bool _isRunning;
         float _sizeX = 0;

@@ -13,11 +13,15 @@
     #include "raylib.h"
     #include "IRenderable.hpp"
     #include "IClickable.hpp"
+    #include "Resource.hpp"
+    #include "HUD.hpp"
     #include <vector>
+    #include <memory>
+    #include <map>
 
 class Tile : public IRenderable, public IClickable {
     public:
-        Tile(Vector3 position, const Model& islandModel, const std::vector<Model>& resourceModels);
+        Tile(Vector3 position, Model tileModel, const std::vector<Model>& resourceModels);
         ~Tile();
 
         void Render() override final;
@@ -38,7 +42,8 @@ class Tile : public IRenderable, public IClickable {
         bool _isHovered, _isClicked;
         float _rotationAngle;
         std::vector<int> _resources;
-        std::vector<Model> _resourceModels;
+        std::vector<std::shared_ptr<Resource>> _resourceObjects;
+        std::shared_ptr<HUD> _hud;
 };
 
 #endif /* !TILE_HPP_ */

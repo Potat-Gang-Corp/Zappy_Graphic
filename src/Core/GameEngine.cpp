@@ -11,6 +11,7 @@
 
 GameEngine::GameEngine() : _isRunning(false) {
     _camera = CameraWrapper::getInstance();
+    _hud = HUD::getInstance();
 }
 
 void GameEngine::setMapSize(float sizeX, float sizeY)
@@ -53,8 +54,7 @@ void GameEngine::loadModels()
     _resourceModels.push_back(LoadModel("assets/Egg.glb"));
 }
 
-GameEngine::~GameEngine() {
-}
+GameEngine::~GameEngine() {}
 
 void GameEngine::Initialize() {
     InitWindow(1920, 1080, "3D Game with Raylib");
@@ -70,10 +70,9 @@ void GameEngine::Initialize() {
 
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_renderables);
-    // _lightWrapper->SetShaderToModel(_resource);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
     
-    AddPlayer(1, 0, 0, 1, "Team 1");
+    AddPlayer(1, 2, 3, 1, "Team 1", 1);
 }
 
 void GameEngine::Run()
@@ -85,6 +84,9 @@ void GameEngine::Run()
         Update(deltaTime);
         Render();
         DrawFPS(10, 10);
+        if (IsKeyPressed(KEY_I)) {
+            _hud->ClearMessages();
+        }
     }
 
     CloseWindow();
@@ -108,13 +110,26 @@ void GameEngine::Update(float deltaTime)
     std::shared_ptr<IClickable> closestElement = nullptr;
 
     Ray ray = {rayOrigin, rayDirection};
+
     for (auto& clickable : _clickables) {
-        RayCollision collision = GetRayCollisionBox(ray, clickable->getBoundingBox());
+        clickable->setHover(false);
+    }
+
+    for (auto& player : _players) {
+        RayCollision collision = GetRayCollisionBox(ray, player->getBoundingBox());
         if (collision.hit && collision.distance < closestDistance) {
             closestDistance = collision.distance;
-            closestElement = clickable;
-        } else {
-            clickable->setHover(false);
+            closestElement = player;
+        }
+    }
+
+    if (!closestElement) {
+        for (auto& tile : _tiles) {
+            RayCollision collision = GetRayCollisionBox(ray, tile->getBoundingBox());
+            if (collision.hit && collision.distance < closestDistance) {
+                closestDistance = collision.distance;
+                closestElement = tile;
+            }
         }
     }
 
@@ -126,6 +141,7 @@ void GameEngine::Update(float deltaTime)
     }
 }
 
+
 void GameEngine::Render()
 {
     BeginDrawing();
@@ -134,8 +150,12 @@ void GameEngine::Render()
 
     for (auto &renderable : _renderables)
         renderable->Render();
+    _lightWrapper->drawSphereOnLights();
 
     EndMode3D();
+
+    _hud->Render();
+
     EndDrawing();
 }
 

@@ -8,11 +8,14 @@
 #include "Player.hpp"
 #include <iostream>
 #include "raymath.h"
+#include "Utils.hpp"
+#include <map>
 
 Player::Player(int id, Vector3 position, int orientation, const std::string& teamName, int level) : _id(id), _position(position), _scale(0.09f),
 _orientation(orientation), _teamName(teamName), _hover(false), _clicked(false), _level(level), _frameCounter(0), _currentAnimation(0) {
     _model = LoadModel("assets/player.glb");
 
+    _hud = HUD::getInstance();
     _animations = LoadModelAnimations("assets/player.glb", &_animationCount);
     loadDefaultAnimation();
     _inventory.resize(7, 0);
@@ -27,6 +30,10 @@ Player::~Player() {}
 
 void Player::Render()
 {
+    if (_hover)
+        _scale = 0.2f;
+    else
+        _scale = 0.07f;
     float angle = 0.0f;
     switch (_orientation) {
         case 1: angle = 0.0f; break;
@@ -51,7 +58,26 @@ void Player::Render()
 
 void Player::OnClick()
 {
-    std::cout << "Player " << _id << " clicked\n";
+    _hud->ClearMessages();
+    std::ostringstream streamX, streamZ;
+    streamX << std::fixed << std::setprecision(1) << _position.x / 10.0f;
+    streamZ << std::fixed << std::setprecision(1) << _position.z / 10.0f;
+    std::string message = "Player #" + std::to_string(_id) + " at (" + streamX.str() + ", " + streamZ.str() + "): ";
+    _hud->AddMessage(message);
+    message = "Level " + std::to_string(_level);
+    _hud->AddMessage(message);
+    message = "Team: \"" + _teamName + "\"";
+    _hud->AddMessage(message);
+    message = "Orientation: " + Utils::getInstance()->orientationToString(_orientation);
+    _hud->AddMessage(message);
+
+    message = "Inventory: ";
+    _hud->AddMessage(message);
+    for (size_t i = 0; i < _inventory.size(); ++i) {
+        message = Utils::getInstance()->indexToString(i);
+        message += std::to_string(_inventory[i]);
+        _hud->AddMessage(message);
+    }
     _clicked = !_clicked;
 }
 

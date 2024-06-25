@@ -14,7 +14,13 @@
     #include "IRenderable.hpp"
     #include "IClickable.hpp"
     #include <string>
+    #include "HUD.hpp"
     #include <memory>
+    #include <iostream>
+    #include <iomanip>
+    #include <sstream>
+    #include <string>
+    #include <stdexcept>
     #include <vector>
 
 class Player : public IRenderable, public IClickable {
@@ -63,6 +69,7 @@ class Player : public IRenderable, public IClickable {
         bool _hover;
         bool _clicked;
         void loadDefaultAnimation();
+        std::shared_ptr<HUD> _hud;
 };
 
 
