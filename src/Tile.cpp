@@ -39,8 +39,10 @@ void Tile::Render()
         Color glowColor = Fade(RED, 1.0f - (i * 0.1f));
         if (_isHovered)
             DrawModelEx(_model, _position, (Vector3){0, 1, 0}, _rotationAngle, (Vector3){_scale, _scale, _scale}, glowColor);
-        else
+        else {
+            _rotationAngle = 0.0f;
             DrawModel(_model, _position, _scale, WHITE);
+        }
     }
 
     float radius = 0.5f;
@@ -48,7 +50,8 @@ void Tile::Render()
     size_t resourceSize = _resources.size();
     for (size_t i = 0; i < resourceSize; ++i) {
         if (_resources[i] > 0) {
-            float angle = -resourceCount * (360.0f / resourceSize) * DEG2RAD + _rotationAngle * DEG2RAD;
+            float angle = resourceCount * (360.0f / resourceSize) * DEG2RAD + _rotationAngle * DEG2RAD;
+            angle *= -1;
             Vector3 resourcePosition = {
                 _position.x + radius * cos(angle),
                 _position.y,
