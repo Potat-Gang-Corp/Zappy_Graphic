@@ -30,6 +30,10 @@ Player::~Player() {}
 
 void Player::Render()
 {
+    if (_hover)
+        _scale = 0.2f;
+    else
+        _scale = 0.07f;
     float angle = 0.0f;
     switch (_orientation) {
         case 1: angle = 0.0f; break;
@@ -74,12 +78,6 @@ void Player::OnClick()
         message += std::to_string(_inventory[i]);
         _hud->AddMessage(message);
     }
-
-    // for (size_t i = 0; i < _resources.size(); ++i) {
-    //     message = indexToString(i);
-    //     message += std::to_string(_resources[i]);
-    //     _hud->AddMessage(message);
-    // }
     _clicked = !_clicked;
 }
 
