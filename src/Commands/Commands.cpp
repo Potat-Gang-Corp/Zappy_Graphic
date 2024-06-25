@@ -78,40 +78,33 @@ void Commands::pgt(const std::string &data)
     iss >> command >> player_id >> ressource_number;
     player_id = player_id.substr(1);
 
-    GameEnginePtr playerManager = GameEngine::getInstance();
-    playerManager->getPlayers()[std::stoi(player_id)]->addInventory(std::stoi(ressource_number), 1);
-    playerManager->removeResourceTail(playerManager->getPlayers()[std::stoi(player_id)]->getPosition().x / 10, playerManager->getPlayers()[std::stoi(player_id)]->getPosition().z / 10, std::stoi(ressource_number), 1);
+    // GameEnginePtr playerManager = GameEngine::getInstance();
+    // playerManager->getPlayers()[std::stoi(player_id)]->addInventory(std::stoi(ressource_number), 1);
+    // playerManager->removeResourceTail(playerManager->getPlayers()[std::stoi(player_id)]->getPosition().x / 10, playerManager->getPlayers()[std::stoi(player_id)]->getPosition().z / 10, std::stoi(ressource_number), 1);
 }
 
 void Commands::pex(const std::string &data)
 {
-    //explusion player id
-    std::cout << "Handling pex: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     iss >> command;
     iss >> player_id;
-    std::cout << "Player id: " << player_id << std::endl;
 }
 
 void Commands::pfk(const std::string &data)
 {
-    //egg layed by player id
-    std::cout << "Handling pfk: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     iss >> command;
     iss >> player_id;
-    std::cout << "Player id: " << player_id << std::endl;
 }
 
 
 void Commands::pic(const std::string &data)
 {
-    //player id, x, y, level
-    std::cout << "Handling pic: " << data << std::endl;
+    
     std::istringstream iss(data);
     std::string command;
     std::string x;
@@ -123,15 +116,10 @@ void Commands::pic(const std::string &data)
     iss >> y;
     iss >> level;
     iss >> player_id;
-    std::cout << "X: " << x << "Y: " << y << std::endl;
-    std::cout << "Level: " << level << std::endl;
-    std::cout << "Player id: " << player_id << std::endl;
 }
 
 void Commands::pie(const std::string &data)
 {
-    //end of an incantation
-    std::cout << "Handling pie: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string x;
@@ -141,8 +129,6 @@ void Commands::pie(const std::string &data)
     iss >> x;
     iss >> y;
     iss >> result;
-    std::cout << "X: " << x << "Y: " << y << std::endl;
-    std::cout << "Result: " << result << std::endl;
 }
 
 void Commands::pin(const std::string &data)
@@ -199,9 +185,9 @@ void Commands::pnw(const std::string &data)
     iss >> command >> player_id >> x >> y >> orientation >> level >> team_name;
 
     player_id = player_id.substr(1);
-    Player player(std::stoi(player_id), player.getPosition(), player.getOrientation(), team_name, std::stoi(level));
+    Player player(std::stoi(player_id), (Vector3){std::stof(x) * 10.0f, 0.0f, std::stof(y) * 10.0f}, std::stoi(orientation), team_name, std::stoi(level));
     GameEnginePtr playerManager = GameEngine::getInstance();
-    playerManager->AddPlayer(std::stoi(player_id), std::stoi(x), std::stoi(y), player.getOrientation(), team_name, std::stoi(level));
+    playerManager->addFullPlayer(player);
 }
 
 void Commands::ppo(const std::string &data)
@@ -217,29 +203,25 @@ void Commands::ppo(const std::string &data)
 
     GameEnginePtr PlayerManager = GameEngine::getInstance();
     auto &player = PlayerManager->getPlayers()[std::stoi(player_id)];
-    player->setPosition(Vector3{(float)std::stoi(x) * 10.0f, 0.0f, (float)std::stoi(y) * 10.0f});
+    player->setPosition((Vector3){(float)std::stoi(x) * 10.0f, 0.0f, (float)std::stoi(y) * 10.0f});
 }
 
 void Commands::tna(const std::string &data)
 {
-    std::cout << "Handling tna: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string team_name;
     iss >> command;
     iss >> team_name;
-    std::cout << "Team name: " << team_name << std::endl;
 }
 
 void Commands::pdi(const std::string &data)
 {
-    std::cout << "Handling pdi: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string player_id;
     iss >> command;
     iss >> player_id;
-    std::cout << "Player id: " << player_id << std::endl;
 }
 
 void Commands::enw(const std::string &data)
@@ -292,7 +274,6 @@ void Commands::edi(const std::string &data)
 
 void Commands::sgt(const std::string &data)
 {
-    std::cout << "Handling sgt: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string time_unit;
@@ -302,35 +283,29 @@ void Commands::sgt(const std::string &data)
 
 void Commands::sst(const std::string &data)
 {
-    std::cout << "Handling sst: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string time_unit;
     iss >> command;
     iss >> time_unit;
-    std::cout << "Time unit: " << time_unit << std::endl;
 }
 
 void Commands::seg(const std::string &data)
 {
-    std::cout << "Handling seg: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string team_name;
     iss >> command;
     iss >> team_name;
-    std::cout << "Team name: " << team_name << std::endl;
 }
 
 void Commands::smg(const std::string &data)
 {
-    std::cout << "Handling smg: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string message;
     iss >> command;
     iss >> message;
-    std::cout << "Message: " << message << std::endl;
 }
 
 void Commands::suc(const std::string &data)

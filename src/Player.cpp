@@ -30,10 +30,10 @@ Player::~Player() {}
 
 void Player::Render()
 {
-    if (_hover)
-        _scale = 0.2f;
-    else
-        _scale = 0.07f;
+    // if (_hover)
+    //     _scale = 0.2f;
+    // else
+    //     _scale = 0.07f;
     float angle = 0.0f;
     switch (_orientation) {
         case 1: angle = 0.0f; break;
@@ -51,7 +51,10 @@ void Player::Render()
             loadDefaultAnimation();
         }
     }
-
+    printf("Model mesh count: %d\n", _model.meshCount);
+    printf("Model animation count: %d\n", _animationCount);
+    printf("Scale: %f\n", _scale);
+    printf("Player position: %f, %f, %f\n", _position.x, _position.y, _position.z);
     DrawModelEx(_model, _position, (Vector3){0, 1, 0}, angle, (Vector3){_scale, _scale, _scale}, WHITE);
     DrawBoundingBox(_boundingBox, GREEN);
 }

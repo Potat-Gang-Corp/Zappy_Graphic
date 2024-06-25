@@ -69,6 +69,10 @@ void GameEngine::Initialize()
     const float lightZ = (float)(10 / 2 * 10);
     const Vector3 lightPosition = { lightX, 60, lightZ };
 
+    Player player(2, (Vector3){0, 0, 0}, 1, "Team1", 1);
+    addFullPlayer(player);
+    // AddPlayer(1, 1, 0, 0, "Team1", 1);
+
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_renderables);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
@@ -149,7 +153,6 @@ void GameEngine::Render()
     BeginDrawing();
     ClearBackground(SKYBLUE);
     BeginMode3D(_camera->getCamera());
-
     for (auto &renderable : _renderables)
         renderable->Render();
     _lightWrapper->drawSphereOnLights();
@@ -176,6 +179,16 @@ void GameEngine::AddPlayer(int id, int x, int y, int orientation, const std::str
     _players.push_back(player);
     _renderables.push_back(player);
     _clickables.push_back(player);
+}
+
+void GameEngine::addFullPlayer(Player player)
+{
+    // Output the memory address of the GameEngine instance
+    std::cout << "GameEngine instance address: " << this << std::endl;
+    auto newPlayer = std::make_shared<Player>(player);
+    _players.push_back(newPlayer);
+    _renderables.push_back(newPlayer);
+    _clickables.push_back(newPlayer);
 }
 
 void GameEngine::UpdatePlayerPosition(int id, int x, int y, int orientation)

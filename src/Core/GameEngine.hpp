@@ -41,6 +41,7 @@ class GameEngine {
         void loadModels();
         void UpdateTileResources(int x, int y, const std::vector<int>& resources);
         void AddPlayer(int id, int x, int y, int orientation, const std::string& teamName, int level);
+        void addFullPlayer(Player player);
         void UpdatePlayerPosition(int id, int x, int y, int orientation);
         float getSizeX () { return _sizeX; }
         float getSizeY () { return _sizeY; }
