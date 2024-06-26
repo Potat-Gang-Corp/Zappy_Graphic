@@ -22,6 +22,8 @@ class ModelsLoader {
         ~ModelsLoader() = default;
         Model getModel(std::string filename);
         std::shared_ptr<ModelAnimation> getAnim(std::string filename);
+        Music getMusic(std::string filename);
+        Sound getSound(std::string filename);
         int &getAnimsCount() { return _animsCount; }
         static std::shared_ptr<ModelsLoader> &getInstance() {
             static std::shared_ptr<ModelsLoader> instance = std::make_shared<ModelsLoader>();
@@ -34,6 +36,8 @@ class ModelsLoader {
     private:
         std::map<std::string, Model> _models;
         std::map<std::string, std::shared_ptr<ModelAnimation>> _anims;
+        std::map<std::string, Music> _music;
+        std::map<std::string, Sound> _sounds;
         int _animsCount = 0;
 };
 

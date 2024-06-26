@@ -105,19 +105,19 @@ void Commands::pfk(const std::string &data)
 
 void Commands::pic(const std::string &data)
 {
-    std::cout << "0 Handling pic: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string x;
     std::string y;
     std::string level;
     std::string player_id;
-    std::cout << "1 Je suis la" << std::endl;
     if (!(iss >> command >> x >> y >> level)) {
         std::cerr << "Failed to parse command, x, y, and level\n";
         return;
     }
-    
+
+    SoundWrap::getInstance()->playSoundWithVolumeAdjustment(ModelsLoader::getInstance()->getSound("BroadCast"));
+
     if (currentPlayers.size() > 0)
         currentPlayers.clear();
     while (iss >> player_id) {
@@ -148,6 +148,7 @@ void Commands::pie(const std::string &data)
                 }
             }
         }
+        SoundWrap::getInstance()->playSoundWithVolumeAdjustment(ModelsLoader::getInstance()->getSound("Youpi"));
     } else {
         currentPlayers.clear();
     }
@@ -209,11 +210,7 @@ void Commands::pnw(const std::string &data)
     player_id = player_id.substr(1);
     Player player(std::stoi(player_id), (Vector3){std::stof(x) * 10.0f, 0.0f, std::stof(y) * 10.0f}, std::stoi(orientation), team_name, std::stoi(level));
     GameEngine::getInstance()->addFullPlayer(player);
-
-    // postTask([player]{
-    //     GameEnginePtr playerManager = GameEngine::getInstance();
-    //     playerManager->addFullPlayer(player);
-    // });
+    SoundWrap::getInstance()->playSoundWithVolumeAdjustment(ModelsLoader::getInstance()->getSound("Connection"));
 }
 
 void Commands::ppo(const std::string &data)
@@ -310,7 +307,7 @@ void Commands::sgt(const std::string &data)
     std::string command;
     std::string time_unit;
     iss >> command >> time_unit;
-    // GUI::getInstance()->setFreq(std::stoi(time_unit));
+    GameEngine::getInstance()->setFreq(std::stoi(time_unit));
 }
 
 void Commands::sst(const std::string &data)
@@ -329,6 +326,7 @@ void Commands::seg(const std::string &data)
     std::string team_name;
     iss >> command;
     iss >> team_name;
+    SoundWrap::getInstance()->changeMusic(ModelsLoader::getInstance()->getMusic("EndGame"));
 }
 
 void Commands::smg(const std::string &data)
@@ -340,7 +338,10 @@ void Commands::smg(const std::string &data)
     iss >> message;
 
     if (message == "egg") {
-        sleep(1);
+        if (_sleeped == false) {
+            sleep(1);
+            _sleeped = true;
+        }
         std::string id, x, y;
         iss >> id >> x >> y;
         id = id.substr(1);

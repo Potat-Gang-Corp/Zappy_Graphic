@@ -18,15 +18,15 @@ int main(int argc, char **argv)
     std::string host = argv[4];
 
     std::shared_ptr<GameEngine> gameEngine = GameEngine::getInstance();
-    Server server;
+    std::shared_ptr<Server> &server = Server::getInstance();
 
-    if (server.connect_server(port, host) != 0) {
+    if (server->connect_server(port, host) != 0) {
         std::cerr << "Failed to connect to server" << std::endl;
         return 1;
     }
 
     std::thread gameThread(&GameEngine::Run, gameEngine);
-    std::thread listeningThread(&Server::listening, &server);
+    std::thread listeningThread(&Server::listening, server);
 
     listeningThread.join(); 
     gameEngine->Shutdown();

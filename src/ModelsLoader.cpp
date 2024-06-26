@@ -13,8 +13,6 @@ Model LoadModelSafely(const char* fileName)
     if (model.meshCount == 0) {
         std::cerr << "Failed to load model: " << fileName << "\n";
         throw std::runtime_error("Failed to load model: " + std::string(fileName));
-    } else {
-        std::cout << "Model " << fileName << " loaded successfully with " << model.meshCount << " meshes\n";
     }
     return model;
 }
@@ -26,8 +24,6 @@ std::shared_ptr<ModelAnimation> LoadModelAnimationsSafely(const char* fileName)
     if (animsCount == 0) {
         std::cerr << "Failed to load animations: " << fileName << "\n";
         throw std::runtime_error("Failed to load animations: " + std::string(fileName));
-    } else {
-        std::cout << "Animations " << fileName << " loaded successfully with " << animsCount << " animations\n";
     }
     return std::shared_ptr<ModelAnimation>(anims);
 }
@@ -57,6 +53,18 @@ ModelsLoader::ModelsLoader()
             {"LevelUp", LoadModelAnimationsSafely("assets/animation/level_up.glb")},
             {"Hands", LoadModelAnimationsSafely("assets/animation/hands.glb")}
         };
+
+        _music = {
+            {"Ambient", LoadMusicStream("assets/sounds/ambient_music.mp3")},
+            {"EndGame", LoadMusicStream("assets/sounds/endgame.mp3")},
+        };
+
+        _sounds = {
+            {"BroadCast", LoadSound("assets/sounds/broadcast.mp3")},
+            {"Youpi", LoadSound("assets/sounds/youpi.mp3")},
+            {"Connection", LoadSound("assets/sounds/connection.mp3")},
+            {"Death", LoadSound("assets/sounds/death.mp3")},
+        };
     } catch (const std::exception &e) {
         std::cerr << "Error in ModelsLoader: " << e.what() << std::endl;
         throw;
@@ -69,7 +77,7 @@ Model ModelsLoader::getModel(std::string filename)
         if (it.first == filename)
             return it.second;
     }
-    printf("Model not found\n");
+    std::cout << "Model not found" << std::endl;
     return _models["Island"];
 }
 
@@ -79,6 +87,26 @@ std::shared_ptr<ModelAnimation> ModelsLoader::getAnim(std::string filename)
         if (it.first == filename)
             return it.second;
     }
-    printf("Animation not found\n");
+    std::cout << "Animation not found" << std::endl;
     return _anims["Player"];
+}
+
+Music ModelsLoader::getMusic(std::string filename)
+{
+    for (auto it: _music) {
+        if (it.first == filename)
+            return it.second;
+    }
+    std::cout << "Music not found" << std::endl;
+    return _music["Ambient"];
+}
+
+Sound ModelsLoader::getSound(std::string filename)
+{
+    for (auto it: _sounds) {
+        if (it.first == filename)
+            return it.second;
+    }
+    std::cout << "Sound not found" << std::endl;
+    return _sounds["BroadCast"];
 }

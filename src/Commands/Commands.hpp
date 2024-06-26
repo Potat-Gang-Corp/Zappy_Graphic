@@ -249,6 +249,7 @@ class Commands {
 
     private:
         std::vector<std::string> currentPlayers;
+        bool _sleeped = false;
 };
 
 #endif /* !COMMANDS_HPP_ */

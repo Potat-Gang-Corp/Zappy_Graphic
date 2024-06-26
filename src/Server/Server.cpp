@@ -69,12 +69,8 @@ std::string Server::receive_data()
 
 void Server::listening() 
 {
-    // std::unique_ptr<Commands> command = Commands::getInstance();
     while (true) {
-        // std::cout << "Team = " << command->getTeamName() << std::endl;
-        // std::cout << "Size of vector " << command->getCurrentPlayers().size() << std::endl;
         std::string response = receive_data();
-        std::cout << "Data received from server: " << response << std::endl;
         if (response != "ko\n" && response != "WELCOME\n" && response != "Connected\n") {
             CommandFactory::getInstance()->execCommand(response);
         }

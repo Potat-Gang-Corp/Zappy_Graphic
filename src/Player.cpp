@@ -50,7 +50,7 @@ void Player::Render()
         }
     }
     DrawModelEx(_model, _position, (Vector3){0, 1, 0}, angle, (Vector3){_scale, _scale, _scale}, WHITE);
-    DrawBoundingBox(_boundingBox, GREEN);
+    // DrawBoundingBox(_boundingBox, GREEN);
 }
 
 void Player::OnClick()

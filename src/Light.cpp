@@ -30,7 +30,7 @@ void LightWrapper::SetShaderToModel(std::vector<std::shared_ptr<IRenderable>> _m
 void LightWrapper::createlight(Vector3 position, Vector3 target, Color color)
 {
     if (_indLight >= MAX_LIGHTS) {
-        printf("Max lights reached\n");
+        std::cerr << "Max lights reached" << std::endl;
         return;
     }
     _lights[_indLight] = CreateLight(LIGHT_POINT, position, target, color, _shader);

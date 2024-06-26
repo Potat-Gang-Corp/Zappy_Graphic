@@ -27,6 +27,9 @@ class CameraWrapper {
         void update();
         void handleInput(float deltaTime);
         Camera3D getCamera() { return _camera; }
+        float getX() { return _camera.position.x; }
+        float getY() { return _camera.position.y; }
+        float getZ() { return _camera.position.z; }
 
     private:
         Camera3D _camera;

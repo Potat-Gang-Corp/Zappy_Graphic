@@ -15,6 +15,7 @@ GameEngine::GameEngine() : _isRunning(false), _sizeX(0), _sizeY(0)
 {
     _camera = CameraWrapper::getInstance();
     _hud = HUD::getInstance();
+    _music = SoundWrap::getInstance();
 }
 
 void GameEngine::setMapSize(float sizeX, float sizeY)
@@ -57,58 +58,65 @@ GameEngine::~GameEngine() {}
 
 void GameEngine::Initialize()
 {
-    InitWindow(1920, 1080, "3D Game with Raylib");
-    InitAudioDevice(); 
-    music = LoadMusicStream("assets/sounds/song.wav");
-    PlayMusicStream(music);
-    SetTargetFPS(144);
     SetTraceLogLevel(LOG_NONE);
-
-    _isRunning = true;
+    InitWindow(1920, 1080, "3D Game with Raylib");
+    _music->init();
+    _music->playMusic();
+    SetTargetFPS(144);
     _modelsGetter = ModelsLoader::getInstance();
     this->loadModels();
     this->loadTiles();
 
+    Server::getInstance()->send_data("sgt\n");
+
+    _buttonAdd = { 100, 100, 50, 50 };
+    _buttonRemove = { 200, 100, 50, 50 };
+
     const float lightX = (float)(_sizeX / 2 * 10);
     const float lightZ = (float)(_sizeY / 2 * 10);
-    const Vector3 lightPosition = { lightX, 60, lightZ };
+    const Vector3 lightPosition = { lightX, 15, lightZ };
 
     _lightWrapper = LightWrapper::getInstance();
     _lightWrapper->SetShaderToModel(_renderables);
     _lightWrapper->createlight(lightPosition, Vector3Zero(), YELLOW);
 }
 
-
 void GameEngine::Run()
 {
     Initialize();
-    while (_isRunning && !WindowShouldClose()) {
-        UpdateMusicStream(music);
+    const float cycleDuration = 180.0f;
+    const float dayPhaseDuration = cycleDuration / 4.0f;
+    float currentTime, cycleTime;
+
+    while (!WindowShouldClose()) {
+        currentTime = GetTime();
+        cycleTime = fmod(currentTime, cycleDuration);
+        _lightWrapper->UpdateLightDayColor(cycleTime, dayPhaseDuration);
         float deltaTime = GetFrameTime();
 
+        _lightWrapper->updateShaderValues(_camera->getX(), _camera->getY(), _camera->getZ());
         Update(deltaTime);
         Render();
         DrawFPS(10, 10);
         if (IsKeyPressed(KEY_I)) {
             _hud->ClearMessages();
         }
+        handleFrequency();
+        // if (_isRunning == false) {
+            
+        // }
     }
-
     CloseWindow();
     exit(0);
 }
 
-void GameEngine::Shutdown() {
-}
+void GameEngine::Shutdown() {}
 
 void GameEngine::Update(float deltaTime)
 {
+    _music->Update();
     _camera->handleInput(deltaTime);
     _camera->update();
-
-    for (auto& updatable : _updatables) {
-        updatable->Update(deltaTime);
-    }
 
     Vector3 rayOrigin = GetMouseRay(GetMousePosition(), _camera->getCamera()).position;
     Vector3 rayDirection = GetMouseRay(GetMousePosition(), _camera->getCamera()).direction;
@@ -150,7 +158,8 @@ void GameEngine::Update(float deltaTime)
 void GameEngine::Render()
 {
     BeginDrawing();
-    ClearBackground(SKYBLUE);
+    ClearBackground(_lightWrapper->getCurrentBackgroundColor());
+    DrawText(TextFormat("Frequency: %d", _freq), 100, 10, 20, DARKGREEN);
     BeginMode3D(_camera->getCamera());
     for (auto &renderable : _renderables)
         renderable->Render();
@@ -221,5 +230,20 @@ void GameEngine::addEgg(int id, int x, int y, int resourceIndex)
     int index = x * _sizeY + y;
     if (index >= 0 && index < _tiles.size()) {
         _tiles[index]->addEgg(id, {x * 10.0f, 0.0f, y * 10.0f}, resourceIndex);
+    }
+}
+
+void GameEngine::handleFrequency()
+{
+    if (IsKeyPressed(KEY_K)) {
+        if (_freq < 241) {
+            _freq += 10;
+            Server::getInstance()->send_data("sst " + std::to_string(_freq) + "\n");
+        }
+    } else if (IsKeyPressed(KEY_J)) {
+        if (_freq > 10) {
+            _freq -= 10;
+            Server::getInstance()->send_data("sst " + std::to_string(_freq) + "\n");
+        }
     }
 }

@@ -84,17 +84,15 @@ class Server {
         */
         std::function<void(const std::string&)> on_receive;
 
-        bool getConnectionStatus() { return _connected; }
-        std::mutex _mutex;
-        std::condition_variable _cv;
-        bool _mapSizeSet;
-
     private:
         boost::asio::io_service io_service;
         tcp::resolver resolver;
         tcp::socket socket;
         boost::asio::streambuf buffer;
         bool _connected = false;
+        std::mutex socket_mutex;
+        int _freq = 10;
+        bool send_freq = false;
 };
 
 typedef std::shared_ptr<Server> ServerPtr;
