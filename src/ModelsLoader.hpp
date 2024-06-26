@@ -28,6 +28,9 @@ class ModelsLoader {
             return instance;
         }
 
+        ModelsLoader(const ModelsLoader &cpy) = delete;
+        ModelsLoader &operator=(const ModelsLoader &src) = delete;
+
     private:
         std::map<std::string, Model> _models;
         std::map<std::string, std::shared_ptr<ModelAnimation>> _anims;

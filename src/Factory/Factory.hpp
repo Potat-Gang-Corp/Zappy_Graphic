@@ -34,6 +34,9 @@ class CommandFactory {
             static std::shared_ptr<CommandFactory> instance = std::make_shared<CommandFactory>();
             return instance;
         }
+
+        CommandFactory(const CommandFactory &cpy) = delete;
+        CommandFactory &operator=(const CommandFactory &src) = delete;
         
         /**
          * @brief Construct a new CommandFactory object.

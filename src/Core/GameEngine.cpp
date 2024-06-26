@@ -58,6 +58,9 @@ GameEngine::~GameEngine() {}
 void GameEngine::Initialize()
 {
     InitWindow(1920, 1080, "3D Game with Raylib");
+    InitAudioDevice(); 
+    music = LoadMusicStream("assets/sounds/song.wav");
+    PlayMusicStream(music);
     SetTargetFPS(144);
     SetTraceLogLevel(LOG_NONE);
 
@@ -80,6 +83,7 @@ void GameEngine::Run()
 {
     Initialize();
     while (_isRunning && !WindowShouldClose()) {
+        UpdateMusicStream(music);
         float deltaTime = GetFrameTime();
 
         Update(deltaTime);
@@ -142,7 +146,6 @@ void GameEngine::Update(float deltaTime)
         }
     }
 }
-
 
 void GameEngine::Render()
 {

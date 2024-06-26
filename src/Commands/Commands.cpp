@@ -16,6 +16,7 @@
 #include "Player.hpp"
 #include "Commands.hpp"
 #include "GameEngine.hpp"
+#include <unistd.h>
 
 void Commands::msz(const std::string &data)
 {
@@ -338,9 +339,13 @@ void Commands::smg(const std::string &data)
     iss >> command;
     iss >> message;
 
-    // if (message == "egg") {
-
-    // }
+    if (message == "egg") {
+        sleep(1);
+        std::string id, x, y;
+        iss >> id >> x >> y;
+        id = id.substr(1);
+        GameEngine::getInstance()->addEgg(std::stoi(id), std::stoi(x), std::stoi(y), 7);
+    }
 }
 
 void Commands::suc(const std::string &data)

@@ -26,6 +26,8 @@ class LightWrapper {
             static std::shared_ptr<LightWrapper> instance = std::make_shared<LightWrapper>();
             return instance;
         }
+        LightWrapper(const LightWrapper &cpy) = delete;
+        LightWrapper &operator=(const LightWrapper &src) = delete;
         void SetShaderToModel(std::vector<std::shared_ptr<IRenderable>> _models);
         void createlight(Vector3 position, Vector3 target, Color color);
         void updateShaderValues(float CamX, float CamY, float CamZ);

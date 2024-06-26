@@ -21,6 +21,9 @@ class Utils {
             static std::shared_ptr<Utils> instance = std::make_shared<Utils>();
             return instance;
         }
+
+        Utils(const Utils &cpy) = delete;
+        Utils &operator=(const Utils &src) = delete;
         Utils() {}
         ~Utils() = default;
         std::string orientationToString(int orientation) {

@@ -31,6 +31,10 @@ class GameEngine {
             static std::shared_ptr<GameEngine> instance = std::make_shared<GameEngine>();
             return instance;
         }
+
+        GameEngine(const GameEngine &cpy) = delete;
+        GameEngine &operator=(const GameEngine &src) = delete;
+
         GameEngine();
         ~GameEngine();
         void Initialize();
@@ -69,6 +73,7 @@ class GameEngine {
         bool _isRunning;
         float _sizeX = 0;
         float _sizeY = 0;
+        Music music;
 };
 
 typedef std::shared_ptr<GameEngine> GameEnginePtr;

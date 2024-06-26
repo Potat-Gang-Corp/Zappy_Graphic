@@ -32,16 +32,13 @@ class Commands {
             return instance;
         }
 
+        Commands(const Commands &cpy) = delete;
+        Commands &operator=(const Commands &src) = delete;
+
         // Commands(const Commands &cpy) = delete;
         // Commands &operator=(const Commands &src) = delete;
 
-        Commands() {
-            _teamName = "patate";
-            std::cout << "Currentplayer size " << currentPlayers.size() << std::endl;
-            std::cout << "Adresse of currentPlayers " << &currentPlayers << std::endl;
-        }
-        std::string getTeamName() { return _teamName; }
-        std::vector<std::string> getCurrentPlayers() { return currentPlayers; }
+        Commands() {}
 
         /**
          * @brief Handle the msz command (map size)
@@ -252,7 +249,6 @@ class Commands {
 
     private:
         std::vector<std::string> currentPlayers;
-        std::string _teamName;
 };
 
 #endif /* !COMMANDS_HPP_ */

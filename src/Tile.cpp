@@ -72,9 +72,6 @@ void Tile::Render()
             resourceCount++;
         }
     }
-    // for (const auto& egg : _eggs) {
-    //     egg.resource->Render();
-    // }
 }
 
 BoundingBox Tile::getBoundingBox() const
