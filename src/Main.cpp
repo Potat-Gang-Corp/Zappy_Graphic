@@ -18,7 +18,6 @@ int main(int argc, char **argv)
     std::string host = argv[4];
 
     std::shared_ptr<GameEngine> gameEngine = GameEngine::getInstance();
-
     Server server;
 
     if (server.connect_server(port, host) != 0) {

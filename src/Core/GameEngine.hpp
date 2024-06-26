@@ -27,7 +27,7 @@
 
 class GameEngine {
     public:
-        static std::shared_ptr<GameEngine> getInstance() {
+        static std::shared_ptr<GameEngine> &getInstance() {
             static std::shared_ptr<GameEngine> instance = std::make_shared<GameEngine>();
             return instance;
         }
@@ -49,6 +49,7 @@ class GameEngine {
         std::vector<std::shared_ptr<Tile>> getTiles() { return _tiles; }
         void removeResourceTail(int x, int y, int resourceIndex, int amount);
         void addResourceTail(int x, int y, int resourceIndex, int amount);
+        void addEgg(int id, int x, int y, int resourceIndex);
 
     private:
         void Update(float deltaTime);

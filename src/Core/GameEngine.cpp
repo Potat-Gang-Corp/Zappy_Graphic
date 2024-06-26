@@ -59,6 +59,7 @@ void GameEngine::Initialize()
 {
     InitWindow(1920, 1080, "3D Game with Raylib");
     SetTargetFPS(144);
+    SetTraceLogLevel(LOG_NONE);
 
     _isRunning = true;
     _modelsGetter = ModelsLoader::getInstance();
@@ -161,9 +162,9 @@ void GameEngine::Render()
 
 void GameEngine::UpdateTileResources(int x, int y, const std::vector<int>& resources)
 {
-    int index = x * 10 + y;
+    int index = x * _sizeY + y;
     if (index >= 0 && index < _tiles.size()) {
-        _tiles[index]->setResources(resources);
+        _tiles[index]->setResources(resources);   
     }
 }
 
@@ -198,7 +199,7 @@ void GameEngine::UpdatePlayerPosition(int id, int x, int y, int orientation)
 
 void GameEngine::removeResourceTail(int x, int y, int resourceIndex, int amount)
 {
-    int index = x * 10 + y;
+    int index = x * _sizeY + y;
     if (index >= 0 && index < _tiles.size()) {
         _tiles[index]->removeResource(resourceIndex, amount);
     }
@@ -206,8 +207,16 @@ void GameEngine::removeResourceTail(int x, int y, int resourceIndex, int amount)
 
 void GameEngine::addResourceTail(int x, int y, int resourceIndex, int amount)
 {
-    int index = x * 10 + y;
+    int index = x * _sizeY + y;
     if (index >= 0 && index < _tiles.size()) {
         _tiles[index]->addResource(resourceIndex, amount);
+    }
+}
+
+void GameEngine::addEgg(int id, int x, int y, int resourceIndex)
+{
+    int index = x * _sizeY + y;
+    if (index >= 0 && index < _tiles.size()) {
+        _tiles[index]->addEgg(id, {x * 10.0f, 0.0f, y * 10.0f}, resourceIndex);
     }
 }

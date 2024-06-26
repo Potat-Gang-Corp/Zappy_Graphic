@@ -23,7 +23,7 @@ class ModelsLoader {
         Model getModel(std::string filename);
         std::shared_ptr<ModelAnimation> getAnim(std::string filename);
         int &getAnimsCount() { return _animsCount; }
-        static std::shared_ptr<ModelsLoader> getInstance() {
+        static std::shared_ptr<ModelsLoader> &getInstance() {
             static std::shared_ptr<ModelsLoader> instance = std::make_shared<ModelsLoader>();
             return instance;
         }

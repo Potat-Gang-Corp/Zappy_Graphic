@@ -22,7 +22,7 @@ class LightWrapper {
     public:
         LightWrapper();
         ~LightWrapper();
-        static std::shared_ptr<LightWrapper> getInstance() {
+        static std::shared_ptr<LightWrapper> &getInstance() {
             static std::shared_ptr<LightWrapper> instance = std::make_shared<LightWrapper>();
             return instance;
         }

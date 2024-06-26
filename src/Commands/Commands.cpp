@@ -29,12 +29,11 @@ void Commands::msz(const std::string &data)
 
 void Commands::bct(const std::string &data)
 {
-    std::cout << "Adress dans BCT " << this << std::endl;
     std::istringstream iss(data);
     std::string command;
     int x, y;
     int food, linemate, deraumere, sibur, mendiane, phiras, thystame;
-    GameEnginePtr gameMap = GameEngine::getInstance();
+    GameEnginePtr &gameMap = GameEngine::getInstance();
 
     iss >> command >> x >> y >> food >> linemate >> deraumere >> sibur >> mendiane >> phiras >> thystame;
 
@@ -142,7 +141,6 @@ void Commands::pie(const std::string &data)
         auto player = PlayerManager->getPlayers();
         for (auto &id : currentPlayers) {
             id = id.substr(1);
-            printf("id: %s\n", id.c_str());
             for (auto &p : player) {
                 if (p->getId() == std::stoi(id)) {
                     p->setPlayerLevel(p->getLevel() + 1);
@@ -339,6 +337,10 @@ void Commands::smg(const std::string &data)
     std::string message;
     iss >> command;
     iss >> message;
+
+    // if (message == "egg") {
+
+    // }
 }
 
 void Commands::suc(const std::string &data)

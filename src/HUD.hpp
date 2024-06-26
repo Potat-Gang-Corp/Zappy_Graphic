@@ -17,7 +17,7 @@
 
 class HUD {
     public:
-        static std::shared_ptr<HUD> getInstance() {
+        static std::shared_ptr<HUD> &getInstance() {
             static std::shared_ptr<HUD> instance = std::make_shared<HUD>();
             return instance;
         }

@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include "raymath.h"
 #include "Utils.hpp"
+#include "ModelsLoader.hpp"
+#include <algorithm>
 
 Tile::Tile(Vector3 position, Model tileModel, const std::vector<Model>& resourceModels)
     : _position(position), _scale(0.2f), _model(tileModel), _isHovered(false), _isClicked(false), _rotationAngle(0.0f), _resources(8, 0)
@@ -70,6 +72,9 @@ void Tile::Render()
             resourceCount++;
         }
     }
+    // for (const auto& egg : _eggs) {
+    //     egg.resource->Render();
+    // }
 }
 
 BoundingBox Tile::getBoundingBox() const
@@ -81,8 +86,8 @@ void Tile::OnClick()
 {
     _hud->ClearMessages();
     std::ostringstream streamX, streamZ;
-    streamX << std::fixed << std::setprecision(1) << _position.x / 10.0f;
-    streamZ << std::fixed << std::setprecision(1) << _position.z / 10.0f;
+    streamX << std::fixed << std::setprecision(0) << _position.x / 10.0f;
+    streamZ << std::fixed << std::setprecision(0) << _position.z / 10.0f;
     std::string message = "Tile at (" + streamX.str() + ", " + streamZ.str() + "): ";
     _hud->AddMessage(message);
     for (size_t i = 0; i < _resources.size(); ++i) {
@@ -96,9 +101,12 @@ void Tile::OnClick()
 void Tile::setResources(const std::vector<int>& resources)
 {
     if (resources.size() == 8) {
-        _resources = resources;
+        for (size_t i = 0; i < _resources.size() - 1; ++i) {
+            _resources[i] = resources[i];
+        }
     }
 }
+
 
 std::vector<int> Tile::getResources() const
 {
@@ -118,3 +126,25 @@ void Tile::removeResource(int resourceIndex, int amount)
         _resources[resourceIndex] -= amount;
     }
 }
+
+void Tile::addEgg(int id, Vector3 position, int resourceIndex)
+{
+    auto eggModel = ModelsLoader::getInstance()->getModel("EGG");
+    auto eggResource = std::make_shared<Resource>(eggModel, position);
+    Egg egg = {id, position, resourceIndex, eggResource};
+    _eggs.push_back(egg);
+    _resources[resourceIndex]++;
+}
+
+void Tile::removeEgg(int id)
+{
+    auto it = std::remove_if(_eggs.begin(), _eggs.end(), [id](const Egg& egg) {
+        return egg.id == id;
+    });
+    if (it != _eggs.end()) {
+        _resources[it->resourceIndex]--;
+        _eggs.erase(it);
+    }
+}
+
+

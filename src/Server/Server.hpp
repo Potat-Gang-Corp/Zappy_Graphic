@@ -32,7 +32,7 @@ using boost::asio::ip::tcp;
 
 class Server {
     public:
-        static std::shared_ptr<Server> getInstance() {
+        static std::shared_ptr<Server> &getInstance() {
             static std::shared_ptr<Server> instance = std::make_shared<Server>();
             return instance;
         }

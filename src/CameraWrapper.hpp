@@ -16,7 +16,7 @@
 class CameraWrapper {
     public:
         CameraWrapper();
-        static std::shared_ptr<CameraWrapper> getInstance() {
+        static std::shared_ptr<CameraWrapper> &getInstance() {
             static std::shared_ptr<CameraWrapper> instance = std::make_shared<CameraWrapper>();
             return instance;
         }

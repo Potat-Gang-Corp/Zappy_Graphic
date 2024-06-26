@@ -57,8 +57,8 @@ void Player::OnClick()
 {
     _hud->ClearMessages();
     std::ostringstream streamX, streamZ;
-    streamX << std::fixed << std::setprecision(1) << _position.x / 10.0f;
-    streamZ << std::fixed << std::setprecision(1) << _position.z / 10.0f;
+    streamX << std::fixed << std::setprecision(0) << _position.x / 10.0f;
+    streamZ << std::fixed << std::setprecision(0) << _position.z / 10.0f;
     std::string message = "Player #" + std::to_string(_id) + " at (" + streamX.str() + ", " + streamZ.str() + "): ";
     _hud->AddMessage(message);
     message = "Level " + std::to_string(_level);

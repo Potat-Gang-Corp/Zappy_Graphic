@@ -30,7 +30,7 @@ class CommandFactory {
          * @brief Get the instance of the CommandFactory
          * @return CommandFactory* The instance of the CommandFactory
         */
-        static std::shared_ptr<CommandFactory> getInstance() {
+        static std::shared_ptr<CommandFactory> &getInstance() {
             static std::shared_ptr<CommandFactory> instance = std::make_shared<CommandFactory>();
             return instance;
         }

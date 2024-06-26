@@ -17,7 +17,7 @@
 
 class Utils {
     public:
-        static std::shared_ptr<Utils> getInstance() {
+        static std::shared_ptr<Utils> &getInstance() {
             static std::shared_ptr<Utils> instance = std::make_shared<Utils>();
             return instance;
         }

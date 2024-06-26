@@ -19,6 +19,13 @@
     #include <memory>
     #include <map>
 
+struct Egg {
+    int id;
+    Vector3 position;
+    int resourceIndex;
+    std::shared_ptr<Resource> resource;
+};
+
 class Tile : public IRenderable, public IClickable {
     public:
         Tile(Vector3 position, Model tileModel, const std::vector<Model>& resourceModels);
@@ -32,6 +39,8 @@ class Tile : public IRenderable, public IClickable {
         std::vector<int> getResources() const;
         void addResource(int resourceIndex, int amount);
         void removeResource(int resourceIndex, int amount);
+        void addEgg(int id, Vector3 position, int resourceIndex);
+        void removeEgg(int id);
         Model getModel() override final { return _model; }
 
     private:
@@ -44,6 +53,7 @@ class Tile : public IRenderable, public IClickable {
         std::vector<int> _resources;
         std::vector<std::shared_ptr<Resource>> _resourceObjects;
         std::shared_ptr<HUD> _hud;
+        std::vector<Egg> _eggs;
 };
 
 #endif /* !TILE_HPP_ */
