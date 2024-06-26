@@ -29,6 +29,7 @@ void Commands::msz(const std::string &data)
 
 void Commands::bct(const std::string &data)
 {
+    std::cout << "Adress dans BCT " << this << std::endl;
     std::istringstream iss(data);
     std::string command;
     int x, y;
@@ -104,18 +105,24 @@ void Commands::pfk(const std::string &data)
 
 void Commands::pic(const std::string &data)
 {
-    
+    std::cout << "0 Handling pic: " << data << std::endl;
     std::istringstream iss(data);
     std::string command;
     std::string x;
     std::string y;
     std::string level;
     std::string player_id;
-    iss >> command;
-    iss >> x;
-    iss >> y;
-    iss >> level;
-    iss >> player_id;
+    std::cout << "1 Je suis la" << std::endl;
+    if (!(iss >> command >> x >> y >> level)) {
+        std::cerr << "Failed to parse command, x, y, and level\n";
+        return;
+    }
+    
+    if (currentPlayers.size() > 0)
+        currentPlayers.clear();
+    while (iss >> player_id) {
+        currentPlayers.push_back(player_id);
+    }
 }
 
 void Commands::pie(const std::string &data)
@@ -125,10 +132,26 @@ void Commands::pie(const std::string &data)
     std::string x;
     std::string y;
     std::string result;
+
     iss >> command;
     iss >> x;
     iss >> y;
     iss >> result;
+    if (result == "ok") {
+        GameEnginePtr PlayerManager = GameEngine::getInstance();
+        auto player = PlayerManager->getPlayers();
+        for (auto &id : currentPlayers) {
+            id = id.substr(1);
+            printf("id: %s\n", id.c_str());
+            for (auto &p : player) {
+                if (p->getId() == std::stoi(id)) {
+                    p->setPlayerLevel(p->getLevel() + 1);
+                }
+            }
+        }
+    } else {
+        currentPlayers.clear();
+    }
 }
 
 void Commands::pin(const std::string &data)
@@ -206,8 +229,14 @@ void Commands::ppo(const std::string &data)
     player_id = player_id.substr(1);
 
     GameEnginePtr PlayerManager = GameEngine::getInstance();
-    auto &player = PlayerManager->getPlayers()[std::stoi(player_id)];
-    player->setPosition((Vector3){(float)std::stoi(x) * 10.0f, 0.0f, (float)std::stoi(y) * 10.0f});
+    auto player = PlayerManager->getPlayers();
+    for (auto &p : player) {
+        if (p->getId() == std::stoi(player_id)) {
+            p->setPosition((Vector3){std::stof(x) * 10.0f, 0.0f, std::stof(y) * 10.0f});
+            p->setOrientation(std::stoi(orientation));
+            break;
+        }
+    }
 }
 
 void Commands::tna(const std::string &data)

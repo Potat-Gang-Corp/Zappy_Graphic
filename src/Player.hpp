@@ -41,6 +41,9 @@ class Player : public IRenderable, public IClickable {
         void addInventory(int resourceIndex, int amount);
         void removeInventory(int resourceIndex, int amount);
 
+        int getLevel() {
+            return _level;
+        }
         int getId() const;
         Vector3 getPosition() const;
         int getOrientation() const;

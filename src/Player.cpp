@@ -34,10 +34,10 @@ void Player::Render()
 {
     float angle = 0.0f;
     switch (_orientation) {
-        case 1: angle = 0.0f; break;
+        case 1: angle = 180.0f; break;
         case 2: angle = 90.0f; break;
-        case 3: angle = 180.0f; break;
-        case 4: angle = 270.0f; break;
+        case 3: angle = 0.0f; break;
+        case 4: angle = -90.0f; break;
     }
 
     _frameCounter++;
@@ -49,7 +49,6 @@ void Player::Render()
             loadDefaultAnimation();
         }
     }
-
     DrawModelEx(_model, _position, (Vector3){0, 1, 0}, angle, (Vector3){_scale, _scale, _scale}, WHITE);
     DrawBoundingBox(_boundingBox, GREEN);
 }
@@ -92,6 +91,11 @@ bool Player::isHovered() const
 void Player::setPosition(Vector3 position)
 {
     this->_position = position;
+    _boundingBox = GetModelBoundingBox(_model);
+    _boundingBox.min = Vector3Scale(_boundingBox.min, _scale);
+    _boundingBox.max = Vector3Scale(_boundingBox.max, _scale);
+    _boundingBox.min = Vector3Add(_boundingBox.min, position);
+    _boundingBox.max = Vector3Add(_boundingBox.max, position);
 }
 
 void Player::setOrientation(int orientation)

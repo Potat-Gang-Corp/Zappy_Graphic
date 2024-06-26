@@ -30,10 +30,9 @@ class CommandFactory {
          * @brief Get the instance of the CommandFactory
          * @return CommandFactory* The instance of the CommandFactory
         */
-        static CommandFactory *getInstance()
-        {
-            static CommandFactory instance;
-            return &instance;
+        static std::shared_ptr<CommandFactory> getInstance() {
+            static std::shared_ptr<CommandFactory> instance = std::make_shared<CommandFactory>();
+            return instance;
         }
         
         /**
@@ -43,33 +42,34 @@ class CommandFactory {
         */
         CommandFactory()
         {
-            std::map<std::string, std::function<void(const std::string&)>> mymap = {
-                {"msz", Commands::msz},
-                {"bct", Commands::bct},
-                {"tna", Commands::tna},
-                {"pnw", Commands::pnw},
-                {"ppo", Commands::ppo},
-                {"plv", Commands::plv},
-                {"pin", Commands::pin},
-                {"pex", Commands::pex},
-                {"pbc", Commands::pbc},
-                {"pic", Commands::pic},
-                {"pie", Commands::pie},
-                {"pfk", Commands::pfk},
-                {"pdr", Commands::pdr},
-                {"pgt", Commands::pgt},
-                {"pdi", Commands::pdi},
-                {"enw", Commands::enw},
-                {"ebo", Commands::ebo},
-                {"edi", Commands::edi},
-                {"sgt", Commands::sgt},
-                {"sst", Commands::sst},
-                {"seg", Commands::seg},
-                {"smg", Commands::smg},
-                {"suc", Commands::suc},
-                {"sbp", Commands::sbp},
+            std::shared_ptr<Commands> &command = Commands::getInstance();
+            // use lambda functions to bind the command functions to the command strings
+            commands = {
+                {"msz", [&command](const std::string &data) { command->msz(data); }},
+                {"bct", [&command](const std::string &data) { command->bct(data); }},
+                {"pdr", [&command](const std::string &data) { command->pdr(data); }},
+                {"pgt", [&command](const std::string &data) { command->pgt(data); }},
+                {"pin", [&command](const std::string &data) { command->pin(data); }},
+                {"plv", [&command](const std::string &data) { command->plv(data); }},
+                {"ppo", [&command](const std::string &data) { command->ppo(data); }},
+                {"tna", [&command](const std::string &data) { command->tna(data); }},
+                {"pnw", [&command](const std::string &data) { command->pnw(data); }},
+                {"pex", [&command](const std::string &data) { command->pex(data); }},
+                {"pbc", [&command](const std::string &data) { command->pbc(data); }},
+                {"pic", [&command](const std::string &data) { command->pic(data); }},
+                {"pie", [&command](const std::string &data) { command->pie(data); }},
+                {"pfk", [&command](const std::string &data) { command->pfk(data); }},
+                {"pdi", [&command](const std::string &data) { command->pdi(data); }},
+                {"smg", [&command](const std::string &data) { command->smg(data); }},
+                {"enw", [&command](const std::string &data) { command->enw(data); }},
+                {"ebo", [&command](const std::string &data) { command->ebo(data); }},
+                {"edi", [&command](const std::string &data) { command->edi(data); }},
+                {"sgt", [&command](const std::string &data) { command->sgt(data); }},
+                {"sst", [&command](const std::string &data) { command->sst(data); }},
+                {"seg", [&command](const std::string &data) { command->seg(data); }},
+                {"suc", [&command](const std::string &data) { command->suc(data); }},
+                {"sbp", [&command](const std::string &data) { command->sbp(data); }}
             };
-            commands = mymap;
         }
 
         /**
@@ -109,5 +109,7 @@ class CommandFactory {
     private:
         std::map<std::string, std::function<void(const std::string&)>> commands;
 };
+
+
 
 #endif /* !FACTORY_HPP_ */

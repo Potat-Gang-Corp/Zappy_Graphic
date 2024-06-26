@@ -9,7 +9,6 @@
 
 Model LoadModelSafely(const char* fileName)
 {
-    std::cout << "Attempting to load model: " << fileName << "\n";
     Model model = LoadModel(fileName);
     if (model.meshCount == 0) {
         std::cerr << "Failed to load model: " << fileName << "\n";
@@ -22,7 +21,6 @@ Model LoadModelSafely(const char* fileName)
 
 std::shared_ptr<ModelAnimation> LoadModelAnimationsSafely(const char* fileName)
 {
-    std::cout << "Attempting to load animations: " << fileName << "\n";
     int animsCount = 0;
     ModelAnimation* anims = LoadModelAnimations(fileName, &animsCount);
     if (animsCount == 0) {
@@ -67,7 +65,6 @@ ModelsLoader::ModelsLoader()
 
 Model ModelsLoader::getModel(std::string filename)
 {
-    printf("Getting model %s\n", filename.c_str());
     for (auto it: _models) {
         if (it.first == filename)
             return it.second;
@@ -78,7 +75,6 @@ Model ModelsLoader::getModel(std::string filename)
 
 std::shared_ptr<ModelAnimation> ModelsLoader::getAnim(std::string filename)
 {
-    printf("Getting animation %s\n", filename.c_str());
     for (auto it: _anims) {
         if (it.first == filename)
             return it.second;
